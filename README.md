@@ -2,8 +2,6 @@
 
 Generate scene layout metrics for multi-participant OBS canvases. Describe each participant's content and the generator returns pixel rectangles for their main content, camera, aux content, info panel, and name tag, arranged in balanced rows on the canvas.
 
-> **Status:** early development. The API may change before 1.0.
-
 ## Install
 
 ```sh
