@@ -33,6 +33,19 @@ const layouts = generateLayout([{ contentMainAspectRatio: '16:9', hasName: true 
 
 Pass one `LayoutConfig` per participant and an optional `LayoutOptions` for the canvas. You get back one `LayoutMetric` per participant, in input order. Any field you leave out takes its value from `LAYOUT_CONFIG_DEFAULT` or `LAYOUT_OPTIONS_DEFAULT`, so `{}` is a participant with 16:9 main content and a camera. The one derived default is `layoutGap`, which is half of `canvasGap` when left out. Set a ratio field to `null` to turn that region off. Calling `generateLayout()` with no arguments lays out a single default participant on a default canvas.
 
+When the canvas is fixed and only the participants change, as in a React component or a bot driving OBS, bind the options once with `createLayoutGenerator` and call the result with just the configs:
+
+```ts
+import { createLayoutGenerator } from 'obs-layout-generator';
+
+const generate = createLayoutGenerator({ canvasMarginBottom: 120, canvasPadding: 30, canvasGap: 30 });
+
+generate([{ hasName: true }]); // same result as the example above
+generate([{ hasName: true }], { canvasMarginBottom: 0 }); // per-call options override the bound ones
+```
+
+An `undefined` field in the per-call options keeps the bound value rather than resetting it to the default, so options built from partial settings can be passed as they are.
+
 ## How layouts are built
 
 **Rows.** Participants are split into balanced rows: 1–2 participants use one row, 3–6 use two, 7–12 use three, and so on. Every row has the same height.
@@ -100,7 +113,7 @@ Each participant's result has optional `camera`, `contentMain`, `contentAux`, `i
 
 ### Exports
 
-- **Layout:** `generateLayout`, the `LayoutConfig`, `LayoutOptions`, `LayoutMetric`, and `LayoutRegion` types, and the `LAYOUT_CONFIG_DEFAULT` and `LAYOUT_OPTIONS_DEFAULT` constants.
+- **Layout:** `generateLayout` and `createLayoutGenerator`, the `LayoutConfig`, `LayoutOptions`, `LayoutMetric`, and `LayoutRegion` types, and the `LAYOUT_CONFIG_DEFAULT` and `LAYOUT_OPTIONS_DEFAULT` constants.
 - **Aspect ratios:** `CONTENT_ASPECT_RATIOS` (frozen), `numericContentAspectRatios`, `widestNumericContentAspectRatio`, the `ContentAspectRatio` and `AspectRatio` types, and `transformAspectRatio` to turn `'16:9'` into `1.777…`.
 - **Building blocks**, in the order `generateLayout` uses them:
   - `distributeLayouts`: split layout configs into rows.

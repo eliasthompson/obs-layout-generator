@@ -6,6 +6,7 @@ export * from '@/lib/calculateCanvasGrid';
 export * from '@/lib/calculateLayoutRegions';
 export * from '@/lib/calculateRowHeight';
 export * from '@/lib/calculateSideRegionHeights';
+export * from '@/lib/createLayoutGenerator';
 export * from '@/lib/distributeLayouts';
 export * from '@/lib/findCollapsedSideIndexes';
 export * from '@/lib/generateLayout';
