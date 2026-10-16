@@ -1,6 +1,6 @@
 import type { LayoutMetric } from '@/types/LayoutMetric';
 
-import { roundLayoutMetricItem } from '@/lib/roundLayoutMetricItem';
+import { roundLayoutRegion } from '@/lib/roundLayoutRegion';
 
 const layoutMetricRegions = [
   'camera',
@@ -15,8 +15,8 @@ export const roundLayoutMetric = (layoutMetric: LayoutMetric) => {
   const roundedLayoutMetric: LayoutMetric = {};
 
   layoutMetricRegions.forEach((region) => {
-    const layoutMetricItem = layoutMetric[region];
-    if (layoutMetricItem) roundedLayoutMetric[region] = roundLayoutMetricItem(layoutMetricItem);
+    const layoutRegion = layoutMetric[region];
+    if (layoutRegion) roundedLayoutMetric[region] = roundLayoutRegion(layoutRegion);
   });
 
   return roundedLayoutMetric;

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { LayoutConfig } from '@/constants/layoutConfig';
 import type { LayoutOptions } from '@/constants/layoutOptions';
-import type { LayoutMetric, LayoutMetricItem } from '@/types/LayoutMetric';
+import type { LayoutMetric, LayoutRegion } from '@/types/LayoutMetric';
 
 import { CONTENT_ASPECT_RATIOS } from '@/constants/contentAspectRatios';
 import { generateLayout } from '@/lib/generateLayout';
@@ -192,10 +192,10 @@ describe('generateLayout', () => {
       return seed / 4294967296;
     };
     const pick = <Value>(values: readonly Value[]) => values[Math.floor(random() * values.length)];
-    const overlaps = (a: LayoutMetricItem, b: LayoutMetricItem) =>
+    const overlaps = (a: LayoutRegion, b: LayoutRegion) =>
       Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x) > 1 &&
       Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y) > 1;
-    const regions = ['camera', 'contentMain', 'contentAux', 'info'] as const;
+    const regionKeys = ['camera', 'contentMain', 'contentAux', 'info'] as const;
 
     for (let iteration = 0; iteration < 2000; iteration += 1) {
       const [canvasWidth, canvasHeight] = pick([
@@ -229,32 +229,32 @@ describe('generateLayout', () => {
       const right = canvasWidth - layoutOptions.canvasMarginRight - layoutOptions.canvasPadding;
       const top = layoutOptions.canvasMarginTop + layoutOptions.canvasPadding;
       const bottom = canvasHeight - layoutOptions.canvasMarginBottom - layoutOptions.canvasPadding;
-      const items = (layoutMetric: LayoutMetric) => Object.values(layoutMetric) as LayoutMetricItem[];
+      const regionsOf = (layoutMetric: LayoutMetric) => Object.values(layoutMetric) as LayoutRegion[];
 
       expect(layoutMetrics).toHaveLength(layoutConfigs.length);
 
       layoutMetrics.forEach((layoutMetric, layoutMetricIndex) => {
-        items(layoutMetric).forEach((item) => {
-          expect(item.width).toBeGreaterThan(0);
-          expect(item.height).toBeGreaterThan(0);
-          expect(item.x).toBeGreaterThanOrEqual(left - 1);
-          expect(item.x + item.width).toBeLessThanOrEqual(right + 1);
-          expect(item.y).toBeGreaterThanOrEqual(top - 1);
-          expect(item.y + item.height).toBeLessThanOrEqual(bottom + 1);
+        regionsOf(layoutMetric).forEach((region) => {
+          expect(region.width).toBeGreaterThan(0);
+          expect(region.height).toBeGreaterThan(0);
+          expect(region.x).toBeGreaterThanOrEqual(left - 1);
+          expect(region.x + region.width).toBeLessThanOrEqual(right + 1);
+          expect(region.y).toBeGreaterThanOrEqual(top - 1);
+          expect(region.y + region.height).toBeLessThanOrEqual(bottom + 1);
         });
 
-        const presentRegions = regions.flatMap((region) => layoutMetric[region] ?? []);
+        const presentRegions = regionKeys.flatMap((region) => layoutMetric[region] ?? []);
 
-        presentRegions.forEach((item, itemIndex) => {
-          presentRegions.slice(itemIndex + 1).forEach((otherItem) => {
-            expect(overlaps(item, otherItem)).toBe(false);
+        presentRegions.forEach((region, regionIndex) => {
+          presentRegions.slice(regionIndex + 1).forEach((otherRegion) => {
+            expect(overlaps(region, otherRegion)).toBe(false);
           });
         });
 
         layoutMetrics.slice(layoutMetricIndex + 1).forEach((otherLayoutMetric) => {
-          items(layoutMetric).forEach((item) => {
-            items(otherLayoutMetric).forEach((otherItem) => {
-              expect(overlaps(item, otherItem)).toBe(false);
+          regionsOf(layoutMetric).forEach((region) => {
+            regionsOf(otherLayoutMetric).forEach((otherRegion) => {
+              expect(overlaps(region, otherRegion)).toBe(false);
             });
           });
         });

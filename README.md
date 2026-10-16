@@ -39,7 +39,7 @@ Pass one `LayoutConfig` per participant and an optional `LayoutOptions` for the 
 
 **Columns.** Each participant gets a main column and, when needed, a side column to its right.
 
-- The **main column** holds the first element present, in this order: main content, camera, aux content, info. Its width comes from that element's aspect ratio (`contentMainAspectRatio`, `cameraMainAspectRatio`, `contentAuxAspectRatio`, or `infoAspectRatio`; `'auto'` info fills the grid cell).
+- The **main column** holds the first region present, in this order: main content, camera, aux content, info. Its width comes from that region's aspect ratio (`contentMainAspectRatio`, `cameraMainAspectRatio`, `contentAuxAspectRatio`, or `infoAspectRatio`; `'auto'` info fills the grid cell).
 - The **side column** holds the remaining camera, aux content, and info, stacked with aux content at the top, info below it, and the camera at the bottom. If none remain, the side column and its gap are dropped.
 
 ```ts
@@ -93,23 +93,23 @@ generateLayout([{ contentMainAspectRatio: null, hasName: true }], {
 
 ### `LayoutMetric`
 
-Each participant's result has optional `camera`, `contentMain`, `contentAux`, `info`, and `name` regions. Each is a `LayoutMetricItem` of rounded pixel values, `{ x, y, width, height }`. Regions that were not requested or did not fit are absent.
+Each participant's result has optional `camera`, `contentMain`, `contentAux`, `info`, and `name` regions. Each is a `LayoutRegion` of rounded pixel values, `{ x, y, width, height }`. Regions that were not requested or did not fit are absent.
 
 ### Exports
 
-- **Layout:** `generateLayout`, the `LayoutConfig`, `LayoutOptions`, `LayoutMetric`, and `LayoutMetricItem` types, and the `LAYOUT_CONFIG_DEFAULT` and `LAYOUT_OPTIONS_DEFAULT` constants.
+- **Layout:** `generateLayout`, the `LayoutConfig`, `LayoutOptions`, `LayoutMetric`, and `LayoutRegion` types, and the `LAYOUT_CONFIG_DEFAULT` and `LAYOUT_OPTIONS_DEFAULT` constants.
 - **Aspect ratios:** `CONTENT_ASPECT_RATIOS` (frozen), `numericContentAspectRatios`, `widestNumericContentAspectRatio`, the `ContentAspectRatio` and `AspectRatio` types, and `transformAspectRatio` to turn `'16:9'` into `1.777…`.
 - **Building blocks**, in the order `generateLayout` uses them:
   - `distributeLayouts`: split layout configs into rows.
   - `calculateCanvasGrid`: content area, gaps, grid cells, and side column width.
-  - `resolveLayoutConfig`: pick the main column element and what stays in the side column.
+  - `resolveLayoutConfig`: pick the main column region and what stays in the side column.
   - `calculateRowHeight`: the tallest row height at which every row fits.
   - `calculateCameraHeights`: the shared side camera height and the name height.
   - `calculateSideRegionHeights`: side column stacking.
   - `findCollapsedSideIndexes`: side columns left with nothing to show.
   - `calculateLayoutRegions`: region positions for one participant.
   - `placeName`: name placement.
-  - `roundLayoutMetric` and `roundLayoutMetricItem`: rounding to whole pixels.
+  - `roundLayoutMetric` and `roundLayoutRegion`: rounding to whole pixels.
   - The `LayoutMainRegion` and `LayoutAlignment` types. `transformAspectRatio` returns `0` for invalid ratios.
 
 ## Development

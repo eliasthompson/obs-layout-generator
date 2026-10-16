@@ -1,4 +1,4 @@
-export interface LayoutMetricItem {
+export interface LayoutRegion {
   x: number;
   y: number;
   width: number;
@@ -6,9 +6,9 @@ export interface LayoutMetricItem {
 }
 
 export interface LayoutMetric {
-  camera?: LayoutMetricItem;
-  contentMain?: LayoutMetricItem;
-  contentAux?: LayoutMetricItem;
-  info?: LayoutMetricItem;
-  name?: LayoutMetricItem;
+  camera?: LayoutRegion;
+  contentMain?: LayoutRegion;
+  contentAux?: LayoutRegion;
+  info?: LayoutRegion;
+  name?: LayoutRegion;
 }

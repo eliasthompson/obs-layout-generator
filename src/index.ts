@@ -12,7 +12,7 @@ export * from '@/lib/generateLayout';
 export * from '@/lib/placeName';
 export * from '@/lib/resolveLayoutConfig';
 export * from '@/lib/roundLayoutMetric';
-export * from '@/lib/roundLayoutMetricItem';
+export * from '@/lib/roundLayoutRegion';
 export * from '@/lib/transformAspectRatio';
 export type * from '@/types/AspectRatio';
 export type * from '@/types/LayoutAlignment';

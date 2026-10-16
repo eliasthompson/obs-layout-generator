@@ -1,5 +1,5 @@
 import type { LayoutMainRegion } from '@/types/LayoutMainRegion';
-import type { LayoutMetric, LayoutMetricItem } from '@/types/LayoutMetric';
+import type { LayoutMetric, LayoutRegion } from '@/types/LayoutMetric';
 
 export interface PlaceNameContext {
   hasCameraNameRoom: boolean;
@@ -11,8 +11,8 @@ export interface PlaceNameContext {
 export const placeName = (
   { camera, contentAux, contentMain }: LayoutMetric,
   { hasCameraNameRoom, mainRegion, nameHeight }: PlaceNameContext,
-): LayoutMetricItem | undefined => {
-  let nameHost: LayoutMetricItem | undefined;
+): LayoutRegion | undefined => {
+  let nameHost: LayoutRegion | undefined;
 
   if (camera && (mainRegion === 'camera' || hasCameraNameRoom)) {
     nameHost = camera;

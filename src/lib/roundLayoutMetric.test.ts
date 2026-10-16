@@ -16,10 +16,12 @@ describe('roundLayoutMetric', () => {
   });
 
   it('keeps regions in camera, contentMain, contentAux, info, name order', () => {
-    const item = { x: 0, y: 0, width: 1, height: 1 };
+    const region = { x: 0, y: 0, width: 1, height: 1 };
 
     expect(
-      Object.keys(roundLayoutMetric({ name: item, info: item, contentAux: item, contentMain: item, camera: item })),
+      Object.keys(
+        roundLayoutMetric({ name: region, info: region, contentAux: region, contentMain: region, camera: region }),
+      ),
     ).toEqual(['camera', 'contentMain', 'contentAux', 'info', 'name']);
   });
 });

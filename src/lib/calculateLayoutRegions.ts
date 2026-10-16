@@ -12,7 +12,7 @@ export interface CalculateLayoutRegionsContext {
   rowY: number;
 }
 
-// Position the main column element and the side column stack of one layout config, before the name and rounding
+// Position the main column region and the side column stack of one layout config, before the name and rounding
 export const calculateLayoutRegions = (
   mainRegion: LayoutMainRegion | undefined,
   { contentAuxHeight, infoHeight, showSideCamera }: SideRegionHeights,
