@@ -7,7 +7,7 @@ import type { LayoutMetric, LayoutMetricItem } from '@/types/LayoutMetric';
 import { CONTENT_ASPECT_RATIOS } from '@/constants/contentAspectRatios';
 import { generateLayout } from '@/lib/generateLayout';
 
-const barOptions: LayoutOptions = { canvasMarginBottom: 120, canvasPadding: 30 };
+const barOptions: LayoutOptions = { canvasGap: 30, canvasMarginBottom: 120, canvasPadding: 30 };
 
 describe('generateLayout', () => {
   it('returns no layout metrics for no layout configs', () => {
@@ -18,12 +18,12 @@ describe('generateLayout', () => {
     expect(generateLayout()).toEqual([{ contentMain: { x: 0, y: 0, width: 1920, height: 1080 } }]);
   });
 
-  it('keeps the original single participant layout', () => {
+  it('lays out a single participant with a lower bar', () => {
     expect(generateLayout([{ hasName: true }], barOptions)).toEqual([
       {
-        camera: { x: 1432, y: 488, width: 458, height: 383 },
-        contentMain: { x: 30, y: 90, width: 1387, height: 780 },
-        name: { x: 1432, y: 743, width: 458, height: 128 },
+        camera: { x: 1645, y: 488, width: 245, height: 443 },
+        contentMain: { x: 30, y: 30, width: 1600, height: 900 },
+        name: { x: 1645, y: 783, width: 245, height: 148 },
       },
     ]);
   });
@@ -40,10 +40,11 @@ describe('generateLayout', () => {
       { hasCamera: false, hasName: true },
     ];
     const optionSets: LayoutOptions[] = [
-      { canvasPadding: 30, canvasMarginBottom: 120 },
-      { canvasPadding: 30 },
-      { canvasPadding: 20, canvasMarginBottom: 100, canvasMarginTop: 40 },
-      { canvasPadding: 30, canvasMarginBottom: 120, canvasMarginLeft: 50, canvasMarginRight: 50 },
+      { canvasGap: 30, canvasMarginBottom: 120, canvasPadding: 30 },
+      { canvasGap: 30, canvasPadding: 30 },
+      { canvasGap: 20, canvasMarginBottom: 100, canvasMarginTop: 40, canvasPadding: 20 },
+      { canvasGap: 30, canvasMarginBottom: 120, canvasMarginLeft: 50, canvasMarginRight: 50, canvasPadding: 30 },
+      { canvasGap: 40, canvasMarginBottom: 120, canvasPadding: 10, layoutGap: 10 },
     ];
     const layouts = optionSets.flatMap((layoutOptions) =>
       Array.from({ length: 9 }, (_, index) => {
@@ -65,7 +66,7 @@ describe('generateLayout', () => {
     const [layoutMetric] = generateLayout([{}], { canvasMarginLeft: 400, canvasMarginTop: 300, canvasPadding: 30 });
 
     expect(layoutMetric.contentMain?.x).toBeGreaterThanOrEqual(430);
-    expect(layoutMetric.contentMain?.y).toBeGreaterThanOrEqual(390);
+    expect(layoutMetric.contentMain?.y).toBeGreaterThanOrEqual(330);
   });
 
   it('omits side regions and moves the name to the main content without side room', () => {
@@ -80,8 +81,8 @@ describe('generateLayout', () => {
   it('puts the camera in the main column without main content', () => {
     expect(generateLayout([{ contentMainAspectRatio: null, hasName: true }], barOptions)).toEqual([
       {
-        camera: { x: 267, y: 90, width: 1387, height: 780 },
-        name: { x: 267, y: 743, width: 1387, height: 128 },
+        camera: { x: 160, y: 30, width: 1600, height: 900 },
+        name: { x: 160, y: 783, width: 1600, height: 148 },
       },
     ]);
   });
@@ -94,8 +95,8 @@ describe('generateLayout', () => {
       ),
     ).toEqual([
       {
-        contentAux: { x: 440, y: 90, width: 1040, height: 780 },
-        name: { x: 440, y: 743, width: 1040, height: 128 },
+        contentAux: { x: 360, y: 30, width: 1200, height: 900 },
+        name: { x: 360, y: 783, width: 1200, height: 148 },
       },
     ]);
   });
@@ -106,7 +107,7 @@ describe('generateLayout', () => {
         [{ contentMainAspectRatio: null, hasCamera: false, hasName: true, infoAspectRatio: 'auto' }],
         barOptions,
       ),
-    ).toEqual([{ info: { x: 30, y: 90, width: 1860, height: 780 } }]);
+    ).toEqual([{ info: { x: 30, y: 30, width: 1860, height: 900 } }]);
   });
 
   it('returns an empty layout metric for a layout config without regions', () => {
@@ -116,10 +117,10 @@ describe('generateLayout', () => {
   it('stacks side aux content, side info, and the side camera', () => {
     expect(generateLayout([{ contentAuxAspectRatio: '4:3', infoAspectRatio: 'auto' }], barOptions)).toEqual([
       {
-        camera: { x: 1432, y: 488, width: 458, height: 383 },
-        contentMain: { x: 30, y: 90, width: 1387, height: 780 },
-        contentAux: { x: 1432, y: 90, width: 458, height: 344 },
-        info: { x: 1432, y: 449, width: 458, height: 24 },
+        camera: { x: 1645, y: 488, width: 245, height: 443 },
+        contentMain: { x: 30, y: 30, width: 1600, height: 900 },
+        contentAux: { x: 1645, y: 30, width: 245, height: 184 },
+        info: { x: 1645, y: 229, width: 245, height: 244 },
       },
     ]);
   });
@@ -127,17 +128,18 @@ describe('generateLayout', () => {
   it('starts side info at the top of the row without side aux content', () => {
     const [layoutMetric] = generateLayout([{ infoAspectRatio: '16:9' }], barOptions);
 
-    expect(layoutMetric.info).toEqual({ x: 1432, y: 90, width: 458, height: 258 });
+    expect(layoutMetric.info).toEqual({ x: 1645, y: 30, width: 245, height: 138 });
   });
 
   it('moves the name to the main content when the camera is too short for it', () => {
     const [layoutMetric] = generateLayout([{ contentAuxAspectRatio: '3:2', hasName: true }], {
-      canvasMarginTop: 300,
+      canvasGap: 30,
+      canvasMarginTop: 420,
       canvasPadding: 30,
     });
 
     expect(layoutMetric.camera?.height).toBeLessThan(98);
-    expect(layoutMetric.name).toEqual({ x: 30, y: 893, width: 1067, height: 98 });
+    expect(layoutMetric.name).toEqual({ x: 30, y: 953, width: 1067, height: 98 });
   });
 
   it('reserves only the gaps each row has when fitting rows to the content width', () => {
@@ -154,7 +156,7 @@ describe('generateLayout', () => {
         { contentMainAspectRatio: '16:9', hasCamera: false, hasName: true },
         { contentMainAspectRatio: '3:2', hasName: true },
       ],
-      { canvasHeight: 1920, canvasPadding: 10, canvasWidth: 1080 },
+      { canvasGap: 10, canvasHeight: 1920, canvasPadding: 10, canvasWidth: 1080 },
     );
 
     expect(layoutMetrics[0].contentMain).toEqual({ x: 35, y: 612, width: 251, height: 226 });
@@ -162,24 +164,25 @@ describe('generateLayout', () => {
 
   it('drops a side column whose regions all collapsed', () => {
     const layoutMetrics = generateLayout([{ contentAuxAspectRatio: '1:1' }, { hasName: true }], {
-      canvasMarginTop: 300,
+      canvasGap: 30,
+      canvasMarginTop: 420,
       canvasPadding: 30,
     });
 
     expect(layoutMetrics[1]).toEqual({
-      contentMain: { x: 1179, y: 490, width: 711, height: 400 },
-      name: { x: 1179, y: 826, width: 711, height: 64 },
+      contentMain: { x: 1179, y: 550, width: 711, height: 400 },
+      name: { x: 1179, y: 886, width: 711, height: 64 },
     });
   });
 
   it('omits the name when there is no room for it', () => {
-    expect(generateLayout([{ hasName: true }], { canvasHeight: 380, canvasPadding: 60 })).toEqual([
-      { contentMain: { x: 942, y: 180, width: 36, height: 20 } },
+    expect(generateLayout([{ hasName: true }], { canvasGap: 60, canvasHeight: 140, canvasPadding: 60 })).toEqual([
+      { contentMain: { x: 942, y: 60, width: 36, height: 20 } },
     ]);
   });
 
   it('omits the main column when the row has no height', () => {
-    expect(generateLayout([{}], { canvasHeight: 360, canvasPadding: 60 })).toEqual([{}]);
+    expect(generateLayout([{}], { canvasGap: 60, canvasHeight: 120, canvasPadding: 60 })).toEqual([{}]);
   });
 
   it('keeps every region on the canvas without overlaps', () => {
@@ -203,6 +206,7 @@ describe('generateLayout', () => {
         [1080, 1920],
       ] as const);
       const layoutOptions = {
+        canvasGap: pick([0, 10, 30, 60]),
         canvasHeight,
         canvasMarginBottom: pick([0, 0, 120, 300]),
         canvasMarginLeft: pick([0, 0, 100, 400]),
@@ -210,6 +214,7 @@ describe('generateLayout', () => {
         canvasMarginTop: pick([0, 0, 50, 200]),
         canvasPadding: pick([0, 10, 30, 60]),
         canvasWidth,
+        layoutGap: pick([undefined, 0, 5, 40]),
       };
       const layoutConfigs = Array.from({ length: 1 + Math.floor(random() * 12) }, (): LayoutConfig => ({
         cameraMainAspectRatio: pick([undefined, '16:9', '4:3', '9:16'] as const),
@@ -222,8 +227,8 @@ describe('generateLayout', () => {
       const layoutMetrics = generateLayout(layoutConfigs, layoutOptions);
       const left = layoutOptions.canvasMarginLeft + layoutOptions.canvasPadding;
       const right = canvasWidth - layoutOptions.canvasMarginRight - layoutOptions.canvasPadding;
-      const top = layoutOptions.canvasMarginTop + layoutOptions.canvasPadding * 3;
-      const bottom = canvasHeight - layoutOptions.canvasMarginBottom - layoutOptions.canvasPadding * 3;
+      const top = layoutOptions.canvasMarginTop + layoutOptions.canvasPadding;
+      const bottom = canvasHeight - layoutOptions.canvasMarginBottom - layoutOptions.canvasPadding;
       const items = (layoutMetric: LayoutMetric) => Object.values(layoutMetric) as LayoutMetricItem[];
 
       expect(layoutMetrics).toHaveLength(layoutConfigs.length);

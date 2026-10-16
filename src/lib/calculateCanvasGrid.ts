@@ -22,19 +22,18 @@ export const calculateCanvasGrid = (
   {
     canvasWidth = LAYOUT_OPTIONS_DEFAULT.canvasWidth,
     canvasHeight = LAYOUT_OPTIONS_DEFAULT.canvasHeight,
-    canvasPadding = LAYOUT_OPTIONS_DEFAULT.canvasPadding,
     canvasMarginTop = LAYOUT_OPTIONS_DEFAULT.canvasMarginTop,
     canvasMarginBottom = LAYOUT_OPTIONS_DEFAULT.canvasMarginBottom,
     canvasMarginLeft = LAYOUT_OPTIONS_DEFAULT.canvasMarginLeft,
     canvasMarginRight = LAYOUT_OPTIONS_DEFAULT.canvasMarginRight,
+    canvasPadding = LAYOUT_OPTIONS_DEFAULT.canvasPadding,
+    canvasGap = LAYOUT_OPTIONS_DEFAULT.canvasGap,
+    layoutGap = LAYOUT_OPTIONS_DEFAULT.layoutGap ?? canvasGap / 2,
   }: LayoutOptions,
   layoutConfigsTotal: number,
 ): CanvasGrid => {
-  const canvasPaddingTopBottom = canvasPadding * 3;
-  const canvasGap = canvasPadding;
-  const layoutGap = canvasGap / 2;
   const canvasContentWidth = canvasWidth - canvasMarginLeft - canvasMarginRight - canvasPadding * 2;
-  const canvasContentHeight = canvasHeight - canvasMarginTop - canvasMarginBottom - canvasPaddingTopBottom * 2;
+  const canvasContentHeight = canvasHeight - canvasMarginTop - canvasMarginBottom - canvasPadding * 2;
   const canvasGridUnits = Math.ceil(Math.sqrt(layoutConfigsTotal));
   const canvasGridUnitWidth = (canvasContentWidth - (canvasGridUnits - 1) * canvasGap) / canvasGridUnits;
   const canvasGridUnitHeight = (canvasContentHeight - (canvasGridUnits - 1) * canvasGap) / canvasGridUnits;
@@ -47,7 +46,7 @@ export const calculateCanvasGrid = (
     canvasContentHeight,
     canvasContentWidth,
     canvasContentX: canvasMarginLeft + canvasPadding,
-    canvasContentY: canvasMarginTop + canvasPaddingTopBottom,
+    canvasContentY: canvasMarginTop + canvasPadding,
     canvasGap,
     canvasGridUnitNumericAspectRatio: canvasGridUnitWidth / canvasGridUnitHeight,
     hasSideRoom: Math.round(layoutSideWidth) > 0,

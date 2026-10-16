@@ -27,26 +27,42 @@ describe('calculateCanvasGrid', () => {
   });
 
   it('gives the side column what a grid cell has left after the widest content ratio', () => {
-    const canvasGrid = calculateCanvasGrid({ canvasMarginBottom: 120, canvasPadding: 30 }, 1);
+    const canvasGrid = calculateCanvasGrid({ canvasGap: 30, canvasMarginBottom: 120, canvasPadding: 30 }, 1);
 
     expect(canvasGrid).toMatchObject({
-      canvasContentHeight: 780,
+      canvasContentHeight: 900,
       canvasContentWidth: 1860,
       canvasContentX: 30,
-      canvasContentY: 90,
+      canvasContentY: 30,
       canvasGap: 30,
       hasSideRoom: true,
       layoutGap: 15,
     });
-    expect(canvasGrid.canvasGridUnitNumericAspectRatio).toBeCloseTo(1860 / 780);
-    expect(canvasGrid.layoutSideWidth).toBeCloseTo(1860 - (780 * 16) / 9 - 15);
+    expect(canvasGrid.canvasGridUnitNumericAspectRatio).toBeCloseTo(1860 / 900);
+    expect(canvasGrid.layoutSideWidth).toBeCloseTo(1860 - (900 * 16) / 9 - 15);
   });
 
   it('splits the content area into a grid sized for the layout config count', () => {
-    const canvasGrid = calculateCanvasGrid({ canvasMarginBottom: 120, canvasPadding: 30 }, 4);
+    const canvasGrid = calculateCanvasGrid({ canvasGap: 30, canvasMarginBottom: 120, canvasPadding: 30 }, 4);
 
-    expect(canvasGrid.canvasGridUnitNumericAspectRatio).toBeCloseTo(915 / 375);
-    expect(canvasGrid.layoutSideWidth).toBeCloseTo(915 - (375 * 16) / 9 - 15);
+    expect(canvasGrid.canvasGridUnitNumericAspectRatio).toBeCloseTo(915 / 435);
+    expect(canvasGrid.layoutSideWidth).toBeCloseTo(915 - (435 * 16) / 9 - 15);
+  });
+
+  it('leaves the gaps at 0 when only padding is set', () => {
+    expect(calculateCanvasGrid({ canvasPadding: 30 }, 1)).toMatchObject({
+      canvasContentHeight: 1020,
+      canvasContentWidth: 1860,
+      canvasContentX: 30,
+      canvasContentY: 30,
+      canvasGap: 0,
+      layoutGap: 0,
+    });
+  });
+
+  it('halves the canvas gap for the layout gap unless one is given', () => {
+    expect(calculateCanvasGrid({ canvasGap: 20 }, 1)).toMatchObject({ canvasGap: 20, layoutGap: 10 });
+    expect(calculateCanvasGrid({ canvasGap: 20, layoutGap: 4 }, 1)).toMatchObject({ canvasGap: 20, layoutGap: 4 });
   });
 
   it('offsets the content area by the margins and padding', () => {
@@ -64,10 +80,10 @@ describe('calculateCanvasGrid', () => {
         1,
       ),
     ).toMatchObject({
-      canvasContentHeight: 590,
+      canvasContentHeight: 630,
       canvasContentWidth: 1120,
       canvasContentX: 110,
-      canvasContentY: 80,
+      canvasContentY: 60,
     });
   });
 

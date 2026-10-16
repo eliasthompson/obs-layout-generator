@@ -18,19 +18,20 @@ The package ships as ESM with bundled type declarations and has no runtime depen
 import { generateLayout } from 'obs-layout-generator';
 
 const layouts = generateLayout([{ contentMainAspectRatio: '16:9', hasName: true }], {
-  canvasPadding: 30,
   canvasMarginBottom: 120,
+  canvasPadding: 30,
+  canvasGap: 30,
 });
 // [
 //   {
-//     camera: { x: 1432, y: 488, width: 458, height: 383 },
-//     contentMain: { x: 30, y: 90, width: 1387, height: 780 },
-//     name: { x: 1432, y: 743, width: 458, height: 128 },
+//     camera: { x: 1645, y: 488, width: 245, height: 443 },
+//     contentMain: { x: 30, y: 30, width: 1600, height: 900 },
+//     name: { x: 1645, y: 783, width: 245, height: 148 },
 //   },
 // ]
 ```
 
-Pass one `LayoutConfig` per participant and an optional `LayoutOptions` for the canvas. You get back one `LayoutMetric` per participant, in input order. Any field you leave out takes its value from `LAYOUT_CONFIG_DEFAULT` or `LAYOUT_OPTIONS_DEFAULT`, so `{}` is a participant with 16:9 main content and a camera. Set a ratio field to `null` to turn that region off. Calling `generateLayout()` with no arguments lays out a single default participant on a default canvas.
+Pass one `LayoutConfig` per participant and an optional `LayoutOptions` for the canvas. You get back one `LayoutMetric` per participant, in input order. Any field you leave out takes its value from `LAYOUT_CONFIG_DEFAULT` or `LAYOUT_OPTIONS_DEFAULT`, so `{}` is a participant with 16:9 main content and a camera. The one derived default is `layoutGap`, which is half of `canvasGap` when left out. Set a ratio field to `null` to turn that region off. Calling `generateLayout()` with no arguments lays out a single default participant on a default canvas.
 
 ## How layouts are built
 
@@ -43,11 +44,17 @@ Pass one `LayoutConfig` per participant and an optional `LayoutOptions` for the 
 
 ```ts
 // No main content: the camera takes the main column at its 16:9 cameraMainAspectRatio
-generateLayout([{ contentMainAspectRatio: null, hasName: true }], { canvasPadding: 30, canvasMarginBottom: 120 });
-// [{ camera: { x: 267, y: 90, width: 1387, height: 780 }, name: { x: 267, y: 743, width: 1387, height: 128 } }]
+generateLayout([{ contentMainAspectRatio: null, hasName: true }], {
+  canvasMarginBottom: 120,
+  canvasPadding: 30,
+  canvasGap: 30,
+});
+// [{ camera: { x: 160, y: 30, width: 1600, height: 900 }, name: { x: 160, y: 783, width: 1600, height: 148 } }]
 ```
 
-**Side column width.** The side column is whatever width remains in a grid cell after the widest content ratio (16:9) at full height. Canvases with more horizontal room get wider side columns. On a 16:9 canvas with no padding or margins nothing remains, so side regions are omitted. Add padding or margins, such as `canvasMarginBottom` for a lower bar, to make room.
+**Side column width.** The side column is whatever width remains in a grid cell after the widest content ratio (16:9) at full height. Canvases with more horizontal room get wider side columns. On a 16:9 canvas with no margins or padding nothing remains, so side regions are omitted. Add vertical margins, such as `canvasMarginBottom` for a lower bar, to make room.
+
+**Spacing.** Margins reserve space outside the layout on each side, `canvasPadding` insets the layout from the margins on all four sides, `canvasGap` separates participants across a row and between rows, and `layoutGap` separates a participant's main and side columns. Padding does not set the gaps: leave `canvasGap` out and participants touch.
 
 **Camera height.** In the side column, every participant's camera is the same height: half the row, reduced if needed to leave room for the tallest side aux content in the layout.
 
@@ -72,15 +79,17 @@ generateLayout([{ contentMainAspectRatio: null, hasName: true }], { canvasPaddin
 
 ### `LayoutOptions`
 
-| Option               | Type     | Default | Description                                                                                                                                                                   |
-| -------------------- | -------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `canvasWidth`        | `number` | `1920`  | Canvas width in pixels.                                                                                                                                                       |
-| `canvasHeight`       | `number` | `1080`  | Canvas height in pixels.                                                                                                                                                      |
-| `canvasPadding`      | `number` | `0`     | Padding inside the margins: this value left and right, three times it top and bottom. Also sets the gap between participants, and half of it between a participant's columns. |
-| `canvasMarginTop`    | `number` | `0`     | Space reserved above the layout.                                                                                                                                              |
-| `canvasMarginBottom` | `number` | `0`     | Space reserved below the layout, for example for a lower bar.                                                                                                                 |
-| `canvasMarginLeft`   | `number` | `0`     | Space reserved left of the layout.                                                                                                                                            |
-| `canvasMarginRight`  | `number` | `0`     | Space reserved right of the layout.                                                                                                                                           |
+| Option               | Type     | Default             | Description                                                   |
+| -------------------- | -------- | ------------------- | ------------------------------------------------------------- |
+| `canvasWidth`        | `number` | `1920`              | Canvas width in pixels.                                       |
+| `canvasHeight`       | `number` | `1080`              | Canvas height in pixels.                                      |
+| `canvasMarginTop`    | `number` | `0`                 | Space reserved above the layout.                              |
+| `canvasMarginBottom` | `number` | `0`                 | Space reserved below the layout, for example for a lower bar. |
+| `canvasMarginLeft`   | `number` | `0`                 | Space reserved left of the layout.                            |
+| `canvasMarginRight`  | `number` | `0`                 | Space reserved right of the layout.                           |
+| `canvasPadding`      | `number` | `0`                 | Space between the margins and the layout, on all four sides.  |
+| `canvasGap`          | `number` | `0`                 | Space between participants, across a row and between rows.    |
+| `layoutGap`          | `number` | half of `canvasGap` | Space between a participant's main and side columns.          |
 
 ### `LayoutMetric`
 
