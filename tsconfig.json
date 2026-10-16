@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "isolatedModules": true,
+    "lib": ["es2022"],
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es2022",
+    "types": [],
+    "verbatimModuleSyntax": true
+  },
+  "include": ["eslint.config.ts", "src", "tsdown.config.ts", "vitest.config.ts"]
+}
