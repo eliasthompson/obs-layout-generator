@@ -27,7 +27,6 @@ jobs:
           fi
       - run: npm install -g npm@latest
       - run: npm ci
-      - run: npm run prepublishOnly
       - run: npm stage publish
       - run: gh release create "$GITHUB_REF_NAME" --generate-notes
         env:
