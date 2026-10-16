@@ -2,6 +2,7 @@ import { CONTENT_ASPECT_RATIOS } from '@/constants/contentAspectRatios';
 import { LAYOUT_OPTIONS_DEFAULT, type LayoutOptions } from '@/constants/layoutOptions';
 import { transformAspectRatio } from '@/lib/transformAspectRatio';
 
+// Measured between region content rects: the content area is inset by one region border and the gaps include two
 export interface CanvasGrid {
   canvasContentHeight: number;
   canvasContentWidth: number;
@@ -12,6 +13,7 @@ export interface CanvasGrid {
   hasSideRoom: boolean;
   layoutGap: number;
   layoutSideWidth: number;
+  regionBorder: number;
 }
 
 export const numericContentAspectRatios = CONTENT_ASPECT_RATIOS.map(transformAspectRatio);
@@ -29,28 +31,35 @@ export const calculateCanvasGrid = (
     canvasPadding = LAYOUT_OPTIONS_DEFAULT.canvasPadding,
     canvasGap = LAYOUT_OPTIONS_DEFAULT.canvasGap,
     layoutGap = LAYOUT_OPTIONS_DEFAULT.layoutGap ?? canvasGap / 2,
+    regionBorder = LAYOUT_OPTIONS_DEFAULT.regionBorder,
   }: LayoutOptions,
   layoutConfigsTotal: number,
 ): CanvasGrid => {
-  const canvasContentWidth = canvasWidth - canvasMarginLeft - canvasMarginRight - canvasPadding * 2;
-  const canvasContentHeight = canvasHeight - canvasMarginTop - canvasMarginBottom - canvasPadding * 2;
+  // Borders sit outside region content rects, so in content terms they inset the content area and widen the gaps
+  const regionBorderTotal = regionBorder * 2;
+  const canvasContentGap = canvasGap + regionBorderTotal;
+  const layoutContentGap = layoutGap + regionBorderTotal;
+  const canvasContentWidth = canvasWidth - canvasMarginLeft - canvasMarginRight - canvasPadding * 2 - regionBorderTotal;
+  const canvasContentHeight =
+    canvasHeight - canvasMarginTop - canvasMarginBottom - canvasPadding * 2 - regionBorderTotal;
   const canvasGridUnits = Math.ceil(Math.sqrt(layoutConfigsTotal));
-  const canvasGridUnitWidth = (canvasContentWidth - (canvasGridUnits - 1) * canvasGap) / canvasGridUnits;
-  const canvasGridUnitHeight = (canvasContentHeight - (canvasGridUnits - 1) * canvasGap) / canvasGridUnits;
+  const canvasGridUnitWidth = (canvasContentWidth - (canvasGridUnits - 1) * canvasContentGap) / canvasGridUnits;
+  const canvasGridUnitHeight = (canvasContentHeight - (canvasGridUnits - 1) * canvasContentGap) / canvasGridUnits;
   const layoutSideWidth = Math.max(
     0,
-    canvasGridUnitWidth - canvasGridUnitHeight * widestNumericContentAspectRatio - layoutGap,
+    canvasGridUnitWidth - canvasGridUnitHeight * widestNumericContentAspectRatio - layoutContentGap,
   );
 
   return {
     canvasContentHeight,
     canvasContentWidth,
-    canvasContentX: canvasMarginLeft + canvasPadding,
-    canvasContentY: canvasMarginTop + canvasPadding,
-    canvasGap,
+    canvasContentX: canvasMarginLeft + canvasPadding + regionBorder,
+    canvasContentY: canvasMarginTop + canvasPadding + regionBorder,
+    canvasGap: canvasContentGap,
     canvasGridUnitNumericAspectRatio: canvasGridUnitWidth / canvasGridUnitHeight,
     hasSideRoom: Math.round(layoutSideWidth) > 0,
-    layoutGap,
+    layoutGap: layoutContentGap,
     layoutSideWidth,
+    regionBorder,
   };
 };

@@ -5009,5 +5009,1010 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
     },
     "total": 9,
   },
+  {
+    "layoutMetrics": [
+      {
+        "contentMain": {
+          "height": 888,
+          "width": 1579,
+          "x": 171,
+          "y": 36,
+        },
+        "name": {
+          "height": 144,
+          "width": 1579,
+          "x": 171,
+          "y": 781,
+        },
+      },
+    ],
+    "layoutOptions": {
+      "canvasGap": 30,
+      "canvasMarginBottom": 120,
+      "canvasPadding": 30,
+      "regionBorder": 6,
+    },
+    "total": 1,
+  },
+  {
+    "layoutMetrics": [
+      {
+        "camera": {
+          "height": 228,
+          "width": 124,
+          "x": 922,
+          "y": 494,
+        },
+        "contentAux": {
+          "height": 93,
+          "width": 124,
+          "x": 922,
+          "y": 238,
+        },
+        "contentMain": {
+          "height": 483,
+          "width": 859,
+          "x": 36,
+          "y": 238,
+        },
+        "name": {
+          "height": 76,
+          "width": 124,
+          "x": 922,
+          "y": 646,
+        },
+      },
+      {
+        "camera": {
+          "height": 228,
+          "width": 124,
+          "x": 1760,
+          "y": 494,
+        },
+        "contentMain": {
+          "height": 483,
+          "width": 645,
+          "x": 1088,
+          "y": 238,
+        },
+        "info": {
+          "height": 228,
+          "width": 124,
+          "x": 1760,
+          "y": 238,
+        },
+        "name": {
+          "height": 76,
+          "width": 124,
+          "x": 1760,
+          "y": 646,
+        },
+      },
+    ],
+    "layoutOptions": {
+      "canvasGap": 30,
+      "canvasMarginBottom": 120,
+      "canvasPadding": 30,
+      "regionBorder": 6,
+    },
+    "total": 2,
+  },
+  {
+    "layoutMetrics": [
+      {
+        "camera": {
+          "height": 198,
+          "width": 124,
+          "x": 909,
+          "y": 261,
+        },
+        "contentMain": {
+          "height": 423,
+          "width": 752,
+          "x": 130,
+          "y": 36,
+        },
+        "info": {
+          "height": 198,
+          "width": 124,
+          "x": 909,
+          "y": 36,
+        },
+        "name": {
+          "height": 66,
+          "width": 124,
+          "x": 909,
+          "y": 393,
+        },
+      },
+      {
+        "camera": {
+          "height": 198,
+          "width": 124,
+          "x": 1666,
+          "y": 261,
+        },
+        "contentMain": {
+          "height": 423,
+          "width": 564,
+          "x": 1075,
+          "y": 36,
+        },
+        "info": {
+          "height": 70,
+          "width": 124,
+          "x": 1666,
+          "y": 36,
+        },
+        "name": {
+          "height": 66,
+          "width": 124,
+          "x": 1666,
+          "y": 393,
+        },
+      },
+      {
+        "camera": {
+          "height": 198,
+          "width": 124,
+          "x": 1123,
+          "y": 726,
+        },
+        "contentMain": {
+          "height": 423,
+          "width": 423,
+          "x": 673,
+          "y": 501,
+        },
+      },
+    ],
+    "layoutOptions": {
+      "canvasGap": 30,
+      "canvasMarginBottom": 120,
+      "canvasPadding": 30,
+      "regionBorder": 6,
+    },
+    "total": 3,
+  },
+  {
+    "layoutMetrics": [
+      {
+        "camera": {
+          "height": 198,
+          "width": 124,
+          "x": 909,
+          "y": 261,
+        },
+        "contentMain": {
+          "height": 423,
+          "width": 752,
+          "x": 130,
+          "y": 36,
+        },
+        "info": {
+          "height": 70,
+          "width": 124,
+          "x": 909,
+          "y": 36,
+        },
+        "name": {
+          "height": 66,
+          "width": 124,
+          "x": 909,
+          "y": 393,
+        },
+      },
+      {
+        "camera": {
+          "height": 198,
+          "width": 124,
+          "x": 1666,
+          "y": 261,
+        },
+        "contentMain": {
+          "height": 423,
+          "width": 564,
+          "x": 1075,
+          "y": 36,
+        },
+      },
+      {
+        "contentMain": {
+          "height": 423,
+          "width": 423,
+          "x": 426,
+          "y": 501,
+        },
+        "name": {
+          "height": 66,
+          "width": 423,
+          "x": 426,
+          "y": 858,
+        },
+      },
+      {
+        "camera": {
+          "height": 198,
+          "width": 124,
+          "x": 1370,
+          "y": 726,
+        },
+        "contentMain": {
+          "height": 423,
+          "width": 451,
+          "x": 891,
+          "y": 501,
+        },
+        "name": {
+          "height": 66,
+          "width": 124,
+          "x": 1370,
+          "y": 858,
+        },
+      },
+    ],
+    "layoutOptions": {
+      "canvasGap": 30,
+      "canvasMarginBottom": 120,
+      "canvasPadding": 30,
+      "regionBorder": 6,
+    },
+    "total": 4,
+  },
+  {
+    "layoutMetrics": [
+      {
+        "camera": {
+          "height": 174,
+          "width": 85,
+          "x": 729,
+          "y": 285,
+        },
+        "contentMain": {
+          "height": 375,
+          "width": 666,
+          "x": 36,
+          "y": 84,
+        },
+      },
+      {
+        "contentMain": {
+          "height": 375,
+          "width": 500,
+          "x": 856,
+          "y": 84,
+        },
+        "name": {
+          "height": 58,
+          "width": 500,
+          "x": 856,
+          "y": 401,
+        },
+      },
+      {
+        "camera": {
+          "height": 174,
+          "width": 85,
+          "x": 1799,
+          "y": 285,
+        },
+        "contentMain": {
+          "height": 375,
+          "width": 375,
+          "x": 1398,
+          "y": 84,
+        },
+        "name": {
+          "height": 58,
+          "width": 85,
+          "x": 1799,
+          "y": 401,
+        },
+      },
+      {
+        "contentMain": {
+          "height": 375,
+          "width": 400,
+          "x": 402,
+          "y": 501,
+        },
+        "name": {
+          "height": 58,
+          "width": 400,
+          "x": 402,
+          "y": 818,
+        },
+      },
+      {
+        "camera": {
+          "height": 174,
+          "width": 85,
+          "x": 1433,
+          "y": 702,
+        },
+        "contentAux": {
+          "height": 63,
+          "width": 85,
+          "x": 1433,
+          "y": 501,
+        },
+        "contentMain": {
+          "height": 375,
+          "width": 562,
+          "x": 844,
+          "y": 501,
+        },
+        "name": {
+          "height": 58,
+          "width": 85,
+          "x": 1433,
+          "y": 818,
+        },
+      },
+    ],
+    "layoutOptions": {
+      "canvasGap": 30,
+      "canvasMarginBottom": 120,
+      "canvasPadding": 30,
+      "regionBorder": 6,
+    },
+    "total": 5,
+  },
+  {
+    "layoutMetrics": [
+      {
+        "contentMain": {
+          "height": 329,
+          "width": 585,
+          "x": 186,
+          "y": 130,
+        },
+        "name": {
+          "height": 50,
+          "width": 585,
+          "x": 186,
+          "y": 409,
+        },
+      },
+      {
+        "camera": {
+          "height": 151,
+          "width": 85,
+          "x": 1279,
+          "y": 308,
+        },
+        "contentMain": {
+          "height": 329,
+          "width": 439,
+          "x": 813,
+          "y": 130,
+        },
+        "name": {
+          "height": 50,
+          "width": 85,
+          "x": 1279,
+          "y": 409,
+        },
+      },
+      {
+        "contentMain": {
+          "height": 329,
+          "width": 329,
+          "x": 1405,
+          "y": 130,
+        },
+        "name": {
+          "height": 50,
+          "width": 329,
+          "x": 1405,
+          "y": 409,
+        },
+      },
+      {
+        "camera": {
+          "height": 151,
+          "width": 85,
+          "x": 414,
+          "y": 679,
+        },
+        "contentAux": {
+          "height": 63,
+          "width": 85,
+          "x": 414,
+          "y": 501,
+        },
+        "contentMain": {
+          "height": 329,
+          "width": 351,
+          "x": 36,
+          "y": 501,
+        },
+        "name": {
+          "height": 50,
+          "width": 85,
+          "x": 414,
+          "y": 780,
+        },
+      },
+      {
+        "camera": {
+          "height": 151,
+          "width": 85,
+          "x": 1061,
+          "y": 679,
+        },
+        "contentMain": {
+          "height": 329,
+          "width": 494,
+          "x": 540,
+          "y": 501,
+        },
+        "info": {
+          "height": 151,
+          "width": 85,
+          "x": 1061,
+          "y": 501,
+        },
+        "name": {
+          "height": 50,
+          "width": 85,
+          "x": 1061,
+          "y": 780,
+        },
+      },
+      {
+        "camera": {
+          "height": 151,
+          "width": 85,
+          "x": 1799,
+          "y": 679,
+        },
+        "contentMain": {
+          "height": 329,
+          "width": 585,
+          "x": 1188,
+          "y": 501,
+        },
+        "info": {
+          "height": 48,
+          "width": 85,
+          "x": 1799,
+          "y": 501,
+        },
+        "name": {
+          "height": 50,
+          "width": 85,
+          "x": 1799,
+          "y": 780,
+        },
+      },
+    ],
+    "layoutOptions": {
+      "canvasGap": 30,
+      "canvasMarginBottom": 120,
+      "canvasPadding": 30,
+      "regionBorder": 6,
+    },
+    "total": 6,
+  },
+  {
+    "layoutMetrics": [
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 759,
+          "y": 184,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 476,
+          "x": 256,
+          "y": 36,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 759,
+          "y": 264,
+        },
+      },
+      {
+        "contentMain": {
+          "height": 268,
+          "width": 357,
+          "x": 886,
+          "y": 36,
+        },
+        "name": {
+          "height": 40,
+          "width": 357,
+          "x": 886,
+          "y": 264,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 1580,
+          "y": 184,
+        },
+        "contentAux": {
+          "height": 63,
+          "width": 85,
+          "x": 1580,
+          "y": 36,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 268,
+          "x": 1285,
+          "y": 36,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 1580,
+          "y": 264,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 796,
+          "y": 494,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 286,
+          "x": 484,
+          "y": 346,
+        },
+        "info": {
+          "height": 121,
+          "width": 85,
+          "x": 796,
+          "y": 346,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 796,
+          "y": 574,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 1352,
+          "y": 494,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 402,
+          "x": 923,
+          "y": 346,
+        },
+        "info": {
+          "height": 48,
+          "width": 85,
+          "x": 1352,
+          "y": 346,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 1352,
+          "y": 574,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 970,
+          "y": 804,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 476,
+          "x": 466,
+          "y": 656,
+        },
+      },
+      {
+        "contentMain": {
+          "height": 268,
+          "width": 357,
+          "x": 1096,
+          "y": 656,
+        },
+        "name": {
+          "height": 40,
+          "width": 357,
+          "x": 1096,
+          "y": 884,
+        },
+      },
+    ],
+    "layoutOptions": {
+      "canvasGap": 30,
+      "canvasMarginBottom": 120,
+      "canvasPadding": 30,
+      "regionBorder": 6,
+    },
+    "total": 7,
+  },
+  {
+    "layoutMetrics": [
+      {
+        "contentMain": {
+          "height": 268,
+          "width": 476,
+          "x": 256,
+          "y": 36,
+        },
+        "name": {
+          "height": 40,
+          "width": 476,
+          "x": 256,
+          "y": 264,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 1158,
+          "y": 184,
+        },
+        "contentAux": {
+          "height": 63,
+          "width": 85,
+          "x": 1158,
+          "y": 36,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 357,
+          "x": 774,
+          "y": 36,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 1158,
+          "y": 264,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 1580,
+          "y": 184,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 268,
+          "x": 1285,
+          "y": 36,
+        },
+        "info": {
+          "height": 121,
+          "width": 85,
+          "x": 1580,
+          "y": 36,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 1580,
+          "y": 264,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 537,
+          "y": 494,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 286,
+          "x": 224,
+          "y": 346,
+        },
+        "info": {
+          "height": 48,
+          "width": 85,
+          "x": 537,
+          "y": 346,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 537,
+          "y": 574,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 1093,
+          "y": 494,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 402,
+          "x": 664,
+          "y": 346,
+        },
+      },
+      {
+        "contentMain": {
+          "height": 268,
+          "width": 476,
+          "x": 1219,
+          "y": 346,
+        },
+        "name": {
+          "height": 40,
+          "width": 476,
+          "x": 1219,
+          "y": 574,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 955,
+          "y": 804,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 357,
+          "x": 571,
+          "y": 656,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 955,
+          "y": 884,
+        },
+      },
+      {
+        "contentMain": {
+          "height": 268,
+          "width": 268,
+          "x": 1081,
+          "y": 656,
+        },
+        "name": {
+          "height": 40,
+          "width": 268,
+          "x": 1081,
+          "y": 884,
+        },
+      },
+    ],
+    "layoutOptions": {
+      "canvasGap": 30,
+      "canvasMarginBottom": 120,
+      "canvasPadding": 30,
+      "regionBorder": 6,
+    },
+    "total": 8,
+  },
+  {
+    "layoutMetrics": [
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 703,
+          "y": 184,
+        },
+        "contentAux": {
+          "height": 63,
+          "width": 85,
+          "x": 703,
+          "y": 36,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 476,
+          "x": 200,
+          "y": 36,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 703,
+          "y": 264,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 1214,
+          "y": 184,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 357,
+          "x": 830,
+          "y": 36,
+        },
+        "info": {
+          "height": 121,
+          "width": 85,
+          "x": 1214,
+          "y": 36,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 1214,
+          "y": 264,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 1636,
+          "y": 184,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 268,
+          "x": 1341,
+          "y": 36,
+        },
+        "info": {
+          "height": 48,
+          "width": 85,
+          "x": 1636,
+          "y": 36,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 1636,
+          "y": 264,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 537,
+          "y": 494,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 286,
+          "x": 224,
+          "y": 346,
+        },
+      },
+      {
+        "contentMain": {
+          "height": 268,
+          "width": 402,
+          "x": 664,
+          "y": 346,
+        },
+        "name": {
+          "height": 40,
+          "width": 402,
+          "x": 664,
+          "y": 574,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 1611,
+          "y": 494,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 476,
+          "x": 1108,
+          "y": 346,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 1611,
+          "y": 574,
+        },
+      },
+      {
+        "contentMain": {
+          "height": 268,
+          "width": 357,
+          "x": 351,
+          "y": 656,
+        },
+        "name": {
+          "height": 40,
+          "width": 357,
+          "x": 351,
+          "y": 884,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 1045,
+          "y": 804,
+        },
+        "contentAux": {
+          "height": 63,
+          "width": 85,
+          "x": 1045,
+          "y": 656,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 268,
+          "x": 750,
+          "y": 656,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 1045,
+          "y": 884,
+        },
+      },
+      {
+        "camera": {
+          "height": 121,
+          "width": 85,
+          "x": 1485,
+          "y": 804,
+        },
+        "contentMain": {
+          "height": 268,
+          "width": 286,
+          "x": 1172,
+          "y": 656,
+        },
+        "info": {
+          "height": 121,
+          "width": 85,
+          "x": 1485,
+          "y": 656,
+        },
+        "name": {
+          "height": 40,
+          "width": 85,
+          "x": 1485,
+          "y": 884,
+        },
+      },
+    ],
+    "layoutOptions": {
+      "canvasGap": 30,
+      "canvasMarginBottom": 120,
+      "canvasPadding": 30,
+      "regionBorder": 6,
+    },
+    "total": 9,
+  },
 ]
 `;

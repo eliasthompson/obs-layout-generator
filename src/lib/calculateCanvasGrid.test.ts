@@ -23,6 +23,7 @@ describe('calculateCanvasGrid', () => {
       hasSideRoom: false,
       layoutGap: 0,
       layoutSideWidth: 0,
+      regionBorder: 0,
     });
   });
 
@@ -84,6 +85,28 @@ describe('calculateCanvasGrid', () => {
       canvasContentWidth: 1120,
       canvasContentX: 110,
       canvasContentY: 60,
+    });
+  });
+
+  it('insets the content area by one region border and widens the gaps by two', () => {
+    const canvasGrid = calculateCanvasGrid(
+      { canvasGap: 30, canvasMarginBottom: 120, canvasPadding: 30, regionBorder: 6 },
+      1,
+    );
+
+    expect(canvasGrid).toMatchObject({
+      canvasContentHeight: 888,
+      canvasContentWidth: 1848,
+      canvasContentX: 36,
+      canvasContentY: 36,
+      canvasGap: 42,
+      layoutGap: 27,
+      regionBorder: 6,
+    });
+    expect(canvasGrid.layoutSideWidth).toBeCloseTo(1848 - (888 * 16) / 9 - 27);
+    expect(calculateCanvasGrid({ canvasGap: 30, layoutGap: 10, regionBorder: 6 }, 1)).toMatchObject({
+      canvasGap: 42,
+      layoutGap: 22,
     });
   });
 

@@ -45,6 +45,7 @@ describe('generateLayout', () => {
       { canvasGap: 20, canvasMarginBottom: 100, canvasMarginTop: 40, canvasPadding: 20 },
       { canvasGap: 30, canvasMarginBottom: 120, canvasMarginLeft: 50, canvasMarginRight: 50, canvasPadding: 30 },
       { canvasGap: 40, canvasMarginBottom: 120, canvasPadding: 10, layoutGap: 10 },
+      { canvasGap: 30, canvasMarginBottom: 120, canvasPadding: 30, regionBorder: 6 },
     ];
     const layouts = optionSets.flatMap((layoutOptions) =>
       Array.from({ length: 9 }, (_, index) => {
@@ -175,6 +176,16 @@ describe('generateLayout', () => {
     });
   });
 
+  it('reserves a region border around every region but the name', () => {
+    expect(generateLayout([{ hasName: true }], { ...barOptions, regionBorder: 6 })).toEqual([
+      {
+        camera: { x: 1642, y: 494, width: 242, height: 431 },
+        contentMain: { x: 36, y: 36, width: 1579, height: 888 },
+        name: { x: 1642, y: 781, width: 242, height: 144 },
+      },
+    ]);
+  });
+
   it('omits the name when there is no room for it', () => {
     expect(generateLayout([{ hasName: true }], { canvasGap: 60, canvasHeight: 140, canvasPadding: 60 })).toEqual([
       { contentMain: { x: 942, y: 60, width: 36, height: 20 } },
@@ -215,7 +226,20 @@ describe('generateLayout', () => {
         canvasPadding: pick([0, 10, 30, 60]),
         canvasWidth,
         layoutGap: pick([undefined, 0, 5, 40]),
+        regionBorder: pick([0, 0, 6, 20]),
       };
+      // Every region but the name grows by its border before the bounds and overlap checks
+      const bordered = ({ x, y, width, height }: LayoutRegion): LayoutRegion => ({
+        x: x - layoutOptions.regionBorder,
+        y: y - layoutOptions.regionBorder,
+        width: width + layoutOptions.regionBorder * 2,
+        height: height + layoutOptions.regionBorder * 2,
+      });
+      const borderedRegionsOf = (layoutMetric: LayoutMetric) =>
+        regionKeys.flatMap((regionKey) => {
+          const region = layoutMetric[regionKey];
+          return region ? [bordered(region)] : [];
+        });
       const layoutConfigs = Array.from({ length: 1 + Math.floor(random() * 12) }, (): LayoutConfig => ({
         cameraMainAspectRatio: pick([undefined, '16:9', '4:3', '9:16'] as const),
         contentAuxAspectRatio: pick([null, null, ...CONTENT_ASPECT_RATIOS]),
@@ -229,7 +253,10 @@ describe('generateLayout', () => {
       const right = canvasWidth - layoutOptions.canvasMarginRight - layoutOptions.canvasPadding;
       const top = layoutOptions.canvasMarginTop + layoutOptions.canvasPadding;
       const bottom = canvasHeight - layoutOptions.canvasMarginBottom - layoutOptions.canvasPadding;
-      const regionsOf = (layoutMetric: LayoutMetric) => Object.values(layoutMetric) as LayoutRegion[];
+      const regionsOf = (layoutMetric: LayoutMetric) => [
+        ...borderedRegionsOf(layoutMetric),
+        ...(layoutMetric.name ? [layoutMetric.name] : []),
+      ];
 
       expect(layoutMetrics).toHaveLength(layoutConfigs.length);
 
@@ -243,7 +270,7 @@ describe('generateLayout', () => {
           expect(region.y + region.height).toBeLessThanOrEqual(bottom + 1);
         });
 
-        const presentRegions = regionKeys.flatMap((region) => layoutMetric[region] ?? []);
+        const presentRegions = borderedRegionsOf(layoutMetric);
 
         presentRegions.forEach((region, regionIndex) => {
           presentRegions.slice(regionIndex + 1).forEach((otherRegion) => {

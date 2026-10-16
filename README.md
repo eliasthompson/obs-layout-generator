@@ -56,6 +56,8 @@ generateLayout([{ contentMainAspectRatio: null, hasName: true }], {
 
 **Spacing.** Margins reserve space outside the layout on each side, `canvasPadding` insets the layout from the margins on all four sides, `canvasGap` separates participants across a row and between rows, and `layoutGap` separates a participant's main and side columns. Padding does not set the gaps: leave `canvasGap` out and participants touch.
 
+**Borders.** `regionBorder` reserves a border of that width around every region except the name, which sits inside its host region. The returned rectangles are the content inside the border, so the border box of a region is its rectangle grown by `regionBorder` on every side. Aspect ratios apply to the content, gaps are measured between border boxes, and padding runs from the margins to the border boxes, so borders never overlap each other or leave the padded area.
+
 **Camera height.** In the side column, every participant's camera is the same height: half the row, reduced if needed to leave room for the tallest side aux content in the layout.
 
 **Name tag.** The name sits along the bottom of the camera, or the main content if there is no camera big enough to hold it, or the aux content if there is neither. If none of those is shown, the name is omitted.
@@ -90,10 +92,11 @@ generateLayout([{ contentMainAspectRatio: null, hasName: true }], {
 | `canvasPadding`      | `number` | `0`                 | Space between the margins and the layout, on all four sides.  |
 | `canvasGap`          | `number` | `0`                 | Space between participants, across a row and between rows.    |
 | `layoutGap`          | `number` | half of `canvasGap` | Space between a participant's main and side columns.          |
+| `regionBorder`       | `number` | `0`                 | Border width reserved around every region but the name.       |
 
 ### `LayoutMetric`
 
-Each participant's result has optional `camera`, `contentMain`, `contentAux`, `info`, and `name` regions. Each is a `LayoutRegion` of rounded pixel values, `{ x, y, width, height }`. Regions that were not requested or did not fit are absent.
+Each participant's result has optional `camera`, `contentMain`, `contentAux`, `info`, and `name` regions. Each is a `LayoutRegion` of rounded pixel values, `{ x, y, width, height }`, measured inside any `regionBorder`. Regions that were not requested or did not fit are absent.
 
 ### Exports
 
