@@ -141,6 +141,15 @@ npm run build
 
 `npm run dev` rebuilds on change, `npm run test:watch` reruns tests on change, and `npm run lint:fix` and `npm run format` apply fixes. See [AGENTS.md](AGENTS.md) for project conventions.
 
+### Releasing
+
+```sh
+npm version <major|minor|patch> -m "chore: release v%s"
+git push --follow-tags
+```
+
+Pushing the tag runs the publish workflow, which checks that the tag matches the package version, runs every check through `prepublishOnly`, publishes to npm with provenance through npm trusted publishing, and creates the GitHub release. Nothing is published from a laptop.
+
 ## License
 
 [MIT](LICENSE) © Elias Thompson
