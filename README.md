@@ -128,6 +128,8 @@ Each participant's result has optional `camera`, `contentMain`, `contentAux`, `i
 
 ## Development
 
+The published package runs on Node 20 or later. Developing it needs Node 22.18 or later, which the build tool requires, and CI runs the checks below on Node 22 and 24.
+
 ```sh
 npm install
 npm run typecheck
