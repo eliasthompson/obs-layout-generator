@@ -148,7 +148,7 @@ npm version <major|minor|patch> -m "chore: release v%s"
 git push --follow-tags
 ```
 
-Pushing the tag runs the publish workflow, which checks that the tag matches the package version, runs every check through `prepublishOnly`, publishes to npm with provenance through npm trusted publishing, and creates the GitHub release. Nothing is published from a laptop.
+Pushing the tag runs the publish workflow, which checks that the tag matches the package version, runs every check, stages the version on npm through trusted publishing, and creates the GitHub release. The version is not installable until a maintainer approves it with two-factor authentication, on the package's Staged Packages tab on npmjs.com or with `npm stage approve`. Nothing is published from a laptop.
 
 ## License
 
