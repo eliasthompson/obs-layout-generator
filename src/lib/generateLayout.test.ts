@@ -176,6 +176,16 @@ describe('generateLayout', () => {
     });
   });
 
+  it('raises the name to nameHeightMin within its host', () => {
+    expect(generateLayout([{ hasName: true }], { ...barOptions, nameHeightMin: 200 })).toEqual([
+      {
+        camera: { x: 1645, y: 488, width: 245, height: 443 },
+        contentMain: { x: 30, y: 30, width: 1600, height: 900 },
+        name: { x: 1645, y: 730, width: 245, height: 200 },
+      },
+    ]);
+  });
+
   it('reserves a region border around every region but the name', () => {
     expect(generateLayout([{ hasName: true }], { ...barOptions, regionBorder: 6 })).toEqual([
       {

@@ -11,15 +11,15 @@ export interface CameraHeights {
   cameraHeight: number;
   hasCameraNameRoom: boolean;
   hasCameraRoom: boolean;
-  nameHeight: number;
+  nameHeightMax: number;
 }
 
 /**
- * Size the side camera shared by every participant, and the name tag that sits on it.
+ * Size the side camera shared by every participant, and the largest name tag: a third of a full-height side camera.
  *
  * @param resolvedLayoutConfigs - Resolved configs for every participant.
  * @param context - Whether there is a side column at all, the column gap, side width, and row height.
- * @returns The shared camera height, whether it is usable, the name height, and whether the camera can host the name.
+ * @returns The shared camera height, whether it is usable and tall enough to host the name, and the name height cap.
  */
 export const calculateCameraHeights = (
   resolvedLayoutConfigs: ResolvedLayoutConfig[],
@@ -37,14 +37,9 @@ export const calculateCameraHeights = (
     : cameraHeightMax;
   const cameraHeight = Math.max(0, Math.min(cameraHeightMax, cameraHeightVariable));
   const hasCameraRoom = hasSideRoom && Math.round(cameraHeight) > 0;
-  // The name is a third of the camera when the camera is tall enough, else a third of the largest possible camera
-  const nameHeightMax = cameraHeightMax / 3;
+  // The name is at most a third of the largest possible camera; a side camera shorter than that hands it to the content
+  const nameHeightMax = Math.max(0, cameraHeightMax / 3);
   const hasCameraNameRoom = hasCameraRoom && cameraHeight >= nameHeightMax;
 
-  return {
-    cameraHeight,
-    hasCameraNameRoom,
-    hasCameraRoom,
-    nameHeight: hasCameraNameRoom ? cameraHeight / 3 : nameHeightMax,
-  };
+  return { cameraHeight, hasCameraNameRoom, hasCameraRoom, nameHeightMax };
 };

@@ -9,6 +9,7 @@ export interface LayoutOptions {
   canvasGap?: number;
   layoutGap?: number;
   regionBorder?: number;
+  nameHeightMin?: number;
 }
 
 export const LAYOUT_OPTIONS_DEFAULT = Object.freeze({
@@ -22,4 +23,5 @@ export const LAYOUT_OPTIONS_DEFAULT = Object.freeze({
   canvasGap: 0,
   layoutGap: undefined as number | undefined,
   regionBorder: 0,
+  nameHeightMin: 0,
 } as const satisfies LayoutOptions);

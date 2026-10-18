@@ -2,6 +2,7 @@ import type { LayoutOptions } from '@/constants/layoutOptions';
 import type { LayoutMetric } from '@/types/LayoutMetric';
 
 import { LAYOUT_CONFIG_DEFAULT, type LayoutConfig } from '@/constants/layoutConfig';
+import { LAYOUT_OPTIONS_DEFAULT } from '@/constants/layoutOptions';
 import { calculateCameraHeights } from '@/lib/calculateCameraHeights';
 import { calculateCanvasGrid } from '@/lib/calculateCanvasGrid';
 import { calculateLayoutRegions } from '@/lib/calculateLayoutRegions';
@@ -90,7 +91,8 @@ export const generateLayout = (
 
   if (collapsedSideIndexes.length) layoutSizes = calculateLayoutSizes(new Set(collapsedSideIndexes));
 
-  const { cameraHeight, hasCameraNameRoom, nameHeight, resolvedRows, rowHeight, sideRegionHeightRows } = layoutSizes;
+  const { cameraHeight, hasCameraNameRoom, nameHeightMax, resolvedRows, rowHeight, sideRegionHeightRows } = layoutSizes;
+  const { nameHeightMin = LAYOUT_OPTIONS_DEFAULT.nameHeightMin } = layoutOptions;
 
   // Center the rows vertically in the content area and each row's participants horizontally
   const layoutMetrics: LayoutMetric[] = [];
@@ -118,7 +120,9 @@ export const generateLayout = (
         rowHeight,
         rowY,
       });
-      const name = hasName ? placeName(layoutMetric, { hasCameraNameRoom, mainRegion, nameHeight }) : undefined;
+      const name = hasName
+        ? placeName(layoutMetric, { hasCameraNameRoom, mainRegion, nameHeightMax, nameHeightMin })
+        : undefined;
 
       if (name) layoutMetric.name = name;
 

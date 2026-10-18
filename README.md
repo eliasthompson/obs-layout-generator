@@ -71,7 +71,7 @@ generateLayout([{ contentMainAspectRatio: null, hasName: true }], {
 
 **Camera height.** In the side column, every participant's camera is the same height: half the row, reduced if needed to leave room for the tallest side aux content in the layout.
 
-**Name tag.** The name sits along the bottom of the camera, or the main content if there is no camera big enough to hold it, or the aux content if there is neither. If none of those is shown, the name is omitted.
+**Name tag.** The name sits along the bottom of the camera, or the main content if there is no camera big enough to hold it, or the aux content if there is neither. It is as wide as its host and a third as tall, capped at a third of a full-height side camera so a name on a main-column camera stays the same size as one beside content, and at least `nameHeightMin` tall when the host allows. If none of those is shown, the name is omitted.
 
 **Space that runs out.** A region whose width or height rounds to 0 is omitted rather than returned with a zero or negative size. If every region in a participant's side column is omitted this way, the side column is dropped too and the layout is sized again without it.
 
@@ -104,6 +104,7 @@ generateLayout([{ contentMainAspectRatio: null, hasName: true }], {
 | `canvasGap`          | `number` | `0`                 | Space between participants, across a row and between rows.    |
 | `layoutGap`          | `number` | half of `canvasGap` | Space between a participant's main and side columns.          |
 | `regionBorder`       | `number` | `0`                 | Border width reserved around every region but the name.       |
+| `nameHeightMin`      | `number` | `0`                 | Smallest name tag height, within what its host allows.        |
 
 ### `LayoutMetric`
 
@@ -118,7 +119,7 @@ Each participant's result has optional `camera`, `contentMain`, `contentAux`, `i
   - `calculateCanvasGrid`: content area, gaps, grid cells, and side column width.
   - `resolveLayoutConfig`: pick the main column region and what stays in the side column.
   - `calculateRowHeight`: the tallest row height at which every row fits.
-  - `calculateCameraHeights`: the shared side camera height and the name height.
+  - `calculateCameraHeights`: the shared side camera height and the largest name height.
   - `calculateSideRegionHeights`: side column stacking.
   - `findCollapsedSideIndexes`: side columns left with nothing to show.
   - `calculateLayoutRegions`: region positions for one participant.

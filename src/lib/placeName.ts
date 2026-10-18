@@ -4,20 +4,22 @@ import type { LayoutMetric, LayoutRegion } from '@/types/LayoutMetric';
 export interface PlaceNameContext {
   hasCameraNameRoom: boolean;
   mainRegion?: LayoutMainRegion;
-  nameHeight: number;
+  nameHeightMax: number;
+  nameHeightMin: number;
 }
 
 /**
- * Place the name tag along the bottom of the region that hosts it.
+ * Place the name tag along the bottom of the region that hosts it, as wide as that region and a third as tall,
+ * capped at `nameHeightMax`, raised to `nameHeightMin`, and never taller than the host.
  *
  * @param layoutMetric - Positioned regions of one participant, before rounding.
  * @param context - Whether a side camera is tall enough for the name, which region took the main column, and the
- *   name height.
+ *   name height bounds.
  * @returns The name region, or `undefined` when no host is shown or the name would round to no height.
  */
 export const placeName = (
   { camera, contentAux, contentMain }: LayoutMetric,
-  { hasCameraNameRoom, mainRegion, nameHeight }: PlaceNameContext,
+  { hasCameraNameRoom, mainRegion, nameHeightMax, nameHeightMin }: PlaceNameContext,
 ): LayoutRegion | undefined => {
   let nameHost: LayoutRegion | undefined;
 
@@ -32,15 +34,15 @@ export const placeName = (
 
   if (!nameHost) return undefined;
 
-  // The name never exceeds its host, and a name that rounds away is omitted rather than returned empty
-  const nameFittedHeight = Math.min(nameHeight, nameHost.height);
+  // The host decides the size within the bounds; a name that rounds away is omitted rather than returned empty
+  const nameHeight = Math.min(nameHost.height, Math.max(nameHeightMin, Math.min(nameHost.height / 3, nameHeightMax)));
 
-  return Math.round(nameFittedHeight) > 0
+  return Math.round(nameHeight) > 0
     ? {
         x: nameHost.x,
-        y: nameHost.y + nameHost.height - nameFittedHeight,
+        y: nameHost.y + nameHost.height - nameHeight,
         width: nameHost.width,
-        height: nameFittedHeight,
+        height: nameHeight,
       }
     : undefined;
 };

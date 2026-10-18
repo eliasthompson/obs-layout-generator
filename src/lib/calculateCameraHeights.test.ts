@@ -22,29 +22,29 @@ const createResolvedLayoutConfigs = (...sideContentAuxNumericAspectRatios: (numb
   }));
 
 describe('calculateCameraHeights', () => {
-  it('uses half the row without side aux content', () => {
+  it('uses half the row without side aux content, with a third of it as the name cap', () => {
     const cameraHeights = calculateCameraHeights(createResolvedLayoutConfigs(undefined), context);
 
     expect(cameraHeights).toMatchObject({ cameraHeight: 200, hasCameraNameRoom: true, hasCameraRoom: true });
-    expect(cameraHeights.nameHeight).toBeCloseTo(200 / 3);
+    expect(cameraHeights.nameHeightMax).toBeCloseTo(200 / 3);
   });
 
   it('stays at half the row when side aux content fits above it', () => {
     expect(calculateCameraHeights(createResolvedLayoutConfigs(4 / 3), context).cameraHeight).toBe(200);
   });
 
-  it('leaves room for the tallest side aux content in the layout', () => {
+  it('leaves room for the tallest side aux content in the layout without lowering the name cap', () => {
     const cameraHeights = calculateCameraHeights(createResolvedLayoutConfigs(4 / 3, undefined, 0.8), context);
 
-    expect(cameraHeights).toMatchObject({ cameraHeight: 150, hasCameraNameRoom: true, nameHeight: 50 });
+    expect(cameraHeights).toMatchObject({ cameraHeight: 150, hasCameraNameRoom: true });
+    expect(cameraHeights.nameHeightMax).toBeCloseTo(200 / 3);
   });
 
-  it('keeps the camera but moves the name off it when the camera is too short for the name', () => {
+  it('keeps the camera but moves the name off it when the camera is shorter than the name cap', () => {
     const cameraHeights = calculateCameraHeights(createResolvedLayoutConfigs(5 / 9), context);
 
     expect(cameraHeights.cameraHeight).toBeCloseTo(40);
     expect(cameraHeights).toMatchObject({ hasCameraNameRoom: false, hasCameraRoom: true });
-    expect(cameraHeights.nameHeight).toBeCloseTo(200 / 3);
   });
 
   it('collapses the camera when side aux content takes the whole row', () => {
@@ -59,5 +59,13 @@ describe('calculateCameraHeights', () => {
     expect(
       calculateCameraHeights(createResolvedLayoutConfigs(undefined), { ...context, hasSideRoom: false }),
     ).toMatchObject({ cameraHeight: 200, hasCameraNameRoom: false, hasCameraRoom: false });
+  });
+
+  it('never caps the name below zero when the row is shorter than the gap', () => {
+    expect(calculateCameraHeights(createResolvedLayoutConfigs(undefined), { ...context, rowHeight: 4 })).toMatchObject({
+      cameraHeight: 0,
+      hasCameraRoom: false,
+      nameHeightMax: 0,
+    });
   });
 });
