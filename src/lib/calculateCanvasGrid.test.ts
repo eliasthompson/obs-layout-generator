@@ -20,6 +20,10 @@ describe('calculateCanvasGrid', () => {
       canvasContentY: 0,
       canvasGap: 0,
       canvasGridUnitNumericAspectRatio: 16 / 9,
+      canvasLayoutHeight: 1080,
+      canvasLayoutWidth: 1920,
+      canvasLayoutX: 0,
+      canvasLayoutY: 0,
       hasSideRoom: false,
       layoutGap: 0,
       layoutSideWidth: 0,
@@ -66,7 +70,7 @@ describe('calculateCanvasGrid', () => {
     expect(calculateCanvasGrid({ canvasGap: 20, layoutGap: 4 }, 1)).toMatchObject({ canvasGap: 20, layoutGap: 4 });
   });
 
-  it('offsets the content area by the margins and padding', () => {
+  it('offsets the layout area by the margins and the content area by the margins and padding', () => {
     expect(
       calculateCanvasGrid(
         {
@@ -85,6 +89,10 @@ describe('calculateCanvasGrid', () => {
       canvasContentWidth: 1120,
       canvasContentX: 110,
       canvasContentY: 60,
+      canvasLayoutHeight: 650,
+      canvasLayoutWidth: 1140,
+      canvasLayoutX: 100,
+      canvasLayoutY: 50,
     });
   });
 

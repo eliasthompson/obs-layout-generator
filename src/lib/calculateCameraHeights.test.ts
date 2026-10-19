@@ -7,17 +7,23 @@ import { calculateCameraHeights, type CalculateCameraHeightsContext } from '@/li
 const context: CalculateCameraHeightsContext = {
   hasSideRoom: true,
   layoutGap: 10,
-  layoutSideWidth: 200,
   rowHeight: 410,
 };
 
 const createResolvedLayoutConfigs = (...sideContentAuxNumericAspectRatios: (number | undefined)[]) =>
-  sideContentAuxNumericAspectRatios.map((sideContentAuxNumericAspectRatio): ResolvedLayoutConfig => ({
+  sideContentAuxNumericAspectRatios.map((sideContentAuxNumericAspectRatio, index): ResolvedLayoutConfig => ({
     hasName: false,
     hasSideCamera: true,
     hasSideInfo: false,
+    isCameraAboveAttached: false,
+    isCameraGreenScreen: false,
+    isInfoAboveAttached: false,
     mainNumericAspectRatio: 16 / 9,
+    sideCameraWidth: 200,
     sideContentAuxNumericAspectRatio,
+    // The second config's aux content is attached to the main region, so it is wider than the side column
+    sideContentAuxWidth: index === 1 ? 280 : 200,
+    sideInfoWidth: 200,
     sideWidthTotal: 210,
   }));
 
@@ -38,6 +44,10 @@ describe('calculateCameraHeights', () => {
 
     expect(cameraHeights).toMatchObject({ cameraHeight: 150, hasCameraNameRoom: true });
     expect(cameraHeights.nameHeightMax).toBeCloseTo(200 / 3);
+  });
+
+  it('measures side aux content at its own width when it is attached to the main region', () => {
+    expect(calculateCameraHeights(createResolvedLayoutConfigs(undefined, 4 / 3), context).cameraHeight).toBe(190);
   });
 
   it('keeps the camera but moves the name off it when the camera is shorter than the name cap', () => {

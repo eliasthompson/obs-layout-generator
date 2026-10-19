@@ -3,7 +3,6 @@ import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 export interface CalculateCameraHeightsContext {
   hasSideRoom: boolean;
   layoutGap: number;
-  layoutSideWidth: number;
   rowHeight: number;
 }
 
@@ -18,22 +17,23 @@ export interface CameraHeights {
  * Size the side camera shared by every participant, and the largest name tag: a third of a full-height side camera.
  *
  * @param resolvedLayoutConfigs - Resolved configs for every participant.
- * @param context - Whether there is a side column at all, the column gap, side width, and row height.
+ * @param context - Whether there is a side column at all, the column gap, and the row height.
  * @returns The shared camera height, whether it is usable and tall enough to host the name, and the name height cap.
  */
 export const calculateCameraHeights = (
   resolvedLayoutConfigs: ResolvedLayoutConfig[],
-  { hasSideRoom, layoutGap, layoutSideWidth, rowHeight }: CalculateCameraHeightsContext,
+  { hasSideRoom, layoutGap, rowHeight }: CalculateCameraHeightsContext,
 ): CameraHeights => {
-  // Side aux content sits above the camera, so the tallest one in the layout limits every camera
-  const sideContentAuxNumericAspectRatios = resolvedLayoutConfigs.flatMap(
-    ({ sideContentAuxNumericAspectRatio }) => sideContentAuxNumericAspectRatio ?? [],
+  // Side aux content sits above the camera, so the tallest one in the layout, at its own width, limits every camera
+  const sideContentAuxHeights = resolvedLayoutConfigs.flatMap(
+    ({ sideContentAuxNumericAspectRatio, sideContentAuxWidth }) =>
+      sideContentAuxNumericAspectRatio ? [sideContentAuxWidth / sideContentAuxNumericAspectRatio] : [],
   );
   // A camera is at most half the row, less the gap to whatever stacks above it
   const cameraHeightMax = (rowHeight - layoutGap) / 2;
-  // With side aux content, the camera gets what the tallest aux (the smallest ratio at the side width) leaves
-  const cameraHeightVariable = sideContentAuxNumericAspectRatios.length
-    ? rowHeight - layoutGap - layoutSideWidth / Math.min(...sideContentAuxNumericAspectRatios)
+  // With side aux content, the camera gets what the tallest aux leaves
+  const cameraHeightVariable = sideContentAuxHeights.length
+    ? rowHeight - layoutGap - Math.max(...sideContentAuxHeights)
     : cameraHeightMax;
   const cameraHeight = Math.max(0, Math.min(cameraHeightMax, cameraHeightVariable));
   const hasCameraRoom = hasSideRoom && Math.round(cameraHeight) > 0;

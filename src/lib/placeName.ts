@@ -15,7 +15,8 @@ export interface PlaceNameContext {
  * @param layoutMetric - Positioned regions of one participant, before rounding.
  * @param context - Whether a side camera is tall enough for the name, which region took the main column, and the
  *   name height bounds.
- * @returns The name region, or `undefined` when no host is shown or the name would round to no height.
+ * @returns The name region, which has no border, or `undefined` when no host is shown or the name would round to no
+ *   height.
  */
 export const placeName = (
   { camera, contentAux, contentMain }: LayoutMetric,
@@ -43,6 +44,7 @@ export const placeName = (
         y: nameHost.y + nameHost.height - nameHeight,
         width: nameHost.width,
         height: nameHeight,
+        hasBorder: false,
       }
     : undefined;
 };

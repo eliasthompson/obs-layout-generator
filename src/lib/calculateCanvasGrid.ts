@@ -2,7 +2,10 @@ import { CONTENT_ASPECT_RATIOS } from '@/constants/contentAspectRatios';
 import { LAYOUT_OPTIONS_DEFAULT, type LayoutOptions } from '@/constants/layoutOptions';
 import { transformAspectRatio } from '@/lib/transformAspectRatio';
 
-/** Measured between region content rects: the content area is inset by one region border and the gaps include two */
+/**
+ * Measured between region content rects: the content area is inset by one region border and the gaps include two.
+ * The layout area is the canvas inside the margins, before padding and borders.
+ */
 export interface CanvasGrid {
   canvasContentHeight: number;
   canvasContentWidth: number;
@@ -10,6 +13,10 @@ export interface CanvasGrid {
   canvasContentY: number;
   canvasGap: number;
   canvasGridUnitNumericAspectRatio: number;
+  canvasLayoutHeight: number;
+  canvasLayoutWidth: number;
+  canvasLayoutX: number;
+  canvasLayoutY: number;
   hasSideRoom: boolean;
   layoutGap: number;
   layoutSideWidth: number;
@@ -22,11 +29,12 @@ export const numericContentAspectRatios = CONTENT_ASPECT_RATIOS.map(transformAsp
 export const widestNumericContentAspectRatio = Math.max(...numericContentAspectRatios);
 
 /**
- * Size the content area and the grid that participants share, and the side column width.
+ * Size the layout area, the content area and the grid that participants share, and the side column width.
  *
  * @param layoutOptions - Canvas options; missing fields take their defaults.
  * @param layoutConfigsTotal - Number of participants, which sets the grid size.
- * @returns The content area, gaps, grid cell ratio, and side column width, all measured between region content rects.
+ * @returns The layout area inside the margins, and the content area, gaps, grid cell ratio, and side column width,
+ *   all measured between region content rects.
  */
 export const calculateCanvasGrid = (
   {
@@ -43,14 +51,16 @@ export const calculateCanvasGrid = (
   }: LayoutOptions,
   layoutConfigsTotal: number,
 ): CanvasGrid => {
+  // The layout area is the canvas less the margins
+  const canvasLayoutWidth = canvasWidth - canvasMarginLeft - canvasMarginRight;
+  const canvasLayoutHeight = canvasHeight - canvasMarginTop - canvasMarginBottom;
   // Borders sit outside region content rects, so in content terms they inset the content area and widen the gaps
   const regionBorderTotal = regionBorder * 2;
   const canvasContentGap = canvasGap + regionBorderTotal;
   const layoutContentGap = layoutGap + regionBorderTotal;
-  // The content area is the canvas less the margins, the padding, and one border on each side
-  const canvasContentWidth = canvasWidth - canvasMarginLeft - canvasMarginRight - canvasPadding * 2 - regionBorderTotal;
-  const canvasContentHeight =
-    canvasHeight - canvasMarginTop - canvasMarginBottom - canvasPadding * 2 - regionBorderTotal;
+  // The content area is the layout area less the padding and one border on each side
+  const canvasContentWidth = canvasLayoutWidth - canvasPadding * 2 - regionBorderTotal;
+  const canvasContentHeight = canvasLayoutHeight - canvasPadding * 2 - regionBorderTotal;
   // Split the content area into a square grid with a cell for every participant and a gap between cells
   const canvasGridUnits = Math.ceil(Math.sqrt(layoutConfigsTotal));
   const canvasGridUnitWidth = (canvasContentWidth - (canvasGridUnits - 1) * canvasContentGap) / canvasGridUnits;
@@ -68,6 +78,10 @@ export const calculateCanvasGrid = (
     canvasContentY: canvasMarginTop + canvasPadding + regionBorder,
     canvasGap: canvasContentGap,
     canvasGridUnitNumericAspectRatio: canvasGridUnitWidth / canvasGridUnitHeight,
+    canvasLayoutHeight,
+    canvasLayoutWidth,
+    canvasLayoutX: canvasMarginLeft,
+    canvasLayoutY: canvasMarginTop,
     hasSideRoom: Math.round(layoutSideWidth) > 0,
     layoutGap: layoutContentGap,
     layoutSideWidth,

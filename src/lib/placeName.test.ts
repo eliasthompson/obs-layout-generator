@@ -8,23 +8,30 @@ const context: PlaceNameContext = {
   nameHeightMax: 50,
   nameHeightMin: 0,
 };
-const camera = { x: 460, y: 220, width: 200, height: 90 };
-const contentMain = { x: 50, y: 20, width: 400, height: 300 };
-const contentAux = { x: 460, y: 20, width: 200, height: 150 };
+const camera = { x: 460, y: 220, width: 200, height: 90, hasBorder: true };
+const contentMain = { x: 50, y: 20, width: 400, height: 300, hasBorder: true };
+const contentAux = { x: 460, y: 20, width: 200, height: 150, hasBorder: true };
 
 describe('placeName', () => {
-  it('places the name along the bottom third of a side camera with room for it', () => {
-    expect(placeName({ camera, contentMain }, context)).toEqual({ x: 460, y: 280, width: 200, height: 30 });
+  it('places the name along the bottom third of a side camera with room for it, without a border', () => {
+    expect(placeName({ camera, contentMain }, context)).toEqual({
+      x: 460,
+      y: 280,
+      width: 200,
+      height: 30,
+      hasBorder: false,
+    });
   });
 
   it('caps the name on a main column camera at the largest name height', () => {
-    const mainCamera = { x: 160, y: 30, width: 1600, height: 900 };
+    const mainCamera = { x: 160, y: 30, width: 1600, height: 900, hasBorder: true };
 
     expect(placeName({ camera: mainCamera }, { ...context, hasCameraNameRoom: false, mainRegion: 'camera' })).toEqual({
       x: 160,
       y: 880,
       width: 1600,
       height: 50,
+      hasBorder: false,
     });
   });
 
@@ -34,11 +41,12 @@ describe('placeName', () => {
       y: 270,
       width: 400,
       height: 50,
+      hasBorder: false,
     });
   });
 
   it('falls back to the aux content without a camera or main content', () => {
-    expect(placeName({ contentAux }, context)).toEqual({ x: 460, y: 120, width: 200, height: 50 });
+    expect(placeName({ contentAux }, context)).toEqual({ x: 460, y: 120, width: 200, height: 50, hasBorder: false });
   });
 
   it('never places the name on info', () => {
@@ -51,6 +59,7 @@ describe('placeName', () => {
       y: 40,
       width: 200,
       height: 40,
+      hasBorder: false,
     });
   });
 
@@ -60,6 +69,7 @@ describe('placeName', () => {
       y: 20,
       width: 200,
       height: 30,
+      hasBorder: false,
     });
   });
 

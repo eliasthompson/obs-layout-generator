@@ -8,7 +8,7 @@ const context: CalculateSideRegionHeightsContext = {
   cameraHeight: 100,
   hasCameraRoom: true,
   layoutGap: 10,
-  layoutSideWidth: 200,
+  regionBorder: 0,
   rowHeight: 400,
 };
 
@@ -16,7 +16,13 @@ const createResolvedLayoutConfig = (resolvedLayoutConfig: Partial<ResolvedLayout
   hasName: false,
   hasSideCamera: false,
   hasSideInfo: false,
+  isCameraAboveAttached: false,
+  isCameraGreenScreen: false,
+  isInfoAboveAttached: false,
   mainNumericAspectRatio: 16 / 9,
+  sideCameraWidth: 200,
+  sideContentAuxWidth: 200,
+  sideInfoWidth: 200,
   sideWidthTotal: 210,
   ...resolvedLayoutConfig,
 });
@@ -46,6 +52,19 @@ describe('calculateSideRegionHeights', () => {
         context,
       ).contentAuxHeight,
     ).toBe(150);
+  });
+
+  it('sizes attached side aux content by its ratio at its wider width', () => {
+    expect(
+      calculateSideRegionHeights(
+        createResolvedLayoutConfig({
+          hasSideCamera: true,
+          sideContentAuxNumericAspectRatio: 4 / 3,
+          sideContentAuxWidth: 240,
+        }),
+        context,
+      ).contentAuxHeight,
+    ).toBe(180);
   });
 
   it('caps side aux content at the space above the camera', () => {
@@ -84,6 +103,44 @@ describe('calculateSideRegionHeights', () => {
         context,
       ),
     ).toEqual({ contentAuxHeight: 150, infoHeight: 130, showSideCamera: true });
+  });
+
+  it('reaches attached auto side info up through the gap to the aux content, keeping the shared border', () => {
+    expect(
+      calculateSideRegionHeights(
+        createResolvedLayoutConfig({
+          hasSideCamera: true,
+          hasSideInfo: true,
+          isInfoAboveAttached: true,
+          sideContentAuxNumericAspectRatio: 4 / 3,
+        }),
+        { ...context, regionBorder: 4 },
+      ).infoHeight,
+    ).toBe(136);
+  });
+
+  it('keeps attached ratio side info at its ratio height', () => {
+    expect(
+      calculateSideRegionHeights(
+        createResolvedLayoutConfig({
+          hasSideCamera: true,
+          hasSideInfo: true,
+          isInfoAboveAttached: true,
+          sideContentAuxNumericAspectRatio: 4 / 3,
+          sideInfoNumericAspectRatio: 16 / 9,
+        }),
+        { ...context, regionBorder: 4 },
+      ).infoHeight,
+    ).toBe(112.5);
+  });
+
+  it('ignores info attachment without side aux content above it', () => {
+    expect(
+      calculateSideRegionHeights(
+        createResolvedLayoutConfig({ hasSideCamera: true, hasSideInfo: true, isInfoAboveAttached: true }),
+        { ...context, regionBorder: 4 },
+      ).infoHeight,
+    ).toBe(290);
   });
 
   it('sizes side info by its ratio when it fits', () => {

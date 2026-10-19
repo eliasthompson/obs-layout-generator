@@ -3,6 +3,7 @@ export interface LayoutRegion {
   y: number;
   width: number;
   height: number;
+  hasBorder: boolean;
 }
 
 export interface LayoutMetric {

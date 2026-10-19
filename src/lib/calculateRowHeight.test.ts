@@ -10,7 +10,13 @@ const createResolvedLayoutConfig = (mainNumericAspectRatio: number, sideWidthTot
   hasName: false,
   hasSideCamera: false,
   hasSideInfo: false,
+  isCameraAboveAttached: false,
+  isCameraGreenScreen: false,
+  isInfoAboveAttached: false,
   mainNumericAspectRatio,
+  sideCameraWidth: 0,
+  sideContentAuxWidth: 0,
+  sideInfoWidth: 0,
   sideWidthTotal,
 });
 
