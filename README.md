@@ -1,19 +1,19 @@
-# obs-layout-generator
+# @eliasthompson/obs-layout-generator
 
 Generate scene layout metrics for multi-participant OBS canvases. Describe each participant's content and the generator returns pixel rectangles for their main content, camera, aux content, info panel, and name tag, arranged in balanced rows on the canvas.
 
 ## Install
 
 ```sh
-npm install obs-layout-generator
+npm install @eliasthompson/obs-layout-generator
 ```
 
-The package ships as ESM with bundled type declarations and has no runtime dependencies.
+The package ships as ESM with bundled type declarations and has no runtime dependencies. Versions up to 1.1.0 were published unscoped as `obs-layout-generator`.
 
 ## Usage
 
 ```ts
-import { generateLayout } from 'obs-layout-generator';
+import { generateLayout } from '@eliasthompson/obs-layout-generator';
 
 const layouts = generateLayout([{ contentMainAspectRatio: '16:9', hasName: true }], {
   canvasMarginBottom: 120,
@@ -34,7 +34,7 @@ Pass one `LayoutConfig` per participant and an optional `LayoutOptions` for the 
 When the canvas is fixed and only the participants change, as in a React component or a bot driving OBS, bind the options once with `createLayoutGenerator` and call the result with just the configs:
 
 ```ts
-import { createLayoutGenerator } from 'obs-layout-generator';
+import { createLayoutGenerator } from '@eliasthompson/obs-layout-generator';
 
 const generate = createLayoutGenerator({ canvasMarginBottom: 120, canvasPadding: 30, canvasGap: 30 });
 

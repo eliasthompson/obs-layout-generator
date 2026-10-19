@@ -1,6 +1,6 @@
 # AGENTS.md
 
-TypeScript library, published to npm as `obs-layout-generator`, that computes pixel rectangles for multi-participant OBS scene layouts. No runtime dependencies.
+TypeScript library, published to npm as `@eliasthompson/obs-layout-generator` (unscoped `obs-layout-generator` up to 1.1.0), that computes pixel rectangles for multi-participant OBS scene layouts. No runtime dependencies.
 
 ## Commands
 
