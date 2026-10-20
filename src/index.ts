@@ -11,6 +11,7 @@ export * from '@/lib/distributeLayouts';
 export * from '@/lib/expandGreenScreenCamera';
 export * from '@/lib/findCollapsedSideIndexes';
 export * from '@/lib/generateLayout';
+export * from '@/lib/mergeLayoutConfigs';
 export * from '@/lib/placeName';
 export * from '@/lib/resolveLayoutConfig';
 export * from '@/lib/roundLayoutMetric';
