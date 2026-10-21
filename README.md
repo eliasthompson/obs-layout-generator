@@ -1,6 +1,6 @@
 # @eliasthompson/obs-layout-generator
 
-Generate scene layout metrics for multi-participant OBS canvases. Describe each participant's content and the generator returns pixel rectangles for their main content, camera, aux content, info panel, and name tag, arranged in balanced rows on the canvas.
+Generate scene layout metrics for multi-participant OBS canvases. Describe each participant's content and the generator returns pixel rectangles for their main content, camera, aux content, info panel, and name tag, arranged in balanced rows on a landscape canvas or balanced columns on a portrait one.
 
 ## Install
 
@@ -74,7 +74,7 @@ generateLayout([{ contentMain: null, hasName: true }], {
 
 **Borders.** `regionBorder` reserves a border of that width around every region except the name, which sits inside its host region, and a green screen camera. Each returned region says whether it has one with `hasBorder`. The returned rectangles are the content inside the border, so the border box of a bordered region is its rectangle grown by `regionBorder` on every side. Aspect ratios apply to the content, gaps are measured between border boxes, and padding runs from the margins to the border boxes, so borders never overlap each other or leave the padded area.
 
-**Attachment.** A side region can be attached to the main region with `isMainAttached`, and the info and camera can be attached to the side region above them with `isAboveAttached`. An attached region grows across the gap until its border box meets the neighbor's, and the two borders share the same pixels, so a 6px border between them is 6px wide rather than 12px. The attached region's far edge stays where it was, so no other region moves. Aspect ratios are kept: aux content or info attached to the main region grows taller as it grows wider, which can shorten the camera below it as described under camera height, and ratio info attached to the aux content above it moves up to meet it without changing size. Auto info and the camera grow to fill the gap they close. Attaching to a region that is not shown, or above the aux content, does nothing. Nothing is attached by default.
+**Attachment.** A side region can be attached to the main region with `isMainAttached`, and the info and camera can be attached to the side region above them with `isAboveAttached`. An attached region grows across the gap until its border box meets the neighbor's, and the two borders share the same pixels, so a 6px border between them is 6px wide rather than 12px. The attached region's far edge stays where it was, so no other region moves. Aspect ratios are kept: aux content or info attached to the main region grows taller as it grows wider, which can shorten the camera below it as described under camera height, and ratio info attached to the aux content above it moves up to meet it without changing size. Auto info and the camera grow to fill the gap they close. Attaching to a region that is not shown, or above the aux content, does nothing. Nothing is attached by default. In portrait, where the side regions form a row beneath the main region, `isMainAttached` reaches up and `isAboveAttached` reaches left.
 
 ```ts
 // The camera shares the main content's right border; with a 6px border it starts 6px right of the content
@@ -114,6 +114,35 @@ generateLayout([{ camera: { isGreenScreen: true } }], {
 **Name tag.** The name sits along the bottom of the camera, or the main content if there is no camera big enough to hold it, or the aux content if there is neither. It is as wide as its host and a third as tall, capped at a third of a full-height side camera so a name on a main-column camera stays the same size as one beside content, and at least `nameHeightMin` tall when the host allows. If none of those is shown, the name is omitted.
 
 **Space that runs out.** A region whose width or height rounds to 0 is omitted rather than returned with a zero or negative size. If every region in a participant's side column is omitted this way, the side column is dropped too and the layout is sized again without it.
+
+**Portrait canvases.** When the content area is taller than wide, the layout turns. The balanced rows become columns, so two participants stack in one column, three are a column of two and a centered column of one, and so on. Every column has the same width and every cell the same height, set by the fullest column. Each participant's main region sits at the top of its cell at its own ratio, and a **side row** beneath it holds the remaining regions left to right: aux content, then ratio info, then the camera at the right end. `'auto'` info has no ratio to size it by in a row and is omitted.
+
+- A camera alone in its row fills it, as wide as the column and as tall as the row allows, never narrower than 9:16.
+- When any row holds aux content or ratio info, every side row shares one content height: the smallest of each such row's leftover under its main region, its main region's height, and the height at which its regions fill the column at their ratios with the camera at 9:16. The camera then takes the rest of its row's width, and a lone camera in another row is no taller than that.
+- The column width is the even split, narrowed until every main region leaves its side row at least `layoutSideMin` tall, so the option that reserves a side column in landscape reserves a side row here.
+- Attachments carry over: a side region attached to the main region reaches up across the gap to share its bottom border, and `isAboveAttached` attaches info or the camera to the side region left of it. A green screen camera expands the same way, toward the main region above a side camera or the side row below a main camera.
+- The name is a third of its host, capped at a third of a full side camera, which here is half the cell at most.
+
+```ts
+// A 1080×1920 canvas with a top and bottom overlay as margins: the main content on top, the camera filling the rest
+generateLayout([{ hasName: true }], {
+  canvasWidth: 1080,
+  canvasHeight: 1920,
+  canvasMarginTop: 144,
+  canvasMarginBottom: 432,
+  canvasPadding: 24,
+  canvasGap: 24,
+  layoutGap: 18,
+  regionBorder: 6,
+});
+// [
+//   {
+//     camera: { x: 30, y: 778, width: 1020, height: 680, hasBorder: true },
+//     contentMain: { x: 30, y: 174, width: 1020, height: 574, hasBorder: true },
+//     name: { x: 30, y: 1249, width: 1020, height: 209, hasBorder: false },
+//   },
+// ]
+```
 
 ## API
 
@@ -156,8 +185,8 @@ Each region config is optional on every field, so `{}` shows the region with its
 | `canvasMarginRight`  | `number` | `0`                 | Space reserved right of the layout.                           |
 | `canvasPadding`      | `number` | `0`                 | Space between the margins and the layout, on all four sides.  |
 | `canvasGap`          | `number` | `0`                 | Space between participants, across a row and between rows.    |
-| `layoutGap`          | `number` | half of `canvasGap` | Space between a participant's main and side columns.          |
-| `layoutSideMin`      | `number` | `0`                 | Smallest side column width; main columns narrow to fit it.    |
+| `layoutGap`          | `number` | half of `canvasGap` | Space between a participant's main and side regions.          |
+| `layoutSideMin`      | `number` | `0`                 | Smallest side column width, or side row height in portrait.   |
 | `regionBorder`       | `number` | `0`                 | Border width reserved around every region but the name.       |
 | `nameHeightMin`      | `number` | `0`                 | Smallest name tag height, within what its host allows.        |
 
@@ -184,15 +213,13 @@ Version 2 nests each region's settings under the region's name, matching the sha
 - **Layout:** `generateLayout` and `createLayoutGenerator`, `mergeLayoutConfigs` to apply one `LayoutConfig` over another region by region, the `LayoutConfig`, `CameraLayoutConfig`, `ContentMainLayoutConfig`, `ContentAuxLayoutConfig`, `InfoLayoutConfig`, `LayoutOptions`, `LayoutMetric`, and `LayoutRegion` types, and the `LAYOUT_CONFIG_DEFAULT`, `CAMERA_LAYOUT_CONFIG_DEFAULT`, `CONTENT_MAIN_LAYOUT_CONFIG_DEFAULT`, `CONTENT_AUX_LAYOUT_CONFIG_DEFAULT`, `INFO_LAYOUT_CONFIG_DEFAULT`, and `LAYOUT_OPTIONS_DEFAULT` constants.
 - **Aspect ratios:** `CONTENT_ASPECT_RATIOS` (frozen), `numericContentAspectRatios`, `widestNumericContentAspectRatio`, `CAMERA_ASPECT_RATIO_MIN` and `cameraNumericAspectRatioMin`, the `ContentAspectRatio` and `AspectRatio` types, and `transformAspectRatio` to turn `'16:9'` into `1.777…`.
 - **Building blocks**, in the order `generateLayout` uses them:
-  - `distributeLayouts`: split layout configs into rows.
-  - `calculateCanvasGrid`: layout area, content area, gaps, grid cells, and side column width.
+  - `calculateCanvasGrid`: layout area, content area, gaps, grid cells, side column width, and orientation.
+  - `generateLandscapeLayout` and `generatePortraitLayout`: the two orientations, which `generateLayout` picks between.
+  - `distributeLayouts`: split layout configs into balanced rows, read as columns in portrait.
   - `resolveLayoutConfig`: pick the main column region and what stays in the side column, with widths and attachments.
-  - `calculateRowHeight`: the tallest row height at which every row fits.
-  - `calculateCameraHeights`: the shared side camera height and the largest name height.
-  - `calculateSideRegionHeights`: side column stacking.
-  - `findCollapsedSideIndexes`: side columns left with nothing to show.
-  - `calculateLayoutRegions`: region positions for one participant.
-  - `expandGreenScreenCamera`: green screen camera expansion toward what each edge faces.
+  - Landscape: `calculateRowHeight`, the tallest row height at which every row fits; `calculateCameraHeights`, the shared side camera height and the largest name height; `calculateSideRegionHeights`, side column stacking; `findCollapsedSideIndexes`, side columns left with nothing to show; and `calculateLayoutRegions`, region positions for one participant.
+  - Portrait: `calculateColumnWidth`, the cell height and the widest column width at which every main region fits above its side row; `calculateSideRowHeight`, the shared side row content height and the largest name height; `calculateSideRowSizes`, side row sizing, with `hasSideRow`, `isSideRowShared`, and `fitSideRowHeight`; and `calculatePortraitLayoutRegions`, region positions for one participant.
+  - `expandGreenScreenCamera`: green screen camera expansion toward what each edge faces, with `outerNeighbor`.
   - `placeName`: name placement.
   - `roundLayoutMetric` and `roundLayoutRegion`: rounding to whole pixels.
   - The `LayoutMainRegion`, `LayoutNeighbor`, `LayoutNeighbors`, and `LayoutAlignment` types. `transformAspectRatio` returns `0` for invalid ratios.

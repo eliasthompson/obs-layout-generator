@@ -25,11 +25,18 @@ describe('calculateCanvasGrid', () => {
       canvasLayoutX: 0,
       canvasLayoutY: 0,
       hasSideRoom: false,
+      isPortrait: false,
       layoutGap: 0,
       layoutSideMin: 0,
       layoutSideWidth: 0,
       regionBorder: 0,
     });
+  });
+
+  it('detects a portrait content area, but not a square one', () => {
+    expect(calculateCanvasGrid({ canvasHeight: 1920, canvasWidth: 1080 }, 1).isPortrait).toBe(true);
+    expect(calculateCanvasGrid({ canvasHeight: 1080, canvasWidth: 1080 }, 1).isPortrait).toBe(false);
+    expect(calculateCanvasGrid({ canvasMarginLeft: 900 }, 1).isPortrait).toBe(true);
   });
 
   it('raises the side column to layoutSideMin when a cell has less left', () => {

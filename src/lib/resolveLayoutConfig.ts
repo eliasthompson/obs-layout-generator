@@ -24,7 +24,10 @@ export interface ResolvedLayoutConfig {
   hasSideInfo: boolean;
   isCameraAboveAttached: boolean;
   isCameraGreenScreen: boolean;
+  isCameraMainAttached: boolean;
+  isContentAuxMainAttached: boolean;
   isInfoAboveAttached: boolean;
+  isInfoMainAttached: boolean;
   mainNumericAspectRatio: number;
   mainRegion?: LayoutMainRegion;
   sideCameraWidth: number;
@@ -42,7 +45,8 @@ export interface ResolvedLayoutConfig {
  * @param context - The grid cell ratio for `'auto'` info, whether a side column exists, its gap and width, and the
  *   region border.
  * @returns The main region and its ratio, which regions sit in the side column with their ratios and widths, how
- *   they attach, and the total width the side column adds to the participant, `0` when nothing is in it.
+ *   they attach, with attachments to a main region that is not shown or is a green screen camera dropped, and the
+ *   total width the side column adds to the participant, `0` when nothing is in it.
  */
 export const resolveLayoutConfig = (
   {
@@ -113,6 +117,9 @@ export const resolveLayoutConfig = (
   // green screen camera fills the gaps on its own, so its attachments, and attachments to it, are ignored
   const hasMainRegion = mainRegion !== undefined && (mainRegion !== 'camera' || !isCameraGreenScreen);
   const sideAttachedWidth = layoutSideWidth + layoutGap - regionBorder;
+  const isSideCameraMainAttached = isCameraMainAttached && !isCameraGreenScreen && hasMainRegion;
+  const isSideContentAuxMainAttached = isContentAuxMainAttached && hasMainRegion;
+  const isSideInfoMainAttached = isInfoMainAttached && hasMainRegion;
 
   return {
     hasName,
@@ -120,16 +127,18 @@ export const resolveLayoutConfig = (
     hasSideInfo,
     isCameraAboveAttached: isCameraAboveAttached && !isCameraGreenScreen,
     isCameraGreenScreen,
+    isCameraMainAttached: isSideCameraMainAttached,
+    isContentAuxMainAttached: isSideContentAuxMainAttached,
     isInfoAboveAttached,
+    isInfoMainAttached: isSideInfoMainAttached,
     mainNumericAspectRatio,
     mainRegion,
-    sideCameraWidth:
-      isCameraMainAttached && !isCameraGreenScreen && hasMainRegion ? sideAttachedWidth : layoutSideWidth,
+    sideCameraWidth: isSideCameraMainAttached ? sideAttachedWidth : layoutSideWidth,
     sideContentAuxNumericAspectRatio: hasSideContentAux ? contentAuxNumericAspectRatio : undefined,
-    sideContentAuxWidth: isContentAuxMainAttached && hasMainRegion ? sideAttachedWidth : layoutSideWidth,
+    sideContentAuxWidth: isSideContentAuxMainAttached ? sideAttachedWidth : layoutSideWidth,
     // 'auto' info has no side ratio and fills whatever the side stack leaves
     sideInfoNumericAspectRatio: hasSideInfo && infoAspectRatio !== 'auto' ? infoNumericAspectRatio : undefined,
-    sideInfoWidth: isInfoMainAttached && hasMainRegion ? sideAttachedWidth : layoutSideWidth,
+    sideInfoWidth: isSideInfoMainAttached ? sideAttachedWidth : layoutSideWidth,
     // A used side column adds its width plus the gap between the columns to the participant's width
     sideWidthTotal: hasSideCamera || hasSideContentAux || hasSideInfo ? layoutGap + layoutSideWidth : 0,
   };

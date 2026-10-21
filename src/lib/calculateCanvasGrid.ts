@@ -18,6 +18,7 @@ export interface CanvasGrid {
   canvasLayoutX: number;
   canvasLayoutY: number;
   hasSideRoom: boolean;
+  isPortrait: boolean;
   layoutGap: number;
   layoutSideMin: number;
   layoutSideWidth: number;
@@ -87,6 +88,8 @@ export const calculateCanvasGrid = (
     canvasLayoutX: canvasMarginLeft,
     canvasLayoutY: canvasMarginTop,
     hasSideRoom: Math.round(layoutSideWidth) > 0,
+    // A content area taller than wide is laid out in portrait: columns of main regions with side rows beneath them
+    isPortrait: canvasContentHeight > canvasContentWidth,
     layoutGap: layoutContentGap,
     layoutSideMin,
     layoutSideWidth,

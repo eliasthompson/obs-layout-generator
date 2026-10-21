@@ -1,6 +1,14 @@
 import type { LayoutRegion } from '@/types/LayoutMetric';
 import type { LayoutNeighbor, LayoutNeighbors } from '@/types/LayoutNeighbor';
 
+/**
+ * What an edge on the outside of a participant faces: the margin at the edge of the layout, else another participant.
+ *
+ * @param isAtLayoutEdge - Whether the participant is the first or last along that edge.
+ * @returns The neighbor for that edge.
+ */
+export const outerNeighbor = (isAtLayoutEdge: boolean): LayoutNeighbor => (isAtLayoutEdge ? 'margin' : 'canvas');
+
 export interface ExpandGreenScreenCameraContext {
   canvasGap: number;
   canvasLayoutHeight: number;
