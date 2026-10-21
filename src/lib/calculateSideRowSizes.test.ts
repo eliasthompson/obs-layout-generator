@@ -40,6 +40,7 @@ const createResolvedLayoutConfig = (resolvedLayoutConfig: Partial<ResolvedLayout
 const withContentAux = createResolvedLayoutConfig({ sideContentAuxNumericAspectRatio: 4 / 3 });
 const withInfo = createResolvedLayoutConfig({ hasSideInfo: true, sideInfoNumericAspectRatio: 2 });
 const noSideRow = {
+  sideRowHeight: 0,
   contentAuxWidth: 0,
   contentAuxHeight: 0,
   infoWidth: 0,
@@ -143,14 +144,16 @@ describe('calculateSideRowSizes', () => {
   it('fills the row with a lone camera', () => {
     expect(calculateSideRowSizes(createResolvedLayoutConfig({}), context)).toMatchObject({
       mainHeight: 562.5,
+      sideRowHeight: 417.5,
       cameraWidth: 1000,
       cameraHeight: 417.5,
       isCameraMainAttached: false,
     });
   });
 
-  it('reaches a lone camera up to the main region when attached', () => {
+  it('reaches a lone camera up to the main region when attached, keeping the row height below its top', () => {
     expect(calculateSideRowSizes(createResolvedLayoutConfig({ isCameraMainAttached: true }), context)).toMatchObject({
+      sideRowHeight: 417.5,
       cameraWidth: 1000,
       cameraHeight: 432.5,
       isCameraMainAttached: true,
@@ -165,11 +168,13 @@ describe('calculateSideRowSizes', () => {
 
     expect(sideRowSizes.cameraWidth).toBe(200);
     expect(sideRowSizes.cameraHeight).toBeCloseTo(200 / (9 / 16));
+    expect(sideRowSizes.sideRowHeight).toBeCloseTo(200 / (9 / 16));
     expect(sideRowSizes.isCameraMainAttached).toBe(false);
   });
 
   it('limits a lone camera to the shared height when another row is shared', () => {
     expect(calculateSideRowSizes(createResolvedLayoutConfig({}), { ...context, sharedHeight: 300 })).toMatchObject({
+      sideRowHeight: 300,
       cameraWidth: 1000,
       cameraHeight: 300,
     });
@@ -185,6 +190,7 @@ describe('calculateSideRowSizes', () => {
   it('gives the camera the rest of a shared row beside aux content at the shared height', () => {
     expect(calculateSideRowSizes(withContentAux, { ...context, sharedHeight: 300 })).toEqual({
       mainHeight: 562.5,
+      sideRowHeight: 300,
       contentAuxWidth: 400,
       contentAuxHeight: 300,
       infoWidth: 0,

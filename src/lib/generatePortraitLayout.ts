@@ -88,9 +88,14 @@ export const generatePortraitLayout = (
         regionBorder,
         sharedHeight,
       });
+      // The main region and its side row are centered vertically in the cell; a shown side region claims the gap
+      // even when the row below the gap has no height, as an attached camera that fits inside the gap does
+      const { mainHeight, sideRowHeight, cameraWidth, contentAuxWidth, infoWidth } = sideRowSizes;
+      const hasSideRegion = cameraWidth > 0 || contentAuxWidth > 0 || infoWidth > 0;
+      const usedHeight = mainHeight + (hasSideRegion ? layoutGap + sideRowHeight : 0);
       const layoutMetric = calculatePortraitLayoutRegions(resolvedLayoutConfig, sideRowSizes, {
         cellX,
-        cellY,
+        cellY: cellY + (cellHeight - usedHeight) / 2,
         columnWidth,
         layoutGap,
         regionBorder,

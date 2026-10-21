@@ -347,10 +347,10 @@ describe('generateLayout', () => {
   it('shares the side row between aux content and a camera at least 9:16 wide in portrait', () => {
     expect(generateLayout([{ contentAux: {}, hasName: true }], portraitOptions)).toEqual([
       {
-        camera: { x: 756, y: 778, width: 294, height: 522, hasBorder: true },
-        contentMain: portraitContentMain,
-        contentAux: { x: 30, y: 778, width: 696, height: 522, hasBorder: true },
-        name: { x: 756, y: 1126, width: 294, height: 174, hasBorder: false },
+        camera: { x: 756, y: 857, width: 294, height: 522, hasBorder: true },
+        contentMain: { ...portraitContentMain, y: 253 },
+        contentAux: { x: 30, y: 857, width: 696, height: 522, hasBorder: true },
+        name: { x: 756, y: 1205, width: 294, height: 174, hasBorder: false },
       },
     ]);
   });
@@ -359,10 +359,10 @@ describe('generateLayout', () => {
     const [layoutMetric] = generateLayout([{ contentAux: {}, info: { aspectRatio: '16:9' } }], portraitOptions);
 
     expect(layoutMetric).toEqual({
-      camera: { x: 903, y: 778, width: 147, height: 261, hasBorder: true },
-      contentMain: portraitContentMain,
-      contentAux: { x: 30, y: 778, width: 348, height: 261, hasBorder: true },
-      info: { x: 408, y: 778, width: 465, height: 261, hasBorder: true },
+      camera: { x: 903, y: 987, width: 147, height: 261, hasBorder: true },
+      contentMain: { ...portraitContentMain, y: 383 },
+      contentAux: { x: 30, y: 987, width: 348, height: 261, hasBorder: true },
+      info: { x: 408, y: 987, width: 465, height: 261, hasBorder: true },
     });
     expect(generateLayout([{ hasName: true, info: {} }], portraitOptions)).toEqual(
       generateLayout([{ hasName: true }], portraitOptions),
@@ -422,9 +422,9 @@ describe('generateLayout', () => {
   it('reaches attached aux content up to the main region in portrait and shortens the camera to fit', () => {
     expect(generateLayout([{ contentAux: { isMainAttached: true } }], portraitOptions)).toEqual([
       {
-        camera: { x: 766, y: 778, width: 284, height: 505, hasBorder: true },
-        contentMain: portraitContentMain,
-        contentAux: { x: 30, y: 754, width: 706, height: 529, hasBorder: true },
+        camera: { x: 766, y: 865, width: 284, height: 505, hasBorder: true },
+        contentMain: { ...portraitContentMain, y: 261 },
+        contentAux: { x: 30, y: 841, width: 706, height: 529, hasBorder: true },
       },
     ]);
   });
@@ -432,9 +432,9 @@ describe('generateLayout', () => {
   it('attaches the camera to the aux content left of it across a shared border in portrait', () => {
     expect(generateLayout([{ camera: { isAboveAttached: true }, contentAux: {} }], portraitOptions)).toEqual([
       {
-        camera: { x: 749, y: 778, width: 301, height: 535, hasBorder: true },
-        contentMain: portraitContentMain,
-        contentAux: { x: 30, y: 778, width: 713, height: 535, hasBorder: true },
+        camera: { x: 749, y: 850, width: 301, height: 535, hasBorder: true },
+        contentMain: { ...portraitContentMain, y: 247 },
+        contentAux: { x: 30, y: 850, width: 713, height: 535, hasBorder: true },
       },
     ]);
   });
@@ -454,8 +454,8 @@ describe('generateLayout', () => {
       generateLayout([{ camera: { isGreenScreen: true }, contentAux: {}, contentMain: null }], portraitOptions),
     ).toEqual([
       {
-        camera: { x: 0, y: 144, width: 1080, height: 628, hasBorder: false },
-        contentAux: { x: 30, y: 778, width: 765, height: 574, hasBorder: true },
+        camera: { x: 0, y: 144, width: 1080, height: 681, hasBorder: false },
+        contentAux: { x: 30, y: 831, width: 765, height: 574, hasBorder: true },
       },
     ]);
   });

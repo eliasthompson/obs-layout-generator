@@ -37,6 +37,7 @@ const createResolvedLayoutConfig = (resolvedLayoutConfig: Partial<ResolvedLayout
 
 const createSideRowSizes = (sideRowSizes: Partial<SideRowSizes>): SideRowSizes => ({
   mainHeight: 225,
+  sideRowHeight: 0,
   contentAuxWidth: 0,
   contentAuxHeight: 0,
   infoWidth: 0,

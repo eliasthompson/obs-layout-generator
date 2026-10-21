@@ -15,6 +15,7 @@ export interface CalculateSideRowSizesContext extends SideRowContext {
 
 export interface SideRowSizes {
   mainHeight: number;
+  sideRowHeight: number;
   contentAuxWidth: number;
   contentAuxHeight: number;
   infoWidth: number;
@@ -115,8 +116,8 @@ export const fitSideRowHeight = (
  * @param resolvedLayoutConfig - The participant's resolved config.
  * @param context - The cell height, column width, gap, border, and the shared row content height, `Infinity` when
  *   no row in the layout is shared.
- * @returns The main region height and each side region's size, `0` when the region is omitted, and whether the
- *   camera reaches the main region.
+ * @returns The main region height, the height the side row takes below its top, `0` when no side region is shown,
+ *   each side region's size, `0` when the region is omitted, and whether the camera reaches the main region.
  */
 export const calculateSideRowSizes = (
   resolvedLayoutConfig: ResolvedLayoutConfig,
@@ -137,6 +138,7 @@ export const calculateSideRowSizes = (
   const attachedGrowth = layoutGap - regionBorder;
   const sizes: SideRowSizes = {
     mainHeight: mainNumericAspectRatio > 0 ? columnWidth / mainNumericAspectRatio : 0,
+    sideRowHeight: 0,
     contentAuxWidth: 0,
     contentAuxHeight: 0,
     infoWidth: 0,
@@ -159,6 +161,8 @@ export const calculateSideRowSizes = (
     const cameraHeight = isAttached ? attachedHeight : Math.min(rowHeight, cameraHeightMax);
 
     if (Math.round(cameraHeight) > 0) {
+      // An attached camera reaches above the row top, so the row itself is only the part below it
+      sizes.sideRowHeight = isAttached ? rowHeight : cameraHeight;
       sizes.cameraWidth = columnWidth;
       sizes.cameraHeight = cameraHeight;
       sizes.isCameraMainAttached = isAttached;
@@ -170,6 +174,7 @@ export const calculateSideRowSizes = (
   if (Math.round(sharedHeight) <= 0) return sizes;
 
   // Shared rows all use the shared height; regions attached to the main region are taller by the gap they close
+  sizes.sideRowHeight = sharedHeight;
   let usedWidth = 0;
 
   if (sideContentAuxNumericAspectRatio !== undefined) {
