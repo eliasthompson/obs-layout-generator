@@ -19,6 +19,7 @@ export interface CanvasGrid {
   canvasLayoutY: number;
   hasSideRoom: boolean;
   layoutGap: number;
+  layoutSideMin: number;
   layoutSideWidth: number;
   regionBorder: number;
 }
@@ -34,7 +35,8 @@ export const widestNumericContentAspectRatio = Math.max(...numericContentAspectR
  * @param layoutOptions - Canvas options; missing fields take their defaults.
  * @param layoutConfigsTotal - Number of participants, which sets the grid size.
  * @returns The layout area inside the margins, and the content area, gaps, grid cell ratio, and side column width,
- *   all measured between region content rects.
+ *   all measured between region content rects. The side column is at least `layoutSideMin` wide; the rows narrow
+ *   their main columns to fit it.
  */
 export const calculateCanvasGrid = (
   {
@@ -47,6 +49,7 @@ export const calculateCanvasGrid = (
     canvasPadding = LAYOUT_OPTIONS_DEFAULT.canvasPadding,
     canvasGap = LAYOUT_OPTIONS_DEFAULT.canvasGap,
     layoutGap = LAYOUT_OPTIONS_DEFAULT.layoutGap ?? canvasGap / 2,
+    layoutSideMin = LAYOUT_OPTIONS_DEFAULT.layoutSideMin,
     regionBorder = LAYOUT_OPTIONS_DEFAULT.regionBorder,
   }: LayoutOptions,
   layoutConfigsTotal: number,
@@ -65,9 +68,10 @@ export const calculateCanvasGrid = (
   const canvasGridUnits = Math.ceil(Math.sqrt(layoutConfigsTotal));
   const canvasGridUnitWidth = (canvasContentWidth - (canvasGridUnits - 1) * canvasContentGap) / canvasGridUnits;
   const canvasGridUnitHeight = (canvasContentHeight - (canvasGridUnits - 1) * canvasContentGap) / canvasGridUnits;
-  // The side column gets whatever a cell has left after the widest content at full cell height and the column gap
+  // The side column gets whatever a cell has left after the widest content at full cell height and the column gap,
+  // or the minimum when that is more, in which case the main columns narrow to make room
   const layoutSideWidth = Math.max(
-    0,
+    layoutSideMin,
     canvasGridUnitWidth - canvasGridUnitHeight * widestNumericContentAspectRatio - layoutContentGap,
   );
 
@@ -84,6 +88,7 @@ export const calculateCanvasGrid = (
     canvasLayoutY: canvasMarginTop,
     hasSideRoom: Math.round(layoutSideWidth) > 0,
     layoutGap: layoutContentGap,
+    layoutSideMin,
     layoutSideWidth,
     regionBorder,
   };

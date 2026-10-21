@@ -26,9 +26,22 @@ describe('calculateCanvasGrid', () => {
       canvasLayoutY: 0,
       hasSideRoom: false,
       layoutGap: 0,
+      layoutSideMin: 0,
       layoutSideWidth: 0,
       regionBorder: 0,
     });
+  });
+
+  it('raises the side column to layoutSideMin when a cell has less left', () => {
+    expect(calculateCanvasGrid({ layoutSideMin: 120 }, 1)).toMatchObject({
+      hasSideRoom: true,
+      layoutSideMin: 120,
+      layoutSideWidth: 120,
+    });
+    expect(
+      calculateCanvasGrid({ canvasGap: 30, canvasMarginBottom: 120, canvasPadding: 30, layoutSideMin: 120 }, 1)
+        .layoutSideWidth,
+    ).toBeCloseTo(1860 - (900 * 16) / 9 - 15);
   });
 
   it('gives the side column what a grid cell has left after the widest content ratio', () => {

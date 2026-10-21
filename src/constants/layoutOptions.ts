@@ -8,6 +8,7 @@ export interface LayoutOptions {
   canvasPadding?: number;
   canvasGap?: number;
   layoutGap?: number;
+  layoutSideMin?: number;
   regionBorder?: number;
   nameHeightMin?: number;
 }
@@ -22,6 +23,7 @@ export const LAYOUT_OPTIONS_DEFAULT = Object.freeze({
   canvasPadding: 0,
   canvasGap: 0,
   layoutGap: undefined as number | undefined,
+  layoutSideMin: 0,
   regionBorder: 0,
   nameHeightMin: 0,
 } as const satisfies LayoutOptions);

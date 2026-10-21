@@ -48,6 +48,7 @@ describe('generateLayout', () => {
       { canvasGap: 30, canvasMarginBottom: 120, canvasMarginLeft: 50, canvasMarginRight: 50, canvasPadding: 30 },
       { canvasGap: 40, canvasMarginBottom: 120, canvasPadding: 10, layoutGap: 10 },
       { canvasGap: 30, canvasMarginBottom: 120, canvasPadding: 30, regionBorder: 6 },
+      { canvasGap: 30, canvasMarginBottom: 120, canvasPadding: 30, layoutSideMin: 300 },
     ];
     const layouts = optionSets.flatMap((layoutOptions) =>
       Array.from({ length: 9 }, (_, index) => {
@@ -175,6 +176,16 @@ describe('generateLayout', () => {
       contentMain: { x: 1179, y: 550, width: 711, height: 400, hasBorder: true },
       name: { x: 1179, y: 886, width: 711, height: 64, hasBorder: false },
     });
+  });
+
+  it('reserves a side column of layoutSideMin and narrows the main column to fit it', () => {
+    expect(generateLayout([{ hasName: true }], { layoutSideMin: 120 })).toEqual([
+      {
+        camera: { x: 1800, y: 833, width: 120, height: 213, hasBorder: true },
+        contentMain: { x: 0, y: 34, width: 1800, height: 1013, hasBorder: true },
+        name: { x: 1800, y: 975, width: 120, height: 71, hasBorder: false },
+      },
+    ]);
   });
 
   it('raises the name to nameHeightMin within its host', () => {
@@ -358,6 +369,7 @@ describe('generateLayout', () => {
         canvasPadding: pick([0, 10, 30, 60]),
         canvasWidth,
         layoutGap: pick([undefined, 0, 5, 40]),
+        layoutSideMin: pick([0, 0, 60, 200]),
         regionBorder: pick([0, 0, 6, 20]),
       };
       // A bordered region's box grows by its border before the bounds and overlap checks; a borderless one is its own

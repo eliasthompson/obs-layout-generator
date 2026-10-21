@@ -68,7 +68,7 @@ generateLayout([{ contentMain: null, hasName: true }], {
 // ]
 ```
 
-**Side column width.** The side column is whatever width remains in a grid cell after the widest content ratio (16:9) at full height. Canvases with more horizontal room get wider side columns. On a 16:9 canvas with no margins or padding nothing remains, so side regions are omitted. Add vertical margins, such as `canvasMarginBottom` for a lower bar, to make room.
+**Side column width.** The side column is whatever width remains in a grid cell after the widest content ratio (16:9) at full height, or `layoutSideMin` when that is more. Canvases with more horizontal room get wider side columns. On a 16:9 canvas with no margins or padding nothing remains, so side regions are omitted. Add vertical margins, such as `canvasMarginBottom` for a lower bar, to make room, or set `layoutSideMin` to reserve a side column of at least that width, which narrows the main columns to fit it. A value around three times the name height you need keeps a camera there readable.
 
 **Spacing.** Margins reserve space outside the layout on each side, `canvasPadding` insets the layout from the margins on all four sides, `canvasGap` separates participants across a row and between rows, and `layoutGap` separates a participant's main and side columns. Padding does not set the gaps: leave `canvasGap` out and participants touch.
 
@@ -157,6 +157,7 @@ Each region config is optional on every field, so `{}` shows the region with its
 | `canvasPadding`      | `number` | `0`                 | Space between the margins and the layout, on all four sides.  |
 | `canvasGap`          | `number` | `0`                 | Space between participants, across a row and between rows.    |
 | `layoutGap`          | `number` | half of `canvasGap` | Space between a participant's main and side columns.          |
+| `layoutSideMin`      | `number` | `0`                 | Smallest side column width; main columns narrow to fit it.    |
 | `regionBorder`       | `number` | `0`                 | Border width reserved around every region but the name.       |
 | `nameHeightMin`      | `number` | `0`                 | Smallest name tag height, within what its host allows.        |
 
