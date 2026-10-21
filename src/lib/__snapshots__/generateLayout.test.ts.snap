@@ -33,10 +33,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 241,
+          "height": 225,
           "width": 127,
           "x": 929,
-          "y": 488,
+          "y": 503,
         },
         "contentAux": {
           "hasBorder": true,
@@ -54,19 +54,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 80,
+          "height": 75,
           "width": 127,
           "x": 929,
-          "y": 648,
+          "y": 654,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 241,
+          "height": 225,
           "width": 127,
           "x": 1763,
-          "y": 488,
+          "y": 503,
         },
         "contentMain": {
           "hasBorder": true,
@@ -77,17 +77,17 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 241,
+          "height": 257,
           "width": 127,
           "x": 1763,
           "y": 231,
         },
         "name": {
           "hasBorder": false,
-          "height": 80,
+          "height": 75,
           "width": 127,
           "x": 1763,
-          "y": 648,
+          "y": 654,
         },
       },
     ],
@@ -284,10 +284,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 187,
+          "height": 155,
           "width": 87,
           "x": 735,
-          "y": 278,
+          "y": 310,
         },
         "contentMain": {
           "hasBorder": true,
@@ -316,10 +316,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 187,
+          "height": 155,
           "width": 87,
           "x": 1803,
-          "y": 278,
+          "y": 310,
         },
         "contentMain": {
           "hasBorder": true,
@@ -330,10 +330,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 62,
+          "height": 52,
           "width": 87,
           "x": 1803,
-          "y": 403,
+          "y": 413,
         },
       },
       {
@@ -355,10 +355,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 187,
+          "height": 155,
           "width": 87,
           "x": 1437,
-          "y": 697,
+          "y": 728,
         },
         "contentAux": {
           "hasBorder": true,
@@ -376,10 +376,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 62,
+          "height": 52,
           "width": 87,
           "x": 1437,
-          "y": 821,
+          "y": 831,
         },
       },
     ],
@@ -411,10 +411,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 164,
+          "height": 155,
           "width": 87,
           "x": 1287,
-          "y": 301,
+          "y": 310,
         },
         "contentMain": {
           "hasBorder": true,
@@ -425,10 +425,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 55,
+          "height": 52,
           "width": 87,
           "x": 1287,
-          "y": 410,
+          "y": 413,
         },
       },
       {
@@ -450,10 +450,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 164,
+          "height": 155,
           "width": 87,
           "x": 412,
-          "y": 674,
+          "y": 684,
         },
         "contentAux": {
           "hasBorder": true,
@@ -471,19 +471,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 55,
+          "height": 52,
           "width": 87,
           "x": 412,
-          "y": 784,
+          "y": 787,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 164,
+          "height": 155,
           "width": 87,
           "x": 1059,
-          "y": 674,
+          "y": 684,
         },
         "contentMain": {
           "hasBorder": true,
@@ -494,26 +494,26 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 164,
+          "height": 174,
           "width": 87,
           "x": 1059,
           "y": 495,
         },
         "name": {
           "hasBorder": false,
-          "height": 55,
+          "height": 52,
           "width": 87,
           "x": 1059,
-          "y": 784,
+          "y": 787,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 164,
+          "height": 155,
           "width": 87,
           "x": 1803,
-          "y": 674,
+          "y": 684,
         },
         "contentMain": {
           "hasBorder": true,
@@ -531,10 +531,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 55,
+          "height": 52,
           "width": 87,
           "x": 1803,
-          "y": 784,
+          "y": 787,
         },
       },
     ],
@@ -1164,10 +1164,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 275,
+          "height": 36,
           "width": 20,
           "x": 1051,
-          "y": 548,
+          "y": 787,
         },
         "contentAux": {
           "hasBorder": true,
@@ -1186,18 +1186,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 92,
-          "width": 20,
-          "x": 1051,
+          "width": 1006,
+          "x": 30,
           "y": 731,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 275,
+          "height": 36,
           "width": 20,
           "x": 1870,
-          "y": 548,
+          "y": 787,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1208,7 +1208,7 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 275,
+          "height": 515,
           "width": 20,
           "x": 1870,
           "y": 257,
@@ -1216,8 +1216,8 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 92,
-          "width": 20,
-          "x": 1870,
+          "width": 754,
+          "x": 1101,
           "y": 731,
         },
       },
@@ -1233,10 +1233,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 240,
+          "height": 36,
           "width": 20,
           "x": 1035,
-          "y": 285,
+          "y": 489,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1247,7 +1247,7 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 240,
+          "height": 444,
           "width": 20,
           "x": 1035,
           "y": 30,
@@ -1255,18 +1255,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 80,
-          "width": 20,
-          "x": 1035,
+          "width": 880,
+          "x": 140,
           "y": 445,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 240,
+          "height": 36,
           "width": 20,
           "x": 1760,
-          "y": 285,
+          "y": 489,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1285,18 +1285,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 80,
-          "width": 20,
-          "x": 1760,
+          "width": 660,
+          "x": 1085,
           "y": 445,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 240,
+          "height": 36,
           "width": 20,
           "x": 1205,
-          "y": 810,
+          "y": 1014,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1318,10 +1318,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 240,
+          "height": 36,
           "width": 20,
           "x": 1035,
-          "y": 285,
+          "y": 489,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1340,18 +1340,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 80,
-          "width": 20,
-          "x": 1035,
+          "width": 880,
+          "x": 140,
           "y": 445,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 240,
+          "height": 36,
           "width": 20,
           "x": 1760,
-          "y": 285,
+          "y": 489,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1380,10 +1380,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 240,
+          "height": 36,
           "width": 20,
           "x": 1484,
-          "y": 810,
+          "y": 1014,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1395,8 +1395,8 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 80,
-          "width": 20,
-          "x": 1484,
+          "width": 528,
+          "x": 941,
           "y": 970,
         },
       },
@@ -1412,10 +1412,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 204,
+          "height": 29,
           "width": 16,
           "x": 796,
-          "y": 321,
+          "y": 496,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1444,10 +1444,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 204,
+          "height": 29,
           "width": 16,
           "x": 1874,
-          "y": 321,
+          "y": 496,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1459,8 +1459,8 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 68,
-          "width": 16,
-          "x": 1874,
+          "width": 423,
+          "x": 1436,
           "y": 457,
         },
       },
@@ -1483,10 +1483,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 204,
+          "height": 29,
           "width": 16,
           "x": 1517,
-          "y": 774,
+          "y": 949,
         },
         "contentAux": {
           "hasBorder": true,
@@ -1505,8 +1505,8 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 68,
-          "width": 16,
-          "x": 1517,
+          "width": 634,
+          "x": 868,
           "y": 910,
         },
       },
@@ -1538,10 +1538,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 189,
+          "height": 29,
           "width": 16,
           "x": 1374,
-          "y": 336,
+          "y": 496,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1553,8 +1553,8 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 63,
-          "width": 16,
-          "x": 1374,
+          "width": 524,
+          "x": 835,
           "y": 462,
         },
       },
@@ -1577,10 +1577,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 189,
+          "height": 29,
           "width": 16,
           "x": 464,
-          "y": 759,
+          "y": 919,
         },
         "contentAux": {
           "hasBorder": true,
@@ -1599,18 +1599,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 63,
-          "width": 16,
-          "x": 464,
+          "width": 419,
+          "x": 30,
           "y": 885,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 189,
+          "height": 29,
           "width": 16,
           "x": 1114,
-          "y": 759,
+          "y": 919,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1621,7 +1621,7 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 189,
+          "height": 349,
           "width": 16,
           "x": 1114,
           "y": 555,
@@ -1629,18 +1629,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 63,
-          "width": 16,
-          "x": 1114,
+          "width": 589,
+          "x": 510,
           "y": 885,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 189,
+          "height": 29,
           "width": 16,
           "x": 1874,
-          "y": 759,
+          "y": 919,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1659,8 +1659,8 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 63,
-          "width": 16,
-          "x": 1874,
+          "width": 698,
+          "x": 1161,
           "y": 885,
         },
       },
@@ -1676,10 +1676,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 825,
-          "y": 198,
+          "y": 321,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1691,8 +1691,8 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 825,
+          "width": 569,
+          "x": 241,
           "y": 299,
         },
       },
@@ -1715,10 +1715,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 1663,
-          "y": 198,
+          "y": 321,
         },
         "contentAux": {
           "hasBorder": true,
@@ -1737,18 +1737,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 1663,
+          "width": 320,
+          "x": 1328,
           "y": 299,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 860,
-          "y": 548,
+          "y": 671,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1759,7 +1759,7 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 153,
+          "height": 276,
           "width": 16,
           "x": 860,
           "y": 380,
@@ -1767,18 +1767,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 860,
+          "width": 341,
+          "x": 503,
           "y": 649,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 1401,
-          "y": 548,
+          "y": 671,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1797,18 +1797,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 1401,
+          "width": 480,
+          "x": 906,
           "y": 649,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 1016,
-          "y": 898,
+          "y": 1021,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1862,10 +1862,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 1282,
-          "y": 198,
+          "y": 321,
         },
         "contentAux": {
           "hasBorder": true,
@@ -1884,18 +1884,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 1282,
+          "width": 427,
+          "x": 840,
           "y": 299,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 1663,
-          "y": 198,
+          "y": 321,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1906,7 +1906,7 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 153,
+          "height": 276,
           "width": 16,
           "x": 1663,
           "y": 30,
@@ -1914,18 +1914,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 1663,
+          "width": 320,
+          "x": 1328,
           "y": 299,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 560,
-          "y": 548,
+          "y": 671,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1944,18 +1944,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 560,
+          "width": 341,
+          "x": 204,
           "y": 649,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 1101,
-          "y": 548,
+          "y": 671,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1984,10 +1984,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 998,
-          "y": 898,
+          "y": 1021,
         },
         "contentMain": {
           "hasBorder": true,
@@ -1999,8 +1999,8 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 998,
+          "width": 427,
+          "x": 556,
           "y": 999,
         },
       },
@@ -2032,10 +2032,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 809,
-          "y": 198,
+          "y": 321,
         },
         "contentAux": {
           "hasBorder": true,
@@ -2054,18 +2054,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 809,
+          "width": 569,
+          "x": 226,
           "y": 299,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 1297,
-          "y": 198,
+          "y": 321,
         },
         "contentMain": {
           "hasBorder": true,
@@ -2076,7 +2076,7 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 153,
+          "height": 276,
           "width": 16,
           "x": 1297,
           "y": 30,
@@ -2084,18 +2084,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 1297,
+          "width": 427,
+          "x": 856,
           "y": 299,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 1678,
-          "y": 198,
+          "y": 321,
         },
         "contentMain": {
           "hasBorder": true,
@@ -2114,18 +2114,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 1678,
+          "width": 320,
+          "x": 1343,
           "y": 299,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 560,
-          "y": 548,
+          "y": 671,
         },
         "contentMain": {
           "hasBorder": true,
@@ -2154,10 +2154,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 1700,
-          "y": 548,
+          "y": 671,
         },
         "contentMain": {
           "hasBorder": true,
@@ -2169,8 +2169,8 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 1700,
+          "width": 569,
+          "x": 1116,
           "y": 649,
         },
       },
@@ -2193,10 +2193,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 1147,
-          "y": 898,
+          "y": 1021,
         },
         "contentAux": {
           "hasBorder": true,
@@ -2215,18 +2215,18 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 1147,
+          "width": 320,
+          "x": 812,
           "y": 999,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 153,
+          "height": 29,
           "width": 16,
           "x": 1549,
-          "y": 898,
+          "y": 1021,
         },
         "contentMain": {
           "hasBorder": true,
@@ -2237,7 +2237,7 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 153,
+          "height": 276,
           "width": 16,
           "x": 1549,
           "y": 730,
@@ -2245,8 +2245,8 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         "name": {
           "hasBorder": false,
           "height": 51,
-          "width": 16,
-          "x": 1549,
+          "width": 341,
+          "x": 1193,
           "y": 999,
         },
       },
@@ -2289,10 +2289,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 246,
+          "height": 245,
           "width": 138,
           "x": 924,
-          "y": 515,
+          "y": 516,
         },
         "contentAux": {
           "hasBorder": true,
@@ -2313,16 +2313,16 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
           "height": 82,
           "width": 138,
           "x": 924,
-          "y": 679,
+          "y": 680,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 246,
+          "height": 245,
           "width": 138,
           "x": 1762,
-          "y": 515,
+          "y": 516,
         },
         "contentMain": {
           "hasBorder": true,
@@ -2333,7 +2333,7 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 246,
+          "height": 248,
           "width": 138,
           "x": 1762,
           "y": 259,
@@ -2343,7 +2343,7 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
           "height": 82,
           "width": 138,
           "x": 1762,
-          "y": 679,
+          "y": 680,
         },
       },
     ],
@@ -2543,10 +2543,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 194,
+          "height": 167,
           "width": 94,
           "x": 736,
-          "y": 306,
+          "y": 333,
         },
         "contentMain": {
           "hasBorder": true,
@@ -2575,10 +2575,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 194,
+          "height": 167,
           "width": 94,
           "x": 1806,
-          "y": 306,
+          "y": 333,
         },
         "contentMain": {
           "hasBorder": true,
@@ -2589,10 +2589,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 65,
+          "height": 56,
           "width": 94,
           "x": 1806,
-          "y": 435,
+          "y": 444,
         },
       },
       {
@@ -2614,10 +2614,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 194,
+          "height": 167,
           "width": 94,
           "x": 1438,
-          "y": 724,
+          "y": 751,
         },
         "contentAux": {
           "hasBorder": true,
@@ -2635,10 +2635,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 65,
+          "height": 56,
           "width": 94,
           "x": 1438,
-          "y": 853,
+          "y": 862,
         },
       },
     ],
@@ -2671,10 +2671,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 171,
+          "height": 167,
           "width": 94,
           "x": 1290,
-          "y": 329,
+          "y": 333,
         },
         "contentMain": {
           "hasBorder": true,
@@ -2685,10 +2685,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 57,
+          "height": 56,
           "width": 94,
           "x": 1290,
-          "y": 443,
+          "y": 444,
         },
       },
       {
@@ -2710,10 +2710,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 171,
+          "height": 167,
           "width": 94,
           "x": 405,
-          "y": 701,
+          "y": 705,
         },
         "contentAux": {
           "hasBorder": true,
@@ -2731,19 +2731,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 57,
+          "height": 56,
           "width": 94,
           "x": 405,
-          "y": 815,
+          "y": 816,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 171,
+          "height": 167,
           "width": 94,
           "x": 1057,
-          "y": 701,
+          "y": 705,
         },
         "contentMain": {
           "hasBorder": true,
@@ -2754,26 +2754,26 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 171,
+          "height": 175,
           "width": 94,
           "x": 1057,
           "y": 520,
         },
         "name": {
           "hasBorder": false,
-          "height": 57,
+          "height": 56,
           "width": 94,
           "x": 1057,
-          "y": 815,
+          "y": 816,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 171,
+          "height": 167,
           "width": 94,
           "x": 1806,
-          "y": 701,
+          "y": 705,
         },
         "contentMain": {
           "hasBorder": true,
@@ -2791,10 +2791,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 57,
+          "height": 56,
           "width": 94,
           "x": 1806,
-          "y": 815,
+          "y": 816,
         },
       },
     ],
@@ -3431,10 +3431,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 241,
+          "height": 136,
           "width": 77,
           "x": 979,
-          "y": 488,
+          "y": 592,
         },
         "contentAux": {
           "hasBorder": true,
@@ -3452,19 +3452,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 80,
+          "height": 45,
           "width": 77,
           "x": 979,
-          "y": 648,
+          "y": 683,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 241,
+          "height": 136,
           "width": 77,
           "x": 1763,
-          "y": 488,
+          "y": 592,
         },
         "contentMain": {
           "hasBorder": true,
@@ -3475,17 +3475,17 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 241,
+          "height": 346,
           "width": 77,
           "x": 1763,
           "y": 231,
         },
         "name": {
           "hasBorder": false,
-          "height": 80,
+          "height": 45,
           "width": 77,
           "x": 1763,
-          "y": 648,
+          "y": 683,
         },
       },
     ],
@@ -3503,10 +3503,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 210,
+          "height": 136,
           "width": 77,
           "x": 965,
-          "y": 255,
+          "y": 329,
         },
         "contentMain": {
           "hasBorder": true,
@@ -3517,26 +3517,26 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 210,
+          "height": 284,
           "width": 77,
           "x": 965,
           "y": 30,
         },
         "name": {
           "hasBorder": false,
-          "height": 70,
+          "height": 45,
           "width": 77,
           "x": 965,
-          "y": 395,
+          "y": 420,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 210,
+          "height": 136,
           "width": 77,
           "x": 1667,
-          "y": 255,
+          "y": 329,
         },
         "contentMain": {
           "hasBorder": true,
@@ -3554,19 +3554,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 70,
+          "height": 45,
           "width": 77,
           "x": 1667,
-          "y": 395,
+          "y": 420,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 210,
+          "height": 136,
           "width": 77,
           "x": 1147,
-          "y": 720,
+          "y": 794,
         },
         "contentMain": {
           "hasBorder": true,
@@ -3591,10 +3591,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 210,
+          "height": 136,
           "width": 77,
           "x": 965,
-          "y": 255,
+          "y": 329,
         },
         "contentMain": {
           "hasBorder": true,
@@ -3612,19 +3612,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 70,
+          "height": 45,
           "width": 77,
           "x": 965,
-          "y": 395,
+          "y": 420,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 210,
+          "height": 136,
           "width": 77,
           "x": 1667,
-          "y": 255,
+          "y": 329,
         },
         "contentMain": {
           "hasBorder": true,
@@ -3653,10 +3653,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 210,
+          "height": 136,
           "width": 77,
           "x": 1394,
-          "y": 720,
+          "y": 794,
         },
         "contentMain": {
           "hasBorder": true,
@@ -3667,10 +3667,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 70,
+          "height": 45,
           "width": 77,
           "x": 1394,
-          "y": 860,
+          "y": 885,
         },
       },
     ],
@@ -3688,10 +3688,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 183,
+          "height": 96,
           "width": 54,
           "x": 771,
-          "y": 283,
+          "y": 369,
         },
         "contentMain": {
           "hasBorder": true,
@@ -3720,10 +3720,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 183,
+          "height": 96,
           "width": 54,
           "x": 1786,
-          "y": 283,
+          "y": 369,
         },
         "contentMain": {
           "hasBorder": true,
@@ -3734,10 +3734,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 61,
+          "height": 32,
           "width": 54,
           "x": 1786,
-          "y": 404,
+          "y": 433,
         },
       },
       {
@@ -3759,10 +3759,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 183,
+          "height": 96,
           "width": 54,
           "x": 1443,
-          "y": 693,
+          "y": 779,
         },
         "contentAux": {
           "hasBorder": true,
@@ -3780,10 +3780,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 61,
+          "height": 32,
           "width": 54,
           "x": 1443,
-          "y": 814,
+          "y": 843,
         },
       },
     ],
@@ -3817,10 +3817,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 164,
+          "height": 96,
           "width": 54,
           "x": 1303,
-          "y": 301,
+          "y": 369,
         },
         "contentMain": {
           "hasBorder": true,
@@ -3831,10 +3831,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 55,
+          "height": 32,
           "width": 54,
           "x": 1303,
-          "y": 410,
+          "y": 433,
         },
       },
       {
@@ -3856,10 +3856,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 164,
+          "height": 96,
           "width": 54,
           "x": 462,
-          "y": 674,
+          "y": 743,
         },
         "contentAux": {
           "hasBorder": true,
@@ -3877,19 +3877,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 55,
+          "height": 32,
           "width": 54,
           "x": 462,
-          "y": 784,
+          "y": 807,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 164,
+          "height": 96,
           "width": 54,
           "x": 1076,
-          "y": 674,
+          "y": 743,
         },
         "contentMain": {
           "hasBorder": true,
@@ -3900,26 +3900,26 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 164,
+          "height": 233,
           "width": 54,
           "x": 1076,
           "y": 495,
         },
         "name": {
           "hasBorder": false,
-          "height": 55,
+          "height": 32,
           "width": 54,
           "x": 1076,
-          "y": 784,
+          "y": 807,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 164,
+          "height": 96,
           "width": 54,
           "x": 1786,
-          "y": 674,
+          "y": 743,
         },
         "contentMain": {
           "hasBorder": true,
@@ -3937,10 +3937,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 55,
+          "height": 32,
           "width": 54,
           "x": 1786,
-          "y": 784,
+          "y": 807,
         },
       },
     ],
@@ -3958,10 +3958,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 798,
-          "y": 178,
+          "y": 214,
         },
         "contentMain": {
           "hasBorder": true,
@@ -3972,10 +3972,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 798,
-          "y": 266,
+          "y": 278,
         },
       },
       {
@@ -3997,10 +3997,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 1581,
-          "y": 178,
+          "y": 214,
         },
         "contentAux": {
           "hasBorder": true,
@@ -4018,19 +4018,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 1581,
-          "y": 266,
+          "y": 278,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 830,
-          "y": 488,
+          "y": 524,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4041,26 +4041,26 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 133,
+          "height": 169,
           "width": 54,
           "x": 830,
           "y": 340,
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 830,
-          "y": 576,
+          "y": 588,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 1349,
-          "y": 488,
+          "y": 524,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4078,19 +4078,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 1349,
-          "y": 576,
+          "y": 588,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 988,
-          "y": 798,
+          "y": 834,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4147,10 +4147,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 1202,
-          "y": 178,
+          "y": 214,
         },
         "contentAux": {
           "hasBorder": true,
@@ -4168,19 +4168,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 1202,
-          "y": 266,
+          "y": 278,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 1581,
-          "y": 178,
+          "y": 214,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4191,26 +4191,26 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 133,
+          "height": 169,
           "width": 54,
           "x": 1581,
           "y": 30,
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 1581,
-          "y": 266,
+          "y": 278,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 567,
-          "y": 488,
+          "y": 524,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4228,19 +4228,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 567,
-          "y": 576,
+          "y": 588,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 1085,
-          "y": 488,
+          "y": 524,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4269,10 +4269,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 972,
-          "y": 798,
+          "y": 834,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4283,10 +4283,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 972,
-          "y": 886,
+          "y": 898,
         },
       },
       {
@@ -4320,10 +4320,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 764,
-          "y": 178,
+          "y": 214,
         },
         "contentAux": {
           "hasBorder": true,
@@ -4341,19 +4341,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 764,
-          "y": 266,
+          "y": 278,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 1236,
-          "y": 178,
+          "y": 214,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4364,26 +4364,26 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 133,
+          "height": 169,
           "width": 54,
           "x": 1236,
           "y": 30,
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 1236,
-          "y": 266,
+          "y": 278,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 1615,
-          "y": 178,
+          "y": 214,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4401,19 +4401,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 1615,
-          "y": 266,
+          "y": 278,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 567,
-          "y": 488,
+          "y": 524,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4442,10 +4442,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 1613,
-          "y": 488,
+          "y": 524,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4456,10 +4456,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 1613,
-          "y": 576,
+          "y": 588,
         },
       },
       {
@@ -4481,10 +4481,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 1083,
-          "y": 798,
+          "y": 834,
         },
         "contentAux": {
           "hasBorder": true,
@@ -4502,19 +4502,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 1083,
-          "y": 886,
+          "y": 898,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 133,
+          "height": 96,
           "width": 54,
           "x": 1481,
-          "y": 798,
+          "y": 834,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4525,17 +4525,17 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 133,
+          "height": 169,
           "width": 54,
           "x": 1481,
           "y": 650,
         },
         "name": {
           "hasBorder": false,
-          "height": 44,
+          "height": 32,
           "width": 54,
           "x": 1481,
-          "y": 886,
+          "y": 898,
         },
       },
     ],
@@ -4580,10 +4580,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 252,
+          "height": 213,
           "width": 120,
           "x": 934,
-          "y": 485,
+          "y": 524,
         },
         "contentAux": {
           "hasBorder": true,
@@ -4601,19 +4601,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 84,
+          "height": 71,
           "width": 120,
           "x": 934,
-          "y": 653,
+          "y": 666,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 252,
+          "height": 213,
           "width": 120,
           "x": 1790,
-          "y": 485,
+          "y": 524,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4624,17 +4624,17 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 252,
+          "height": 291,
           "width": 120,
           "x": 1790,
           "y": 223,
         },
         "name": {
           "hasBorder": false,
-          "height": 84,
+          "height": 71,
           "width": 120,
           "x": 1790,
-          "y": 653,
+          "y": 666,
         },
       },
     ],
@@ -4651,10 +4651,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 220,
+          "height": 213,
           "width": 120,
           "x": 920,
-          "y": 240,
+          "y": 247,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4665,26 +4665,26 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 220,
+          "height": 227,
           "width": 120,
           "x": 920,
           "y": 10,
         },
         "name": {
           "hasBorder": false,
-          "height": 73,
+          "height": 71,
           "width": 120,
           "x": 920,
-          "y": 387,
+          "y": 389,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 220,
+          "height": 213,
           "width": 120,
           "x": 1690,
-          "y": 240,
+          "y": 247,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4702,19 +4702,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 73,
+          "height": 71,
           "width": 120,
           "x": 1690,
-          "y": 387,
+          "y": 389,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 220,
+          "height": 213,
           "width": 120,
           "x": 1130,
-          "y": 730,
+          "y": 737,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4738,10 +4738,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 220,
+          "height": 213,
           "width": 120,
           "x": 920,
-          "y": 240,
+          "y": 247,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4759,19 +4759,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 73,
+          "height": 71,
           "width": 120,
           "x": 920,
-          "y": 387,
+          "y": 389,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 220,
+          "height": 213,
           "width": 120,
           "x": 1690,
-          "y": 240,
+          "y": 247,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4800,10 +4800,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 220,
+          "height": 213,
           "width": 120,
           "x": 1390,
-          "y": 730,
+          "y": 737,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4814,10 +4814,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 73,
+          "height": 71,
           "width": 120,
           "x": 1390,
-          "y": 877,
+          "y": 879,
         },
       },
     ],
@@ -4834,10 +4834,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 193,
+          "height": 155,
           "width": 87,
           "x": 723,
-          "y": 267,
+          "y": 305,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4866,10 +4866,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 193,
+          "height": 155,
           "width": 87,
           "x": 1823,
-          "y": 267,
+          "y": 305,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4880,10 +4880,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 64,
+          "height": 52,
           "width": 87,
           "x": 1823,
-          "y": 396,
+          "y": 408,
         },
       },
       {
@@ -4905,10 +4905,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 193,
+          "height": 155,
           "width": 87,
           "x": 1449,
-          "y": 703,
+          "y": 741,
         },
         "contentAux": {
           "hasBorder": true,
@@ -4926,10 +4926,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 64,
+          "height": 52,
           "width": 87,
           "x": 1449,
-          "y": 831,
+          "y": 844,
         },
       },
     ],
@@ -4962,10 +4962,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 171,
+          "height": 155,
           "width": 87,
           "x": 1293,
-          "y": 289,
+          "y": 305,
         },
         "contentMain": {
           "hasBorder": true,
@@ -4976,10 +4976,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 57,
+          "height": 52,
           "width": 87,
           "x": 1293,
-          "y": 403,
+          "y": 408,
         },
       },
       {
@@ -5001,10 +5001,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 171,
+          "height": 155,
           "width": 87,
           "x": 395,
-          "y": 681,
+          "y": 697,
         },
         "contentAux": {
           "hasBorder": true,
@@ -5022,19 +5022,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 57,
+          "height": 52,
           "width": 87,
           "x": 395,
-          "y": 795,
+          "y": 800,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 171,
+          "height": 155,
           "width": 87,
           "x": 1060,
-          "y": 681,
+          "y": 697,
         },
         "contentMain": {
           "hasBorder": true,
@@ -5045,26 +5045,26 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 171,
+          "height": 187,
           "width": 87,
           "x": 1060,
           "y": 500,
         },
         "name": {
           "hasBorder": false,
-          "height": 57,
+          "height": 52,
           "width": 87,
           "x": 1060,
-          "y": 795,
+          "y": 800,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 171,
+          "height": 155,
           "width": 87,
           "x": 1823,
-          "y": 681,
+          "y": 697,
         },
         "contentMain": {
           "hasBorder": true,
@@ -5082,10 +5082,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 57,
+          "height": 52,
           "width": 87,
           "x": 1823,
-          "y": 795,
+          "y": 800,
         },
       },
     ],
@@ -5721,10 +5721,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 228,
+          "height": 220,
           "width": 124,
           "x": 922,
-          "y": 494,
+          "y": 501,
         },
         "contentAux": {
           "hasBorder": true,
@@ -5742,19 +5742,19 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 76,
+          "height": 73,
           "width": 124,
           "x": 922,
-          "y": 646,
+          "y": 648,
         },
       },
       {
         "camera": {
           "hasBorder": true,
-          "height": 228,
+          "height": 220,
           "width": 124,
           "x": 1760,
-          "y": 494,
+          "y": 501,
         },
         "contentMain": {
           "hasBorder": true,
@@ -5765,17 +5765,17 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 228,
+          "height": 236,
           "width": 124,
           "x": 1760,
           "y": 238,
         },
         "name": {
           "hasBorder": false,
-          "height": 76,
+          "height": 73,
           "width": 124,
           "x": 1760,
-          "y": 646,
+          "y": 648,
         },
       },
     ],
@@ -5975,10 +5975,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 174,
+          "height": 150,
           "width": 85,
           "x": 729,
-          "y": 285,
+          "y": 309,
         },
         "contentMain": {
           "hasBorder": true,
@@ -6007,10 +6007,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 174,
+          "height": 150,
           "width": 85,
           "x": 1799,
-          "y": 285,
+          "y": 309,
         },
         "contentMain": {
           "hasBorder": true,
@@ -6021,10 +6021,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 58,
+          "height": 50,
           "width": 85,
           "x": 1799,
-          "y": 401,
+          "y": 409,
         },
       },
       {
@@ -6046,10 +6046,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 174,
+          "height": 150,
           "width": 85,
           "x": 1433,
-          "y": 702,
+          "y": 725,
         },
         "contentAux": {
           "hasBorder": true,
@@ -6067,10 +6067,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "name": {
           "hasBorder": false,
-          "height": 58,
+          "height": 50,
           "width": 85,
           "x": 1433,
-          "y": 818,
+          "y": 826,
         },
       },
     ],
@@ -6103,10 +6103,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 151,
+          "height": 150,
           "width": 85,
           "x": 1279,
-          "y": 308,
+          "y": 309,
         },
         "contentMain": {
           "hasBorder": true,
@@ -6142,10 +6142,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 151,
+          "height": 150,
           "width": 85,
           "x": 414,
-          "y": 679,
+          "y": 680,
         },
         "contentAux": {
           "hasBorder": true,
@@ -6172,10 +6172,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 151,
+          "height": 150,
           "width": 85,
           "x": 1061,
-          "y": 679,
+          "y": 680,
         },
         "contentMain": {
           "hasBorder": true,
@@ -6186,7 +6186,7 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
         },
         "info": {
           "hasBorder": true,
-          "height": 151,
+          "height": 152,
           "width": 85,
           "x": 1061,
           "y": 501,
@@ -6202,10 +6202,10 @@ exports[`generateLayout > keeps ordinary layouts unchanged 1`] = `
       {
         "camera": {
           "hasBorder": true,
-          "height": 151,
+          "height": 150,
           "width": 85,
           "x": 1799,
-          "y": 679,
+          "y": 680,
         },
         "contentMain": {
           "hasBorder": true,

@@ -2,6 +2,8 @@ import type { SideRegionHeights } from '@/lib/calculateSideRegionHeights';
 import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 import type { LayoutMetric, LayoutRegion } from '@/types/LayoutMetric';
 
+import { cameraNumericAspectRatioMin } from '@/lib/calculateCameraHeights';
+
 export interface CalculateLayoutRegionsContext {
   cameraHeight: number;
   layoutGap: number;
@@ -94,11 +96,15 @@ export const calculateLayoutRegions = (
   }
 
   // Camera: the main column, else the bottom of the side column at the shared camera height, reaching up to share
-  // the border of the region above it when attached
+  // the border of the region above it when attached, unless that would make it narrower than the minimum ratio
   if (mainRegion === 'camera' && main) {
     layoutMetric.camera = { ...main, hasBorder: !isCameraGreenScreen };
   } else if (showSideCamera) {
-    const cameraY = above && isCameraAboveAttached ? above.y + above.height + regionBorder : rowBottom - cameraHeight;
+    const attachedCameraY = above && isCameraAboveAttached ? above.y + above.height + regionBorder : undefined;
+    const cameraY =
+      attachedCameraY !== undefined && rowBottom - attachedCameraY <= sideCameraWidth / cameraNumericAspectRatioMin
+        ? attachedCameraY
+        : rowBottom - cameraHeight;
 
     layoutMetric.camera = {
       x: sideRight - sideCameraWidth,

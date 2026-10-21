@@ -84,6 +84,16 @@ describe('calculateLayoutRegions', () => {
     ).toEqual({ x: 460, y: 214, width: 200, height: 106, hasBorder: true });
   });
 
+  it('keeps an attached side camera at the shared height when reaching up would make it narrower than 9:16', () => {
+    expect(
+      calculateLayoutRegions(
+        createResolvedLayoutConfig({ isCameraAboveAttached: true, sideCameraWidth: 50 }),
+        sideRegionHeights,
+        { ...context, regionBorder: 4 },
+      ).camera,
+    ).toEqual({ x: 610, y: 220, width: 50, height: 100, hasBorder: true });
+  });
+
   it('keeps an attached side camera at the shared height with nothing above it', () => {
     expect(
       calculateLayoutRegions(

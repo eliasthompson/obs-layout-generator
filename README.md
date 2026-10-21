@@ -22,9 +22,9 @@ const layouts = generateLayout([{ contentMain: { aspectRatio: '16:9' }, hasName:
 });
 // [
 //   {
-//     camera: { x: 1645, y: 488, width: 245, height: 443, hasBorder: true },
+//     camera: { x: 1645, y: 494, width: 245, height: 436, hasBorder: true },
 //     contentMain: { x: 30, y: 30, width: 1600, height: 900, hasBorder: true },
-//     name: { x: 1645, y: 783, width: 245, height: 148, hasBorder: false },
+//     name: { x: 1645, y: 785, width: 245, height: 145, hasBorder: false },
 //   },
 // ]
 ```
@@ -109,7 +109,7 @@ generateLayout([{ camera: { isGreenScreen: true } }], {
 // ]
 ```
 
-**Camera height.** In the side column, every participant's camera is the same height: half the row, reduced if needed to leave room for the tallest side aux content in the layout, measured at each aux content's own width. A camera attached to the region above it is taller than that by the gap it closes.
+**Camera height.** In the side column, every participant's camera is the same height: half the row, reduced if needed to leave room for the tallest side aux content in the layout, measured at each aux content's own width. A camera is never narrower than `CAMERA_ASPECT_RATIO_MIN` (9:16): when the side column is narrower than that at the shared height, every camera is shortened until the narrowest one is 9:16. A camera attached to the region above it is taller than that by the gap it closes, unless reaching the region above would make it narrower than 9:16, in which case it stays unattached at the shared height.
 
 **Name tag.** The name sits along the bottom of the camera, or the main content if there is no camera big enough to hold it, or the aux content if there is neither. It is as wide as its host and a third as tall, capped at a third of a full-height side camera so a name on a main-column camera stays the same size as one beside content, and at least `nameHeightMin` tall when the host allows. If none of those is shown, the name is omitted.
 
@@ -181,7 +181,7 @@ Version 2 nests each region's settings under the region's name, matching the sha
 ### Exports
 
 - **Layout:** `generateLayout` and `createLayoutGenerator`, `mergeLayoutConfigs` to apply one `LayoutConfig` over another region by region, the `LayoutConfig`, `CameraLayoutConfig`, `ContentMainLayoutConfig`, `ContentAuxLayoutConfig`, `InfoLayoutConfig`, `LayoutOptions`, `LayoutMetric`, and `LayoutRegion` types, and the `LAYOUT_CONFIG_DEFAULT`, `CAMERA_LAYOUT_CONFIG_DEFAULT`, `CONTENT_MAIN_LAYOUT_CONFIG_DEFAULT`, `CONTENT_AUX_LAYOUT_CONFIG_DEFAULT`, `INFO_LAYOUT_CONFIG_DEFAULT`, and `LAYOUT_OPTIONS_DEFAULT` constants.
-- **Aspect ratios:** `CONTENT_ASPECT_RATIOS` (frozen), `numericContentAspectRatios`, `widestNumericContentAspectRatio`, the `ContentAspectRatio` and `AspectRatio` types, and `transformAspectRatio` to turn `'16:9'` into `1.777…`.
+- **Aspect ratios:** `CONTENT_ASPECT_RATIOS` (frozen), `numericContentAspectRatios`, `widestNumericContentAspectRatio`, `CAMERA_ASPECT_RATIO_MIN` and `cameraNumericAspectRatioMin`, the `ContentAspectRatio` and `AspectRatio` types, and `transformAspectRatio` to turn `'16:9'` into `1.777…`.
 - **Building blocks**, in the order `generateLayout` uses them:
   - `distributeLayouts`: split layout configs into rows.
   - `calculateCanvasGrid`: layout area, content area, gaps, grid cells, and side column width.

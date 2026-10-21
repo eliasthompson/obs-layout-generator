@@ -2,7 +2,11 @@ import { describe, expect, it } from 'vitest';
 
 import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 
-import { calculateCameraHeights, type CalculateCameraHeightsContext } from '@/lib/calculateCameraHeights';
+import {
+  calculateCameraHeights,
+  type CalculateCameraHeightsContext,
+  cameraNumericAspectRatioMin,
+} from '@/lib/calculateCameraHeights';
 
 const context: CalculateCameraHeightsContext = {
   hasSideRoom: true,
@@ -28,6 +32,10 @@ const createResolvedLayoutConfigs = (...sideContentAuxNumericAspectRatios: (numb
   }));
 
 describe('calculateCameraHeights', () => {
+  it('derives the minimum camera ratio from the 9:16 constant', () => {
+    expect(cameraNumericAspectRatioMin).toBe(9 / 16);
+  });
+
   it('uses half the row without side aux content, with a third of it as the name cap', () => {
     const cameraHeights = calculateCameraHeights(createResolvedLayoutConfigs(undefined), context);
 
@@ -63,6 +71,24 @@ describe('calculateCameraHeights', () => {
       hasCameraNameRoom: false,
       hasCameraRoom: false,
     });
+  });
+
+  it('shortens the camera so the narrowest side camera is never narrower than 9:16', () => {
+    const [wide, narrow] = createResolvedLayoutConfigs(undefined, undefined);
+    const cameraHeights = calculateCameraHeights([wide, { ...narrow, sideCameraWidth: 90 }], context);
+
+    expect(cameraHeights.cameraHeight).toBe(160);
+    expect(cameraHeights).toMatchObject({ hasCameraNameRoom: true, hasCameraRoom: true });
+    expect(cameraHeights.nameHeightMax).toBeCloseTo(200 / 3);
+  });
+
+  it('ignores the side camera width of participants without a side camera', () => {
+    const [resolvedLayoutConfig] = createResolvedLayoutConfigs(undefined);
+
+    expect(
+      calculateCameraHeights([{ ...resolvedLayoutConfig, hasSideCamera: false, sideCameraWidth: 90 }], context)
+        .cameraHeight,
+    ).toBe(200);
   });
 
   it('has no camera room without side room', () => {

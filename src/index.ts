@@ -1,3 +1,4 @@
+export * from '@/constants/cameraAspectRatioMin';
 export * from '@/constants/contentAspectRatios';
 export * from '@/constants/layoutConfig';
 export * from '@/constants/layoutOptions';

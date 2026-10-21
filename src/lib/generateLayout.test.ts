@@ -23,9 +23,9 @@ describe('generateLayout', () => {
   it('lays out a single participant with a lower bar', () => {
     expect(generateLayout([{ hasName: true }], barOptions)).toEqual([
       {
-        camera: { x: 1645, y: 488, width: 245, height: 443, hasBorder: true },
+        camera: { x: 1645, y: 494, width: 245, height: 436, hasBorder: true },
         contentMain: { x: 30, y: 30, width: 1600, height: 900, hasBorder: true },
-        name: { x: 1645, y: 783, width: 245, height: 148, hasBorder: false },
+        name: { x: 1645, y: 785, width: 245, height: 145, hasBorder: false },
       },
     ]);
   });
@@ -118,10 +118,10 @@ describe('generateLayout', () => {
     expect(generateLayout([{ contentAux: { aspectRatio: '4:3' }, info: { aspectRatio: 'auto' } }], barOptions)).toEqual(
       [
         {
-          camera: { x: 1645, y: 488, width: 245, height: 443, hasBorder: true },
+          camera: { x: 1645, y: 494, width: 245, height: 436, hasBorder: true },
           contentMain: { x: 30, y: 30, width: 1600, height: 900, hasBorder: true },
           contentAux: { x: 1645, y: 30, width: 245, height: 184, hasBorder: true },
-          info: { x: 1645, y: 229, width: 245, height: 244, hasBorder: true },
+          info: { x: 1645, y: 229, width: 245, height: 251, hasBorder: true },
         },
       ],
     );
@@ -180,7 +180,7 @@ describe('generateLayout', () => {
   it('raises the name to nameHeightMin within its host', () => {
     expect(generateLayout([{ hasName: true }], { ...barOptions, nameHeightMin: 200 })).toEqual([
       {
-        camera: { x: 1645, y: 488, width: 245, height: 443, hasBorder: true },
+        camera: { x: 1645, y: 494, width: 245, height: 436, hasBorder: true },
         contentMain: { x: 30, y: 30, width: 1600, height: 900, hasBorder: true },
         name: { x: 1645, y: 730, width: 245, height: 200, hasBorder: false },
       },
@@ -222,16 +222,29 @@ describe('generateLayout', () => {
     ]);
   });
 
-  it('reaches an attached side camera up to the side info above it across a shared border', () => {
+  it('leaves a side camera unattached when reaching the side info above it would make it narrower than 9:16', () => {
     expect(
       generateLayout([{ camera: { isAboveAttached: true }, info: { aspectRatio: '16:9' } }], borderedBarOptions),
     ).toEqual([
       {
-        camera: { x: 1642, y: 178, width: 242, height: 746, hasBorder: true },
+        camera: { x: 1642, y: 494, width: 242, height: 431, hasBorder: true },
         contentMain: borderedContentMain,
         info: { x: 1642, y: 36, width: 242, height: 136, hasBorder: true },
       },
     ]);
+  });
+
+  it('reaches an attached side camera up to the side aux content above it across a shared border', () => {
+    const [layoutMetric] = generateLayout(
+      [{ camera: { isAboveAttached: true }, contentAux: { aspectRatio: '16:9' } }],
+      {
+        ...borderedBarOptions,
+        canvasMarginTop: 300,
+      },
+    );
+
+    expect(layoutMetric.contentAux).toEqual({ x: 1108, y: 336, width: 776, height: 436, hasBorder: true });
+    expect(layoutMetric.camera).toEqual({ x: 1108, y: 778, width: 776, height: 146, hasBorder: true });
   });
 
   it('moves attached ratio side info up to the side aux content above it without changing its size', () => {
@@ -406,6 +419,13 @@ describe('generateLayout', () => {
       expect(layoutMetrics).toHaveLength(layoutConfigs.length);
 
       layoutMetrics.forEach((layoutMetric, layoutMetricIndex) => {
+        // A bordered camera is never narrower than 9:16, within rounding
+        if (layoutMetric.camera?.hasBorder) {
+          const { width, height } = layoutMetric.camera;
+
+          expect(height).toBeLessThanOrEqual(width / (9 / 16) + 2);
+        }
+
         regionsOf(layoutMetric).forEach((region) => {
           const [left, right, top, bottom] = region.hasBorder
             ? [paddingLeft, paddingRight, paddingTop, paddingBottom]
