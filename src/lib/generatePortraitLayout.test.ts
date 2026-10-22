@@ -22,8 +22,12 @@ const layoutConfigs: LayoutConfig[] = [{ contentAux: {}, hasName: true }, { hasN
 
 describe('generatePortraitLayout', () => {
   it('lays out what generateLayout does on a portrait canvas', () => {
-    expect(generatePortraitLayout(layoutConfigs, calculateCanvasGrid(layoutOptions, layoutConfigs.length), 36)).toEqual(
+    expect(generatePortraitLayout(layoutConfigs, calculateCanvasGrid(layoutOptions, layoutConfigs.length))).toEqual(
       generateLayout(layoutConfigs, layoutOptions),
     );
+  });
+
+  it('returns no layout metrics for no layout configs', () => {
+    expect(generatePortraitLayout([], calculateCanvasGrid(layoutOptions, 0))).toEqual([]);
   });
 });

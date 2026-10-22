@@ -5,6 +5,7 @@ import type { LayoutOptions } from '@/constants/layoutOptions';
 import type { LayoutMetric, LayoutRegion } from '@/types/LayoutMetric';
 
 import { CONTENT_ASPECT_RATIOS } from '@/constants/contentAspectRatios';
+import { calculateCanvasGrid } from '@/lib/calculateCanvasGrid';
 import { generateLayout } from '@/lib/generateLayout';
 
 const barOptions: LayoutOptions = { canvasGap: 30, canvasMarginBottom: 120, canvasPadding: 30 };
@@ -99,7 +100,7 @@ describe('generateLayout', () => {
     expect(generateLayout([{ contentMain: null, hasName: true }], barOptions)).toEqual([
       {
         camera: { x: 160, y: 30, width: 1600, height: 900, hasBorder: true },
-        name: { x: 160, y: 783, width: 1600, height: 148, hasBorder: false },
+        name: { x: 160, y: 783, width: 1600, height: 147, hasBorder: false },
       },
     ]);
   });
@@ -113,7 +114,7 @@ describe('generateLayout', () => {
     ).toEqual([
       {
         contentAux: { x: 360, y: 30, width: 1200, height: 900, hasBorder: true },
-        name: { x: 360, y: 783, width: 1200, height: 148, hasBorder: false },
+        name: { x: 360, y: 783, width: 1200, height: 147, hasBorder: false },
       },
     ]);
   });
@@ -135,7 +136,7 @@ describe('generateLayout', () => {
           camera: { x: 1645, y: 494, width: 245, height: 436, hasBorder: true },
           contentMain: { x: 30, y: 30, width: 1600, height: 900, hasBorder: true },
           contentAux: { x: 1645, y: 30, width: 245, height: 184, hasBorder: true },
-          info: { x: 1645, y: 229, width: 245, height: 251, hasBorder: true },
+          info: { x: 1645, y: 229, width: 245, height: 250, hasBorder: true },
         },
       ],
     );
@@ -154,8 +155,8 @@ describe('generateLayout', () => {
       canvasPadding: 30,
     });
 
-    expect(layoutMetric.camera?.height).toBeLessThan(98);
-    expect(layoutMetric.name).toEqual({ x: 30, y: 953, width: 1067, height: 98, hasBorder: false });
+    expect(layoutMetric.camera?.height).toBeLessThan(97);
+    expect(layoutMetric.name).toEqual({ x: 30, y: 953, width: 1067, height: 97, hasBorder: false });
   });
 
   it('reserves only the gaps each row has when fitting rows to the content width', () => {
@@ -195,7 +196,7 @@ describe('generateLayout', () => {
     expect(generateLayout([{ hasName: true }], { layoutSideMin: 120 })).toEqual([
       {
         camera: { x: 1800, y: 833, width: 120, height: 213, hasBorder: true },
-        contentMain: { x: 0, y: 34, width: 1800, height: 1013, hasBorder: true },
+        contentMain: { x: 0, y: 34, width: 1800, height: 1012, hasBorder: true },
         name: { x: 1800, y: 975, width: 120, height: 71, hasBorder: false },
       },
     ]);
@@ -214,9 +215,9 @@ describe('generateLayout', () => {
   it('reserves a region border around every region but the name', () => {
     expect(generateLayout([{ hasName: true }], borderedBarOptions)).toEqual([
       {
-        camera: { x: 1642, y: 494, width: 242, height: 431, hasBorder: true },
+        camera: { x: 1642, y: 494, width: 242, height: 430, hasBorder: true },
         contentMain: borderedContentMain,
-        name: { x: 1642, y: 781, width: 242, height: 144, hasBorder: false },
+        name: { x: 1642, y: 781, width: 242, height: 143, hasBorder: false },
       },
     ]);
   });
@@ -224,7 +225,7 @@ describe('generateLayout', () => {
   it('attaches a side camera to the main region across a shared border', () => {
     expect(generateLayout([{ camera: { isMainAttached: true } }], borderedBarOptions)).toEqual([
       {
-        camera: { x: 1621, y: 494, width: 263, height: 431, hasBorder: true },
+        camera: { x: 1621, y: 494, width: 263, height: 430, hasBorder: true },
         contentMain: borderedContentMain,
       },
     ]);
@@ -251,7 +252,7 @@ describe('generateLayout', () => {
       generateLayout([{ camera: { isAboveAttached: true }, info: { aspectRatio: '16:9' } }], borderedBarOptions),
     ).toEqual([
       {
-        camera: { x: 1642, y: 494, width: 242, height: 431, hasBorder: true },
+        camera: { x: 1642, y: 494, width: 242, height: 430, hasBorder: true },
         contentMain: borderedContentMain,
         info: { x: 1642, y: 36, width: 242, height: 136, hasBorder: true },
       },
@@ -293,9 +294,9 @@ describe('generateLayout', () => {
   it('expands a green screen side camera over its border, the layout gaps, and the padding to the margins', () => {
     expect(generateLayout([{ camera: { isGreenScreen: true }, hasName: true }], borderedBarOptions)).toEqual([
       {
-        camera: { x: 1621, y: 473, width: 299, height: 488, hasBorder: false },
+        camera: { x: 1621, y: 473, width: 299, height: 487, hasBorder: false },
         contentMain: borderedContentMain,
-        name: { x: 1621, y: 817, width: 299, height: 144, hasBorder: false },
+        name: { x: 1621, y: 817, width: 299, height: 143, hasBorder: false },
       },
     ]);
   });
@@ -322,16 +323,18 @@ describe('generateLayout', () => {
     ]);
   });
 
-  it('expands a green screen main camera halfway toward the previous participant', () => {
+  it('expands a green screen main camera halfway toward the previous participant and through the padding', () => {
     const layoutMetrics = generateLayout([{}, { camera: { isGreenScreen: true }, contentMain: null }], barOptions);
 
-    expect(layoutMetrics[1].camera).toEqual({ x: 1031, y: 0, width: 889, height: 960, hasBorder: false });
+    // The row is shorter than the content area, so above and below it the camera stops after the padding
+    expect(layoutMetrics[1].camera).toEqual({ x: 1031, y: 213, width: 889, height: 534, hasBorder: false });
   });
 
   it('expands a green screen main camera halfway toward the previous row', () => {
     const layoutMetrics = generateLayout([{}, {}, { camera: { isGreenScreen: true }, contentMain: null }], barOptions);
 
-    expect(layoutMetrics[2].camera).toEqual({ x: 0, y: 480, width: 1920, height: 480, hasBorder: false });
+    // Alone in the bottom row, the camera reaches through the padding on its sides rather than across the row
+    expect(layoutMetrics[2].camera).toEqual({ x: 543, y: 480, width: 834, height: 480, hasBorder: false });
   });
 
   it('lays out a portrait canvas with the main region on top and a lone camera filling the row beneath', () => {
@@ -359,50 +362,115 @@ describe('generateLayout', () => {
     const [layoutMetric] = generateLayout([{ contentAux: {}, info: { aspectRatio: '16:9' } }], portraitOptions);
 
     expect(layoutMetric).toEqual({
-      camera: { x: 903, y: 987, width: 147, height: 261, hasBorder: true },
+      camera: { x: 903, y: 987, width: 147, height: 262, hasBorder: true },
       contentMain: { ...portraitContentMain, y: 383 },
-      contentAux: { x: 30, y: 987, width: 348, height: 261, hasBorder: true },
-      info: { x: 408, y: 987, width: 465, height: 261, hasBorder: true },
+      contentAux: { x: 30, y: 987, width: 348, height: 262, hasBorder: true },
+      info: { x: 408, y: 987, width: 465, height: 262, hasBorder: true },
     });
     expect(generateLayout([{ hasName: true, info: {} }], portraitOptions)).toEqual(
       generateLayout([{ hasName: true }], portraitOptions),
     );
   });
 
-  it('stacks two participants in one column and moves the name off a camera too short for it', () => {
+  it('stacks two participants in one column, narrowed and centered so each camera is no wider than 16:9', () => {
     expect(generateLayout([{ hasName: true }, { hasName: true }], portraitOptions)).toEqual([
       {
-        camera: { x: 30, y: 778, width: 1020, height: 20, hasBorder: true },
-        contentMain: portraitContentMain,
-        name: { x: 30, y: 649, width: 1020, height: 99, hasBorder: false },
+        camera: { x: 276, y: 501, width: 528, height: 297, hasBorder: true },
+        contentMain: { x: 276, y: 174, width: 528, height: 297, hasBorder: true },
+        name: { x: 276, y: 699, width: 528, height: 99, hasBorder: false },
       },
       {
-        camera: { x: 30, y: 1438, width: 1020, height: 20, hasBorder: true },
-        contentMain: { x: 30, y: 834, width: 1020, height: 574, hasBorder: true },
-        name: { x: 30, y: 1309, width: 1020, height: 99, hasBorder: false },
+        camera: { x: 276, y: 1161, width: 528, height: 297, hasBorder: true },
+        contentMain: { x: 276, y: 834, width: 528, height: 297, hasBorder: true },
+        name: { x: 276, y: 1359, width: 528, height: 99, hasBorder: false },
       },
     ]);
   });
 
-  it('reserves layoutSideMin beneath each main region in portrait and raises the name to nameHeightMin', () => {
-    expect(
-      generateLayout([{ hasName: true }, { hasName: true }], {
-        ...portraitOptions,
-        layoutSideMin: 108,
-        nameHeightMin: 36,
-      }),
-    ).toEqual([
+  it('fills a portrait cell with a main camera at its auto ratio, or keeps a given ratio', () => {
+    expect(generateLayout([{ contentMain: null }], portraitOptions)).toEqual([
+      { camera: { x: 30, y: 174, width: 1020, height: 1284, hasBorder: true } },
+    ]);
+    expect(generateLayout([{ camera: { mainAspectRatio: '16:9' }, contentMain: null }], portraitOptions)).toEqual([
+      { camera: { x: 30, y: 529, width: 1020, height: 574, hasBorder: true } },
+    ]);
+  });
+
+  it('stacks the participants of a portrait column a canvas gap apart, centering the stack rather than each one', () => {
+    // The guest camera fills its cell; the first participant is shorter than its cell, so the room goes to the ends
+    expect(generateLayout([{}, { contentMain: null }], portraitOptions)).toEqual([
       {
-        camera: { x: 108, y: 690, width: 864, height: 108, hasBorder: true },
-        contentMain: { x: 108, y: 174, width: 864, height: 486, hasBorder: true },
-        name: { x: 108, y: 762, width: 864, height: 36, hasBorder: false },
+        camera: { x: 276, y: 501, width: 528, height: 297, hasBorder: true },
+        contentMain: { x: 276, y: 174, width: 528, height: 297, hasBorder: true },
       },
+      { camera: { x: 276, y: 834, width: 528, height: 624, hasBorder: true } },
+    ]);
+    // Two main cameras each fill half the column, their borders a canvas gap apart: 834 - 6 - (174 + 624 + 6) = 24
+    expect(generateLayout([{ contentMain: null }, { contentMain: null }], portraitOptions)).toEqual([
+      { camera: { x: 30, y: 174, width: 1020, height: 624, hasBorder: true } },
+      { camera: { x: 30, y: 834, width: 1020, height: 624, hasBorder: true } },
+    ]);
+  });
+
+  it('puts two participants side by side in portrait when stacking them would leave narrower columns', () => {
+    const layoutMetrics = generateLayout([{ hasName: true }, { hasName: true }], {
+      ...portraitOptions,
+      canvasMarginTop: 377,
+    });
+
+    expect(layoutMetrics[0]).toEqual({
+      camera: { x: 30, y: 714, width: 492, height: 744, hasBorder: true },
+      contentMain: { x: 30, y: 407, width: 492, height: 277, hasBorder: true },
+      name: { x: 30, y: 1288, width: 492, height: 170, hasBorder: false },
+    });
+    expect(layoutMetrics[1].contentMain).toEqual({ x: 558, y: 407, width: 492, height: 277, hasBorder: true });
+  });
+
+  it('widens the portrait camera limit with cameraAspectRatioMax', () => {
+    expect(generateLayout([{}, {}], { ...portraitOptions, cameraAspectRatioMax: '2:1' })[0]).toEqual({
+      camera: { x: 260, y: 518, width: 560, height: 280, hasBorder: true },
+      contentMain: { x: 260, y: 174, width: 560, height: 314, hasBorder: true },
+    });
+  });
+
+  it('reserves layoutSideMin beneath the main region in portrait and raises the name to nameHeightMin', () => {
+    expect(generateLayout([{ hasName: true }], { ...portraitOptions, layoutSideMin: 800, nameHeightMin: 300 })).toEqual(
+      [
+        {
+          camera: { x: 136, y: 658, width: 808, height: 800, hasBorder: true },
+          contentMain: { x: 136, y: 174, width: 808, height: 454, hasBorder: true },
+          name: { x: 136, y: 1158, width: 808, height: 300, hasBorder: false },
+        },
+      ],
+    );
+  });
+
+  it('lays out in the orientation given, whatever the shape of the content area', () => {
+    // 1020×1008: near square, so auto lays it out in landscape, where the camera has no room
+    const nearSquareOptions: LayoutOptions = { ...portraitOptions, canvasMarginTop: 420 };
+
+    expect(generateLayout([{}], nearSquareOptions)).toEqual([
+      { contentMain: { x: 30, y: 667, width: 1020, height: 574, hasBorder: true } },
+    ]);
+    expect(generateLayout([{}], { ...nearSquareOptions, orientation: 'portrait' })).toEqual([
       {
-        camera: { x: 108, y: 1350, width: 864, height: 108, hasBorder: true },
-        contentMain: { x: 108, y: 834, width: 864, height: 486, hasBorder: true },
-        name: { x: 108, y: 1422, width: 864, height: 36, hasBorder: false },
+        camera: { x: 105, y: 969, width: 870, height: 489, hasBorder: true },
+        contentMain: { x: 105, y: 450, width: 870, height: 489, hasBorder: true },
       },
     ]);
+    expect(generateLayout([{}], { ...portraitOptions, orientation: 'landscape' })).toEqual([
+      { contentMain: { x: 30, y: 529, width: 1020, height: 574, hasBorder: true } },
+    ]);
+  });
+
+  it('places the name along the top of its host with namePosition', () => {
+    expect(generateLayout([{ hasName: true }], { ...portraitOptions, namePosition: 'top' })[0].name).toEqual({
+      x: 30,
+      y: 778,
+      width: 1020,
+      height: 209,
+      hasBorder: false,
+    });
   });
 
   it('splits three participants into a column of two and a centered column of one in portrait', () => {
@@ -422,9 +490,9 @@ describe('generateLayout', () => {
   it('reaches attached aux content up to the main region in portrait and shortens the camera to fit', () => {
     expect(generateLayout([{ contentAux: { isMainAttached: true } }], portraitOptions)).toEqual([
       {
-        camera: { x: 766, y: 865, width: 284, height: 505, hasBorder: true },
+        camera: { x: 766, y: 865, width: 284, height: 506, hasBorder: true },
         contentMain: { ...portraitContentMain, y: 261 },
-        contentAux: { x: 30, y: 841, width: 706, height: 529, hasBorder: true },
+        contentAux: { x: 30, y: 841, width: 706, height: 530, hasBorder: true },
       },
     ]);
   });
@@ -433,7 +501,7 @@ describe('generateLayout', () => {
     expect(generateLayout([{ camera: { isAboveAttached: true }, contentAux: {} }], portraitOptions)).toEqual([
       {
         camera: { x: 749, y: 850, width: 301, height: 535, hasBorder: true },
-        contentMain: { ...portraitContentMain, y: 247 },
+        contentMain: { ...portraitContentMain, y: 247, height: 573 },
         contentAux: { x: 30, y: 850, width: 713, height: 535, hasBorder: true },
       },
     ]);
@@ -454,7 +522,7 @@ describe('generateLayout', () => {
       generateLayout([{ camera: { isGreenScreen: true }, contentAux: {}, contentMain: null }], portraitOptions),
     ).toEqual([
       {
-        camera: { x: 0, y: 144, width: 1080, height: 681, hasBorder: false },
+        camera: { x: 0, y: 197, width: 1080, height: 628, hasBorder: false },
         contentAux: { x: 30, y: 831, width: 765, height: 574, hasBorder: true },
       },
     ]);
@@ -553,6 +621,7 @@ describe('generateLayout', () => {
         };
       });
       const layoutMetrics = generateLayout(layoutConfigs, layoutOptions);
+      const { isPortrait } = calculateCanvasGrid(layoutOptions, layoutConfigs.length);
       // Bordered boxes stay inside the padding; a green screen camera, and a name on it, may run to the margins
       const marginLeft = layoutOptions.canvasMarginLeft;
       const marginRight = canvasWidth - layoutOptions.canvasMarginRight;
@@ -570,11 +639,13 @@ describe('generateLayout', () => {
       expect(layoutMetrics).toHaveLength(layoutConfigs.length);
 
       layoutMetrics.forEach((layoutMetric, layoutMetricIndex) => {
-        // A bordered camera is never narrower than 9:16, within rounding
+        // A bordered camera is never narrower than 9:16, nor in portrait wider than 16:9, within rounding; the main
+        // camera ratios picked here are all within that too
         if (layoutMetric.camera?.hasBorder) {
           const { width, height } = layoutMetric.camera;
 
           expect(height).toBeLessThanOrEqual(width / (9 / 16) + 2);
+          if (isPortrait) expect(width).toBeLessThanOrEqual(height * (16 / 9) + 2);
         }
 
         // A name sits inside the camera, main content, or aux content that hosts it

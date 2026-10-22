@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { resolveLayoutConfig, type ResolveLayoutConfigContext } from '@/lib/resolveLayoutConfig';
 
 const context: ResolveLayoutConfigContext = {
+  cameraNumericAspectRatioMax: 16 / 9,
+  cameraNumericAspectRatioMin: 9 / 16,
   canvasGridUnitNumericAspectRatio: 2,
   hasSideRoom: true,
   layoutGap: 15,
@@ -106,6 +108,21 @@ describe('resolveLayoutConfig', () => {
       mainRegion: 'camera',
       sideWidthTotal: 0,
     });
+  });
+
+  it('gives a main camera at auto the widest camera ratio and the narrowest as its minimum', () => {
+    const mainCamera = resolveLayoutConfig({ contentMain: null }, context);
+
+    expect(mainCamera).toMatchObject({
+      mainNumericAspectRatio: 16 / 9,
+      mainNumericAspectRatioMin: 9 / 16,
+      mainRegion: 'camera',
+    });
+    expect(resolveLayoutConfig({ camera: { mainAspectRatio: '4:3' }, contentMain: null }, context)).not.toHaveProperty(
+      'mainNumericAspectRatioMin',
+      expect.any(Number) as number,
+    );
+    expect(resolveLayoutConfig({}, context).mainNumericAspectRatioMin).toBeUndefined();
   });
 
   it('skips an invalid main content ratio', () => {

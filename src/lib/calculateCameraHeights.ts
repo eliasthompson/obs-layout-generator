@@ -1,12 +1,7 @@
 import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 
-import { CAMERA_ASPECT_RATIO_MIN } from '@/constants/cameraAspectRatioMin';
-import { transformAspectRatio } from '@/lib/transformAspectRatio';
-
-/** The narrowest side camera shape as a number, below which a camera is shortened */
-export const cameraNumericAspectRatioMin = transformAspectRatio(CAMERA_ASPECT_RATIO_MIN);
-
 export interface CalculateCameraHeightsContext {
+  cameraNumericAspectRatioMin: number;
   hasSideRoom: boolean;
   layoutGap: number;
   rowHeight: number;
@@ -21,16 +16,17 @@ export interface CameraHeights {
 
 /**
  * Size the side camera shared by every participant, and the largest name tag: a third of a full-height side camera.
- * The camera is never narrower than `CAMERA_ASPECT_RATIO_MIN`: a side column narrower than that at the shared height
- * shortens every camera instead.
+ * The camera is never narrower than the minimum ratio: a side column narrower than that at the shared height shortens
+ * every camera instead.
  *
  * @param resolvedLayoutConfigs - Resolved configs for every participant.
- * @param context - Whether there is a side column at all, the column gap, and the row height.
+ * @param context - The narrowest camera ratio, whether there is a side column at all, the column gap, and the row
+ *   height.
  * @returns The shared camera height, whether it is usable and tall enough to host the name, and the name height cap.
  */
 export const calculateCameraHeights = (
   resolvedLayoutConfigs: ResolvedLayoutConfig[],
-  { hasSideRoom, layoutGap, rowHeight }: CalculateCameraHeightsContext,
+  { cameraNumericAspectRatioMin, hasSideRoom, layoutGap, rowHeight }: CalculateCameraHeightsContext,
 ): CameraHeights => {
   // Side aux content sits above the camera, so the tallest one in the layout, at its own width, limits every camera
   const sideContentAuxHeights = resolvedLayoutConfigs.flatMap(

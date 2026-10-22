@@ -7,6 +7,7 @@ import { calculateLayoutRegions, type CalculateLayoutRegionsContext } from '@/li
 
 const context: CalculateLayoutRegionsContext = {
   cameraHeight: 100,
+  cameraNumericAspectRatioMin: 9 / 16,
   layoutGap: 10,
   layoutSideWidth: 200,
   mainWidth: 400,

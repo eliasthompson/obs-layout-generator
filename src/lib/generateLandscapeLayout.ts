@@ -18,13 +18,14 @@ import { roundLayoutMetric } from '@/lib/roundLayoutMetric';
  * its right.
  *
  * @param layoutConfigs - One config per participant, in display order.
- * @param canvasGrid - The canvas grid for these participants.
- * @param nameHeightMin - The smallest name tag height.
+ * @param canvasGrid - The canvas grid for these participants, with the resolved options it carries.
  * @returns One layout metric per participant, in input order, with every region rounded to whole pixels.
  */
 export const generateLandscapeLayout = (
   layoutConfigs: LayoutConfig[],
   {
+    cameraNumericAspectRatioMax,
+    cameraNumericAspectRatioMin,
     canvasContentHeight,
     canvasContentWidth,
     canvasContentX,
@@ -35,12 +36,14 @@ export const generateLandscapeLayout = (
     canvasLayoutWidth,
     canvasLayoutX,
     canvasLayoutY,
+    canvasPadding,
     hasSideRoom,
     layoutGap,
     layoutSideWidth,
+    nameHeightMin,
+    namePosition,
     regionBorder,
   }: CanvasGrid,
-  nameHeightMin: number,
 ): LayoutMetric[] => {
   // Split participants into rows
   const rows = distributeLayouts(layoutConfigs);
@@ -52,6 +55,8 @@ export const generateLandscapeLayout = (
     const resolvedRows = rows.map((rowLayoutConfigs) =>
       rowLayoutConfigs.map((layoutConfig) => {
         const resolvedLayoutConfig = resolveLayoutConfig(layoutConfig, {
+          cameraNumericAspectRatioMax,
+          cameraNumericAspectRatioMin,
           canvasGridUnitNumericAspectRatio,
           hasSideRoom: hasSideRoom && !collapsedSideIndexes.has(layoutConfigIndex),
           layoutGap,
@@ -66,7 +71,12 @@ export const generateLandscapeLayout = (
     );
     // The row height, the shared camera and name heights, and each side stack all follow from the resolved rows
     const rowHeight = calculateRowHeight(resolvedRows, { canvasContentHeight, canvasContentWidth, canvasGap });
-    const cameraHeights = calculateCameraHeights(resolvedRows.flat(), { hasSideRoom, layoutGap, rowHeight });
+    const cameraHeights = calculateCameraHeights(resolvedRows.flat(), {
+      cameraNumericAspectRatioMin,
+      hasSideRoom,
+      layoutGap,
+      rowHeight,
+    });
     const sideRegionHeightRows = resolvedRows.map((rowResolvedLayoutConfigs) =>
       rowResolvedLayoutConfigs.map((resolvedLayoutConfig) =>
         calculateSideRegionHeights(resolvedLayoutConfig, {
@@ -114,7 +124,17 @@ export const generateLandscapeLayout = (
       const layoutMetric = calculateLayoutRegions(
         resolvedLayoutConfig,
         sideRegionHeightRows[rowIndex][rowLayoutConfigIndex],
-        { cameraHeight, layoutGap, layoutSideWidth, mainWidth, mainX, regionBorder, rowHeight, rowY },
+        {
+          cameraHeight,
+          cameraNumericAspectRatioMin,
+          layoutGap,
+          layoutSideWidth,
+          mainWidth,
+          mainX,
+          regionBorder,
+          rowHeight,
+          rowY,
+        },
       );
 
       if (layoutMetric.camera && isCameraGreenScreen) {
@@ -129,6 +149,7 @@ export const generateLandscapeLayout = (
           canvasLayoutWidth,
           canvasLayoutX,
           canvasLayoutY,
+          canvasPadding,
           layoutGap,
           neighbors: {
             left: isMainCamera ? outerNeighbor(rowLayoutConfigIndex === 0) : 'layout',
@@ -141,7 +162,7 @@ export const generateLandscapeLayout = (
       }
 
       const name = hasName
-        ? placeName(layoutMetric, { hasCameraNameRoom, mainRegion, nameHeightMax, nameHeightMin })
+        ? placeName(layoutMetric, { hasCameraNameRoom, mainRegion, nameHeightMax, nameHeightMin, namePosition })
         : undefined;
 
       if (name) layoutMetric.name = name;

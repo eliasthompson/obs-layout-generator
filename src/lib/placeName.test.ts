@@ -7,6 +7,7 @@ const context: PlaceNameContext = {
   mainRegion: 'contentMain',
   nameHeightMax: 50,
   nameHeightMin: 0,
+  namePosition: 'bottom',
 };
 const camera = { x: 460, y: 220, width: 200, height: 90, hasBorder: true };
 const contentMain = { x: 50, y: 20, width: 400, height: 300, hasBorder: true };
@@ -17,6 +18,16 @@ describe('placeName', () => {
     expect(placeName({ camera, contentMain }, context)).toEqual({
       x: 460,
       y: 280,
+      width: 200,
+      height: 30,
+      hasBorder: false,
+    });
+  });
+
+  it('places the name along the top of its host instead when asked', () => {
+    expect(placeName({ camera, contentMain }, { ...context, namePosition: 'top' })).toEqual({
+      x: 460,
+      y: 220,
       width: 200,
       height: 30,
       hasBorder: false,

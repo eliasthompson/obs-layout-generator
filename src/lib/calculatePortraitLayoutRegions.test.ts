@@ -67,6 +67,16 @@ describe('calculatePortraitLayoutRegions', () => {
     });
   });
 
+  it('centers a lone camera narrower than the column beneath the main region', () => {
+    expect(
+      calculatePortraitLayoutRegions(
+        createResolvedLayoutConfig({}),
+        createSideRowSizes({ cameraWidth: 160, cameraHeight: 90 }),
+        context,
+      ).camera,
+    ).toEqual({ x: 220, y: 295, width: 160, height: 90, hasBorder: true });
+  });
+
   it('lays the side row out as aux content, info, and the camera at the right end', () => {
     expect(calculatePortraitLayoutRegions(createResolvedLayoutConfig({}), sharedRow, context)).toEqual({
       camera: { x: 400, y: 295, width: 100, height: 90, hasBorder: true },

@@ -10,7 +10,10 @@ import {
   isSideRowShared,
 } from '@/lib/calculateSideRowSizes';
 
+// A loose maximum ratio, so only the tests about it narrow a camera
 const context: CalculateSideRowSizesContext = {
+  cameraNumericAspectRatioMax: 100,
+  cameraNumericAspectRatioMin: 9 / 16,
   cellHeight: 1000,
   columnWidth: 1000,
   layoutGap: 20,
@@ -141,6 +144,20 @@ describe('calculateSideRowSizes', () => {
     ).toBe(0);
   });
 
+  it('grows a main region that may be taller to fill a cell without a side row, down to its narrowest ratio', () => {
+    const mainCamera = createResolvedLayoutConfig({
+      hasSideCamera: false,
+      mainNumericAspectRatioMin: 9 / 16,
+      mainRegion: 'camera',
+    });
+
+    expect(calculateSideRowSizes(mainCamera, context).mainHeight).toBe(1000);
+    expect(calculateSideRowSizes(mainCamera, { ...context, cellHeight: 3000 }).mainHeight).toBeCloseTo(1000 / (9 / 16));
+    expect(calculateSideRowSizes({ ...mainCamera, mainNumericAspectRatioMin: undefined }, context).mainHeight).toBe(
+      562.5,
+    );
+  });
+
   it('fills the row with a lone camera', () => {
     expect(calculateSideRowSizes(createResolvedLayoutConfig({}), context)).toMatchObject({
       mainHeight: 562.5,
@@ -180,6 +197,16 @@ describe('calculateSideRowSizes', () => {
     });
   });
 
+  it('narrows a lone camera the shared height leaves wider than the maximum ratio', () => {
+    expect(
+      calculateSideRowSizes(createResolvedLayoutConfig({}), {
+        ...context,
+        cameraNumericAspectRatioMax: 16 / 9,
+        sharedHeight: 300,
+      }),
+    ).toMatchObject({ sideRowHeight: 300, cameraWidth: (16 / 9) * 300, cameraHeight: 300 });
+  });
+
   it('omits a lone camera whose row rounds to no height', () => {
     expect(calculateSideRowSizes(createResolvedLayoutConfig({}), { ...context, cellHeight: 582 })).toMatchObject({
       cameraWidth: 0,
@@ -199,6 +226,12 @@ describe('calculateSideRowSizes', () => {
       cameraHeight: 300,
       isCameraMainAttached: false,
     });
+  });
+
+  it('narrows the camera in a shared row to the maximum ratio, leaving the rest of the row empty', () => {
+    expect(
+      calculateSideRowSizes(withContentAux, { ...context, cameraNumericAspectRatioMax: 16 / 9, sharedHeight: 300 }),
+    ).toMatchObject({ contentAuxWidth: 400, cameraWidth: (16 / 9) * 300, cameraHeight: 300 });
   });
 
   it('grows attached regions by the gap less the border and separates attached ones by one border', () => {

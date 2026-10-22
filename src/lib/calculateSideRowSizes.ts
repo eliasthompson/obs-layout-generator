@@ -1,14 +1,22 @@
 import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 
-import { cameraNumericAspectRatioMin } from '@/lib/calculateCameraHeights';
-
-export interface SideRowContext {
-  columnWidth: number;
+export interface SideRowGaps {
   layoutGap: number;
   regionBorder: number;
 }
 
+export interface SideRowContext extends SideRowGaps {
+  cameraNumericAspectRatioMin: number;
+  columnWidth: number;
+}
+
+export interface SideRowMeasure {
+  ratioTotal: number;
+  fixedWidth: number;
+}
+
 export interface CalculateSideRowSizesContext extends SideRowContext {
+  cameraNumericAspectRatioMax: number;
   cellHeight: number;
   sharedHeight: number;
 }
@@ -57,15 +65,17 @@ export const isSideRowShared = ({
   sideContentAuxNumericAspectRatio !== undefined || (hasSideInfo && sideInfoNumericAspectRatio !== undefined);
 
 /**
- * The content height at which a shared side row exactly fills the column: aux content and info at their ratios, the
- * camera at the minimum ratio, and the gaps or shared borders between them. Regions attached to the main region are
- * taller by the gap they close, so their widths count that growth too.
+ * Measure a shared side row's width against its content height: at height `h` it is `ratioTotal * h + fixedWidth`
+ * wide, with aux content and info at their ratios, the camera at the given ratio, and the gaps or shared borders
+ * between them. Regions attached to the main region are taller by the gap they close, so their widths count that
+ * growth too.
  *
  * @param resolvedLayoutConfig - A participant whose side row is shared.
- * @param context - The column width, the gap between regions, and the region border.
- * @returns The fitting content height.
+ * @param gaps - The gap between regions and the region border.
+ * @param cameraNumericAspectRatio - The camera's ratio in the row.
+ * @returns The sum of the regions' ratios and the width that does not grow with the height.
  */
-export const fitSideRowHeight = (
+export const measureSideRow = (
   {
     hasSideCamera,
     hasSideInfo,
@@ -77,8 +87,9 @@ export const fitSideRowHeight = (
     sideContentAuxNumericAspectRatio,
     sideInfoNumericAspectRatio,
   }: ResolvedLayoutConfig,
-  { columnWidth, layoutGap, regionBorder }: SideRowContext,
-) => {
+  { layoutGap, regionBorder }: SideRowGaps,
+  cameraNumericAspectRatio: number,
+): SideRowMeasure => {
   const attachedGrowth = layoutGap - regionBorder;
   // Each region adds its ratio times the height to the row; the fixed part is the gaps and the attached growth
   let ratioTotal = 0;
@@ -99,29 +110,52 @@ export const fitSideRowHeight = (
 
   if (hasSideCamera) {
     // A shared row always has a region before the camera, a gap or one shared border away
-    ratioTotal += cameraNumericAspectRatioMin;
+    ratioTotal += cameraNumericAspectRatio;
     fixedWidth +=
       (isCameraAboveAttached ? regionBorder : layoutGap) +
-      cameraNumericAspectRatioMin * (isCameraMainAttached ? attachedGrowth : 0);
+      cameraNumericAspectRatio * (isCameraMainAttached ? attachedGrowth : 0);
   }
 
-  return (columnWidth - fixedWidth) / ratioTotal;
+  return { ratioTotal, fixedWidth };
+};
+
+/**
+ * The content height at which a shared side row exactly fills the column, with the camera at the minimum ratio.
+ *
+ * @param resolvedLayoutConfig - A participant whose side row is shared.
+ * @param context - The narrowest camera ratio, the column width, the gap between regions, and the region border.
+ * @returns The fitting content height.
+ */
+export const fitSideRowHeight = (resolvedLayoutConfig: ResolvedLayoutConfig, context: SideRowContext) => {
+  const { ratioTotal, fixedWidth } = measureSideRow(resolvedLayoutConfig, context, context.cameraNumericAspectRatioMin);
+
+  return (context.columnWidth - fixedWidth) / ratioTotal;
 };
 
 /**
  * Size one participant's main region and side row: aux content at the left, info next, and the camera at the right.
  * A lone camera fills the row; a row with aux content or ratio info uses the layout's shared content height, with
- * the camera taking the rest of the width.
+ * the camera taking the rest of the width. A camera is never narrower than the minimum ratio or wider than the
+ * maximum; the column width leaves every row tall enough for that, and a camera the shared height leaves too wide is
+ * narrowed.
  *
  * @param resolvedLayoutConfig - The participant's resolved config.
- * @param context - The cell height, column width, gap, border, and the shared row content height, `Infinity` when
- *   no row in the layout is shared.
+ * @param context - The camera ratio limits, the cell height, column width, gap, border, and the shared row content
+ *   height, `Infinity` when no row in the layout is shared.
  * @returns The main region height, the height the side row takes below its top, `0` when no side region is shown,
  *   each side region's size, `0` when the region is omitted, and whether the camera reaches the main region.
  */
 export const calculateSideRowSizes = (
   resolvedLayoutConfig: ResolvedLayoutConfig,
-  { cellHeight, columnWidth, layoutGap, regionBorder, sharedHeight }: CalculateSideRowSizesContext,
+  {
+    cameraNumericAspectRatioMax,
+    cameraNumericAspectRatioMin,
+    cellHeight,
+    columnWidth,
+    layoutGap,
+    regionBorder,
+    sharedHeight,
+  }: CalculateSideRowSizesContext,
 ): SideRowSizes => {
   const {
     hasSideCamera,
@@ -132,6 +166,7 @@ export const calculateSideRowSizes = (
     isInfoAboveAttached,
     isInfoMainAttached,
     mainNumericAspectRatio,
+    mainNumericAspectRatioMin = mainNumericAspectRatio,
     sideContentAuxNumericAspectRatio,
     sideInfoNumericAspectRatio,
   } = resolvedLayoutConfig;
@@ -148,7 +183,15 @@ export const calculateSideRowSizes = (
     isCameraMainAttached: false,
   };
 
-  if (!hasSideRow(resolvedLayoutConfig)) return sizes;
+  if (!hasSideRow(resolvedLayoutConfig)) {
+    // Alone in its cell, a main region that may grow taller, an 'auto' main camera, fills the cell down to its
+    // narrowest ratio
+    if (mainNumericAspectRatio > 0) {
+      sizes.mainHeight = Math.max(sizes.mainHeight, Math.min(cellHeight, columnWidth / mainNumericAspectRatioMin));
+    }
+
+    return sizes;
+  }
 
   // The row gets what the main region and the gap leave of the cell; a camera is never narrower than the minimum ratio
   const rowHeight = cellHeight - sizes.mainHeight - layoutGap;
@@ -163,7 +206,7 @@ export const calculateSideRowSizes = (
     if (Math.round(cameraHeight) > 0) {
       // An attached camera reaches above the row top, so the row itself is only the part below it
       sizes.sideRowHeight = isAttached ? rowHeight : cameraHeight;
-      sizes.cameraWidth = columnWidth;
+      sizes.cameraWidth = Math.min(columnWidth, cameraNumericAspectRatioMax * cameraHeight);
       sizes.cameraHeight = cameraHeight;
       sizes.isCameraMainAttached = isAttached;
     }
@@ -192,12 +235,17 @@ export const calculateSideRowSizes = (
   }
 
   if (hasSideCamera) {
-    // The camera takes the rest of the row, which the shared height keeps at least the minimum ratio wide
-    const cameraWidth = columnWidth - usedWidth - (isCameraAboveAttached ? regionBorder : layoutGap);
+    // The camera takes the rest of the row, which the shared height keeps at least the minimum ratio wide, up to the
+    // maximum ratio
+    const cameraHeight = sharedHeight + (isCameraMainAttached ? attachedGrowth : 0);
+    const cameraWidth = Math.min(
+      columnWidth - usedWidth - (isCameraAboveAttached ? regionBorder : layoutGap),
+      cameraNumericAspectRatioMax * cameraHeight,
+    );
 
     if (Math.round(cameraWidth) > 0) {
       sizes.cameraWidth = cameraWidth;
-      sizes.cameraHeight = sharedHeight + (isCameraMainAttached ? attachedGrowth : 0);
+      sizes.cameraHeight = cameraHeight;
       sizes.isCameraMainAttached = isCameraMainAttached;
     }
   }

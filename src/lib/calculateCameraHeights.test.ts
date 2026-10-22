@@ -2,13 +2,10 @@ import { describe, expect, it } from 'vitest';
 
 import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 
-import {
-  calculateCameraHeights,
-  type CalculateCameraHeightsContext,
-  cameraNumericAspectRatioMin,
-} from '@/lib/calculateCameraHeights';
+import { calculateCameraHeights, type CalculateCameraHeightsContext } from '@/lib/calculateCameraHeights';
 
 const context: CalculateCameraHeightsContext = {
+  cameraNumericAspectRatioMin: 9 / 16,
   hasSideRoom: true,
   layoutGap: 10,
   rowHeight: 410,
@@ -35,8 +32,13 @@ const createResolvedLayoutConfigs = (...sideContentAuxNumericAspectRatios: (numb
   }));
 
 describe('calculateCameraHeights', () => {
-  it('derives the minimum camera ratio from the 9:16 constant', () => {
-    expect(cameraNumericAspectRatioMin).toBe(9 / 16);
+  it('shortens every camera to the minimum ratio the context gives', () => {
+    const cameraHeights = calculateCameraHeights(createResolvedLayoutConfigs(undefined), {
+      ...context,
+      cameraNumericAspectRatioMin: 2,
+    });
+
+    expect(cameraHeights.cameraHeight).toBe(100);
   });
 
   it('uses half the row without side aux content, with a third of it as the name cap', () => {
