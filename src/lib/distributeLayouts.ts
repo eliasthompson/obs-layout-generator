@@ -4,19 +4,25 @@ import type { LayoutConfig } from '@/constants/layoutConfig';
  * Split layout configs into balanced rows.
  *
  * @param layoutConfigs - One config per participant, in display order.
- * @returns Rows of configs, in order. 1-2 configs give one row, 3-6 two, 7-12 three, and so on; the first rows take
- *   any extra configs.
+ * @param rowsTotal - How many rows to split them into, at least one and at most one per config. Left out, 1-2 configs
+ *   give one row, 3-6 two, 7-12 three, and so on.
+ * @returns Rows of configs, in order; the first rows take any extra configs.
  */
-export const distributeLayouts = (layoutConfigs: LayoutConfig[]): LayoutConfig[][] => {
+export const distributeLayouts = (layoutConfigs: LayoutConfig[], rowsTotal?: number): LayoutConfig[][] => {
   const layoutConfigsTotal = layoutConfigs.length;
 
   if (!layoutConfigsTotal) return [];
 
-  // Use the fewest rows R such that R * (R + 1) holds every config: 1-2 -> 1 row, 3-6 -> 2, 7-12 -> 3, 13-20 -> 4
+  // Use the given number of rows, or the fewest rows R such that R * (R + 1) holds every config: 1-2 -> 1 row,
+  // 3-6 -> 2, 7-12 -> 3, 13-20 -> 4
   let numRows = 1;
 
-  while (numRows * (numRows + 1) < layoutConfigsTotal) {
-    numRows += 1;
+  if (rowsTotal === undefined) {
+    while (numRows * (numRows + 1) < layoutConfigsTotal) {
+      numRows += 1;
+    }
+  } else {
+    numRows = Math.min(Math.max(1, Math.floor(rowsTotal)), layoutConfigsTotal);
   }
 
   // Start every row at the same size and count how many configs are left over

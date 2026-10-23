@@ -12,8 +12,8 @@ const layoutConfigs: LayoutConfig[] = [{ contentAux: {}, hasName: true }, { hasN
 
 describe('generateLandscapeLayout', () => {
   it('lays out what generateLayout does on a landscape canvas', () => {
-    expect(
-      generateLandscapeLayout(layoutConfigs, calculateCanvasGrid(layoutOptions, layoutConfigs.length), 36),
-    ).toEqual(generateLayout(layoutConfigs, layoutOptions));
+    expect(generateLandscapeLayout(layoutConfigs, calculateCanvasGrid(layoutOptions, layoutConfigs.length))).toEqual(
+      generateLayout(layoutConfigs, layoutOptions),
+    );
   });
 });

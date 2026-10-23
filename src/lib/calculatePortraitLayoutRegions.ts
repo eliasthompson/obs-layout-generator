@@ -12,7 +12,7 @@ export interface CalculatePortraitLayoutRegionsContext {
 
 /**
  * Position one participant's regions on a portrait canvas: the main region at the top of its cell and the side row
- * beneath it, with aux content at the left, info next, and the camera at the right end.
+ * beneath it, with aux content at the left, info next, and the camera at the right end, or centered when it is alone.
  *
  * @param resolvedLayoutConfig - Which region takes the main column, how the side regions attach, and whether the
  *   camera is a green screen.
@@ -89,12 +89,13 @@ export const calculatePortraitLayoutRegions = (
     };
   }
 
-  // Camera: the main column, else the right end of the side row
+  // Camera: the main column, else the right end of the side row, or centered beneath the main region when it is
+  // alone in the row and narrower than it
   if (mainRegion === 'camera' && main) {
     layoutMetric.camera = { ...main, hasBorder: !isCameraGreenScreen };
   } else if (cameraWidth) {
     layoutMetric.camera = {
-      x: cellRight - cameraWidth,
+      x: contentAuxWidth || infoWidth ? cellRight - cameraWidth : cellX + (columnWidth - cameraWidth) / 2,
       y: rowY - (isCameraMainAttached ? attachedGrowth : 0),
       width: cameraWidth,
       height: cameraHeight,

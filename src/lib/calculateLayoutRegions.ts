@@ -2,10 +2,9 @@ import type { SideRegionHeights } from '@/lib/calculateSideRegionHeights';
 import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 import type { LayoutMetric, LayoutRegion } from '@/types/LayoutMetric';
 
-import { cameraNumericAspectRatioMin } from '@/lib/calculateCameraHeights';
-
 export interface CalculateLayoutRegionsContext {
   cameraHeight: number;
+  cameraNumericAspectRatioMin: number;
   layoutGap: number;
   layoutSideWidth: number;
   mainWidth: number;
@@ -21,8 +20,8 @@ export interface CalculateLayoutRegionsContext {
  * @param resolvedLayoutConfig - Which region takes the main column, the side region widths, how the side regions
  *   attach, and whether the camera is a green screen.
  * @param sideRegionHeights - Heights of the side regions, where `0` omits the region.
- * @param context - The shared camera height, the column gap and side width, the region border, and the size and
- *   position of the main column and the row.
+ * @param context - The shared camera height, the narrowest camera ratio, the column gap and side width, the region
+ *   border, and the size and position of the main column and the row.
  * @returns The positioned regions, before any green screen camera is expanded, the name is placed, and rounding.
  */
 export const calculateLayoutRegions = (
@@ -38,6 +37,7 @@ export const calculateLayoutRegions = (
   { contentAuxHeight, infoHeight, showSideCamera }: SideRegionHeights,
   {
     cameraHeight,
+    cameraNumericAspectRatioMin,
     layoutGap,
     layoutSideWidth,
     mainWidth,

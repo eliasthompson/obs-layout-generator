@@ -11,6 +11,8 @@ import {
 import { transformAspectRatio } from '@/lib/transformAspectRatio';
 
 export interface ResolveLayoutConfigContext {
+  cameraNumericAspectRatioMax: number;
+  cameraNumericAspectRatioMin: number;
   canvasGridUnitNumericAspectRatio: number;
   hasSideRoom: boolean;
   layoutGap: number;
@@ -29,6 +31,8 @@ export interface ResolvedLayoutConfig {
   isInfoAboveAttached: boolean;
   isInfoMainAttached: boolean;
   mainNumericAspectRatio: number;
+  /** The narrowest ratio a main region that may grow taller takes, a main camera at `'auto'`; otherwise unset. */
+  mainNumericAspectRatioMin?: number;
   mainRegion?: LayoutMainRegion;
   sideCameraWidth: number;
   sideContentAuxNumericAspectRatio?: number;
@@ -42,8 +46,8 @@ export interface ResolvedLayoutConfig {
  * Decide which region takes a participant's main column and which regions stay in the side column.
  *
  * @param layoutConfig - The participant's config; a missing region takes its default and `null` turns it off.
- * @param context - The grid cell ratio for `'auto'` info, whether a side column exists, its gap and width, and the
- *   region border.
+ * @param context - The camera ratio limits for an `'auto'` main camera, the grid cell ratio for `'auto'` info, whether
+ *   a side column exists, its gap and width, and the region border.
  * @returns The main region and its ratio, which regions sit in the side column with their ratios and widths, how
  *   they attach, with attachments to a main region that is not shown or is a green screen camera dropped, and the
  *   total width the side column adds to the participant, `0` when nothing is in it.
@@ -57,6 +61,8 @@ export const resolveLayoutConfig = (
     hasName = LAYOUT_CONFIG_DEFAULT.hasName,
   }: LayoutConfig,
   {
+    cameraNumericAspectRatioMax,
+    cameraNumericAspectRatioMin,
     canvasGridUnitNumericAspectRatio,
     hasSideRoom,
     layoutGap,
@@ -83,7 +89,14 @@ export const resolveLayoutConfig = (
   } = info ?? {};
   // Turn each requested region into a numeric ratio; disabled and invalid ratios both become 0
   const contentMainNumericAspectRatio = contentMain ? transformAspectRatio(contentMainAspectRatio) : 0;
-  const cameraMainNumericAspectRatio = camera ? transformAspectRatio(cameraMainAspectRatio) : 0;
+  // An 'auto' main camera may take any ratio within the camera limits: the widest sets the layout, and a portrait
+  // cell with room grows it taller, down to the narrowest
+  const isCameraMainAuto = cameraMainAspectRatio === 'auto';
+  const cameraMainNumericAspectRatio = !camera
+    ? 0
+    : isCameraMainAuto
+      ? cameraNumericAspectRatioMax
+      : transformAspectRatio(cameraMainAspectRatio);
   const contentAuxNumericAspectRatio = contentAux ? transformAspectRatio(contentAuxAspectRatio) : 0;
   // 'auto' info takes the grid cell's ratio so it fills the cell when it is the main region
   const infoNumericAspectRatio = !info
@@ -132,6 +145,7 @@ export const resolveLayoutConfig = (
     isInfoAboveAttached,
     isInfoMainAttached: isSideInfoMainAttached,
     mainNumericAspectRatio,
+    mainNumericAspectRatioMin: mainRegion === 'camera' && isCameraMainAuto ? cameraNumericAspectRatioMin : undefined,
     mainRegion,
     sideCameraWidth: isSideCameraMainAttached ? sideAttachedWidth : layoutSideWidth,
     sideContentAuxNumericAspectRatio: hasSideContentAux ? contentAuxNumericAspectRatio : undefined,

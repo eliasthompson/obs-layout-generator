@@ -1,7 +1,6 @@
 import type { SideRowContext } from '@/lib/calculateSideRowSizes';
 import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 
-import { cameraNumericAspectRatioMin } from '@/lib/calculateCameraHeights';
 import { fitSideRowHeight, isSideRowShared } from '@/lib/calculateSideRowSizes';
 
 export interface CalculateSideRowHeightContext extends SideRowContext {
@@ -18,14 +17,14 @@ export interface SideRowHeight {
  * tag: a third of a full side camera, which is half the cell at most and never narrower than the minimum ratio.
  *
  * @param resolvedLayoutConfigs - Resolved configs for every participant.
- * @param context - The cell height, column width, gap between regions, and region border.
+ * @param context - The narrowest camera ratio, the cell height, column width, gap between regions, and region border.
  * @returns The shared row content height, `Infinity` when no row is shared, and the name height cap.
  */
 export const calculateSideRowHeight = (
   resolvedLayoutConfigs: ResolvedLayoutConfig[],
   context: CalculateSideRowHeightContext,
 ): SideRowHeight => {
-  const { cellHeight, columnWidth, layoutGap } = context;
+  const { cameraNumericAspectRatioMin, cellHeight, columnWidth, layoutGap } = context;
   // Every shared row uses one height: the smallest of each row's leftover under its main region, that main region's
   // height, and the height at which the row exactly fills the column
   const sharedHeights = resolvedLayoutConfigs.flatMap((resolvedLayoutConfig) => {

@@ -14,6 +14,8 @@ describe('calculateCanvasGrid', () => {
 
   it('leaves no side room on the default canvas', () => {
     expect(calculateCanvasGrid({}, 1)).toEqual({
+      cameraNumericAspectRatioMax: 16 / 9,
+      cameraNumericAspectRatioMin: 9 / 16,
       canvasContentHeight: 1080,
       canvasContentWidth: 1920,
       canvasContentX: 0,
@@ -24,11 +26,14 @@ describe('calculateCanvasGrid', () => {
       canvasLayoutWidth: 1920,
       canvasLayoutX: 0,
       canvasLayoutY: 0,
+      canvasPadding: 0,
       hasSideRoom: false,
       isPortrait: false,
       layoutGap: 0,
       layoutSideMin: 0,
       layoutSideWidth: 0,
+      nameHeightMin: 0,
+      namePosition: 'bottom',
       regionBorder: 0,
     });
   });
@@ -37,6 +42,34 @@ describe('calculateCanvasGrid', () => {
     expect(calculateCanvasGrid({ canvasHeight: 1920, canvasWidth: 1080 }, 1).isPortrait).toBe(true);
     expect(calculateCanvasGrid({ canvasHeight: 1080, canvasWidth: 1080 }, 1).isPortrait).toBe(false);
     expect(calculateCanvasGrid({ canvasMarginLeft: 900 }, 1).isPortrait).toBe(true);
+  });
+
+  it('takes the orientation as given, and detects it for auto or an unknown value', () => {
+    const portraitCanvas = { canvasHeight: 1920, canvasWidth: 1080 };
+
+    expect(calculateCanvasGrid({ orientation: 'portrait' }, 1).isPortrait).toBe(true);
+    expect(calculateCanvasGrid({ ...portraitCanvas, orientation: 'landscape' }, 1).isPortrait).toBe(false);
+    expect(calculateCanvasGrid({ ...portraitCanvas, orientation: 'auto' }, 1).isPortrait).toBe(true);
+    // A config read from JSON can hold any string
+    expect(calculateCanvasGrid({ ...portraitCanvas, orientation: 'vertical' as 'auto' }, 1).isPortrait).toBe(true);
+  });
+
+  it('resolves the camera ratio limits, falling back to the defaults for invalid ratios', () => {
+    expect(calculateCanvasGrid({ cameraAspectRatioMax: '2:1', cameraAspectRatioMin: '1:1' }, 1)).toMatchObject({
+      cameraNumericAspectRatioMax: 2,
+      cameraNumericAspectRatioMin: 1,
+    });
+    expect(calculateCanvasGrid({ cameraAspectRatioMax: '0:9', cameraAspectRatioMin: '16:0' }, 1)).toMatchObject({
+      cameraNumericAspectRatioMax: 16 / 9,
+      cameraNumericAspectRatioMin: 9 / 16,
+    });
+  });
+
+  it('passes the name settings through', () => {
+    expect(calculateCanvasGrid({ nameHeightMin: 36, namePosition: 'top' }, 1)).toMatchObject({
+      nameHeightMin: 36,
+      namePosition: 'top',
+    });
   });
 
   it('raises the side column to layoutSideMin when a cell has less left', () => {

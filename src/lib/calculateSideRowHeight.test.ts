@@ -4,7 +4,13 @@ import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 
 import { calculateSideRowHeight, type CalculateSideRowHeightContext } from '@/lib/calculateSideRowHeight';
 
-const context: CalculateSideRowHeightContext = { cellHeight: 1000, columnWidth: 1000, layoutGap: 20, regionBorder: 5 };
+const context: CalculateSideRowHeightContext = {
+  cameraNumericAspectRatioMin: 9 / 16,
+  cellHeight: 1000,
+  columnWidth: 1000,
+  layoutGap: 20,
+  regionBorder: 5,
+};
 
 const createResolvedLayoutConfig = (resolvedLayoutConfig: Partial<ResolvedLayoutConfig>): ResolvedLayoutConfig => ({
   hasName: false,

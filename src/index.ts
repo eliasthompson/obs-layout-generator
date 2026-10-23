@@ -1,4 +1,3 @@
-export * from '@/constants/cameraAspectRatioMin';
 export * from '@/constants/contentAspectRatios';
 export * from '@/constants/layoutConfig';
 export * from '@/constants/layoutOptions';
@@ -28,4 +27,6 @@ export type * from '@/types/AspectRatio';
 export type * from '@/types/LayoutAlignment';
 export type * from '@/types/LayoutMainRegion';
 export type * from '@/types/LayoutMetric';
+export type * from '@/types/LayoutNamePosition';
 export type * from '@/types/LayoutNeighbor';
+export type * from '@/types/LayoutOrientation';

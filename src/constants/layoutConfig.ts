@@ -2,7 +2,7 @@ import type { ContentAspectRatio } from '@/constants/contentAspectRatios';
 import type { AspectRatio } from '@/types/AspectRatio';
 
 export interface CameraLayoutConfig {
-  mainAspectRatio?: AspectRatio;
+  mainAspectRatio?: 'auto' | AspectRatio;
   isMainAttached?: boolean;
   isAboveAttached?: boolean;
   isGreenScreen?: boolean;
@@ -32,7 +32,7 @@ export interface LayoutConfig {
 }
 
 export const CAMERA_LAYOUT_CONFIG_DEFAULT = Object.freeze({
-  mainAspectRatio: '16:9',
+  mainAspectRatio: 'auto',
   isMainAttached: false,
   isAboveAttached: false,
   isGreenScreen: false,
