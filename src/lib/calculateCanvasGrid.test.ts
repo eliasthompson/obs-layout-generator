@@ -8,7 +8,7 @@ import {
 
 describe('calculateCanvasGrid', () => {
   it('derives the numeric content ratios and the widest one', () => {
-    expect(numericContentAspectRatios).toHaveLength(9);
+    expect(numericContentAspectRatios).toHaveLength(11);
     expect(widestNumericContentAspectRatio).toBe(16 / 9);
   });
 

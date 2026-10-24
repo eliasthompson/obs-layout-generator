@@ -640,12 +640,13 @@ describe('generateLayout', () => {
 
       layoutMetrics.forEach((layoutMetric, layoutMetricIndex) => {
         // A bordered camera is never narrower than 9:16, nor in portrait wider than 16:9, within rounding; the main
-        // camera ratios picked here are all within that too
+        // camera ratios picked here are all within that too. Each side rounds by up to 1, and the ratio scales the
+        // other side's rounding, which matters on tiny cameras
         if (layoutMetric.camera?.hasBorder) {
           const { width, height } = layoutMetric.camera;
 
-          expect(height).toBeLessThanOrEqual(width / (9 / 16) + 2);
-          if (isPortrait) expect(width).toBeLessThanOrEqual(height * (16 / 9) + 2);
+          expect(height).toBeLessThanOrEqual((width + 1) * (16 / 9) + 1);
+          if (isPortrait) expect(width).toBeLessThanOrEqual((height + 1) * (16 / 9) + 1);
         }
 
         // A name sits inside the camera, main content, or aux content that hosts it

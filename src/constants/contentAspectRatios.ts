@@ -9,7 +9,9 @@ export const CONTENT_ASPECT_RATIOS = Object.freeze([
   '10:9',
   '16:15',
   '1:1',
+  '5:6',
   '4:6',
+  '9:16',
 ] as const satisfies readonly AspectRatio[]);
 
 export type ContentAspectRatio = (typeof CONTENT_ASPECT_RATIOS)[number];
