@@ -13,6 +13,7 @@ export interface CalculatePortraitLayoutRegionsContext {
 /**
  * Position one participant's regions on a portrait canvas: the main region at the top of its cell and the side row
  * beneath it, with aux content at the left, info next, and the camera at the right end, or centered when it is alone.
+ * Info with a row of its own sits at the left end of that row, between the main region and the side row.
  *
  * @param resolvedLayoutConfig - Which region takes the main column, how the side regions attach, and whether the
  *   camera is a green screen.
@@ -24,12 +25,13 @@ export const calculatePortraitLayoutRegions = (
   {
     isCameraGreenScreen,
     isContentAuxMainAttached,
-    isInfoAboveAttached,
+    isInfoPreviousAttached,
     isInfoMainAttached,
     mainRegion,
   }: ResolvedLayoutConfig,
   {
     mainHeight,
+    infoRowHeight,
     contentAuxWidth,
     contentAuxHeight,
     infoWidth,
@@ -41,8 +43,12 @@ export const calculatePortraitLayoutRegions = (
   { cellX, cellY, columnWidth, layoutGap, regionBorder }: CalculatePortraitLayoutRegionsContext,
 ): LayoutMetric => {
   const attachedGrowth = layoutGap - regionBorder;
-  // The side row sits directly beneath the main region; a region attached to it reaches up by the gap less the border
-  const rowY = cellY + mainHeight + layoutGap;
+  // The side row sits directly beneath the main region, or beneath the info row when the info has one; a region
+  // attached to the region above reaches up by the gap less the border
+  const infoRowY = cellY + mainHeight + layoutGap;
+  const rowY = infoRowHeight ? infoRowY + infoRowHeight + layoutGap : infoRowY;
+  // The camera is alone in its row unless aux content or info sharing the row is left of it
+  const hasRowRegions = Boolean(contentAuxWidth || (infoWidth && !infoRowHeight));
   const cellRight = cellX + columnWidth;
   // The main region fills the top of the cell, unless it would round to nothing
   const main =
@@ -74,28 +80,30 @@ export const calculatePortraitLayoutRegions = (
     layoutMetric.contentAux = sideContentAux;
   }
 
-  // Info: the main column, else right of the aux content, one shared border away when attached, or the left end
+  // Info: the main column, else the left end of its own row, right of the aux content, one shared border away when
+  // attached, or the left end of the side row
   if (mainRegion === 'info' && main) {
     layoutMetric.info = main;
   } else if (infoWidth) {
     layoutMetric.info = {
-      x: sideContentAux
-        ? sideContentAux.x + sideContentAux.width + (isInfoAboveAttached ? regionBorder : layoutGap)
-        : cellX,
-      y: rowY - (isInfoMainAttached ? attachedGrowth : 0),
+      x:
+        sideContentAux && !infoRowHeight
+          ? sideContentAux.x + sideContentAux.width + (isInfoPreviousAttached ? regionBorder : layoutGap)
+          : cellX,
+      y: (infoRowHeight ? infoRowY : rowY) - (isInfoMainAttached ? attachedGrowth : 0),
       width: infoWidth,
       height: infoHeight,
       hasBorder: true,
     };
   }
 
-  // Camera: the main column, else the right end of the side row, or centered beneath the main region when it is
-  // alone in the row and narrower than it
+  // Camera: the main column, else the right end of the side row, or centered in the column when it is alone in the
+  // row and narrower than it
   if (mainRegion === 'camera' && main) {
     layoutMetric.camera = { ...main, hasBorder: !isCameraGreenScreen };
   } else if (cameraWidth) {
     layoutMetric.camera = {
-      x: contentAuxWidth || infoWidth ? cellRight - cameraWidth : cellX + (columnWidth - cameraWidth) / 2,
+      x: hasRowRegions ? cellRight - cameraWidth : cellX + (columnWidth - cameraWidth) / 2,
       y: rowY - (isCameraMainAttached ? attachedGrowth : 0),
       width: cameraWidth,
       height: cameraHeight,

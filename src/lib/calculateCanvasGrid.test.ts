@@ -14,6 +14,7 @@ describe('calculateCanvasGrid', () => {
 
   it('leaves no side room on the default canvas', () => {
     expect(calculateCanvasGrid({}, 1)).toEqual({
+      cameraNumericAspectRatioDefault: 3 / 4,
       cameraNumericAspectRatioMax: 16 / 9,
       cameraNumericAspectRatioMin: 9 / 16,
       canvasContentHeight: 1080,
@@ -32,6 +33,7 @@ describe('calculateCanvasGrid', () => {
       layoutGap: 0,
       layoutSideMin: 0,
       layoutSideWidth: 0,
+      nameHeightMax: Infinity,
       nameHeightMin: 0,
       namePosition: 'bottom',
       regionBorder: 0,
@@ -65,8 +67,22 @@ describe('calculateCanvasGrid', () => {
     });
   });
 
+  it('defaults the camera ratio to 4:3 turned across the canvas, and resolves a given one', () => {
+    expect(calculateCanvasGrid({ canvasHeight: 1920, canvasWidth: 1080 }, 1).cameraNumericAspectRatioDefault).toBe(
+      4 / 3,
+    );
+    expect(calculateCanvasGrid({ cameraAspectRatioDefault: '1:1' }, 1).cameraNumericAspectRatioDefault).toBe(1);
+    expect(calculateCanvasGrid({ cameraAspectRatioDefault: '0:1' }, 1).cameraNumericAspectRatioDefault).toBe(3 / 4);
+  });
+
+  it('holds the default camera ratio within the limits', () => {
+    expect(calculateCanvasGrid({ cameraAspectRatioDefault: '4:1' }, 1).cameraNumericAspectRatioDefault).toBe(16 / 9);
+    expect(calculateCanvasGrid({ cameraAspectRatioDefault: '1:4' }, 1).cameraNumericAspectRatioDefault).toBe(9 / 16);
+  });
+
   it('passes the name settings through', () => {
-    expect(calculateCanvasGrid({ nameHeightMin: 36, namePosition: 'top' }, 1)).toMatchObject({
+    expect(calculateCanvasGrid({ nameHeightMax: 84, nameHeightMin: 36, namePosition: 'top' }, 1)).toMatchObject({
+      nameHeightMax: 84,
       nameHeightMin: 36,
       namePosition: 'top',
     });

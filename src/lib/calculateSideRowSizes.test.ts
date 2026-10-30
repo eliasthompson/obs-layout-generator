@@ -5,17 +5,21 @@ import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 import {
   calculateSideRowSizes,
   type CalculateSideRowSizesContext,
+  canSplitInfoRow,
   fitSideRowHeight,
   hasSideRow,
   isSideRowShared,
+  splitInfoRow,
 } from '@/lib/calculateSideRowSizes';
 
 // A loose maximum ratio, so only the tests about it narrow a camera
 const context: CalculateSideRowSizesContext = {
+  cameraNumericAspectRatioDefault: 4 / 3,
   cameraNumericAspectRatioMax: 100,
   cameraNumericAspectRatioMin: 9 / 16,
   cellHeight: 1000,
   columnWidth: 1000,
+  isInfoRowSplit: false,
   layoutGap: 20,
   regionBorder: 5,
   sharedHeight: Infinity,
@@ -25,11 +29,11 @@ const createResolvedLayoutConfig = (resolvedLayoutConfig: Partial<ResolvedLayout
   hasName: false,
   hasSideCamera: true,
   hasSideInfo: false,
-  isCameraAboveAttached: false,
+  isCameraPreviousAttached: false,
   isCameraGreenScreen: false,
   isCameraMainAttached: false,
   isContentAuxMainAttached: false,
-  isInfoAboveAttached: false,
+  isInfoPreviousAttached: false,
   isInfoMainAttached: false,
   mainNumericAspectRatio: 16 / 9,
   mainRegion: 'contentMain',
@@ -42,7 +46,12 @@ const createResolvedLayoutConfig = (resolvedLayoutConfig: Partial<ResolvedLayout
 
 const withContentAux = createResolvedLayoutConfig({ sideContentAuxNumericAspectRatio: 4 / 3 });
 const withInfo = createResolvedLayoutConfig({ hasSideInfo: true, sideInfoNumericAspectRatio: 2 });
+// A 5:1 info row is 200 px tall across the 1000 px column, leaving a 780 px cell for the side row beneath it; info
+// splits only when wider than the widest camera, so the split context holds cameras to 4:1
+const withWideInfo = createResolvedLayoutConfig({ hasSideInfo: true, sideInfoNumericAspectRatio: 5 });
+const splitContext = { ...context, cameraNumericAspectRatioMax: 4, isInfoRowSplit: true };
 const noSideRow = {
+  infoRowHeight: 0,
   sideRowHeight: 0,
   contentAuxWidth: 0,
   contentAuxHeight: 0,
@@ -72,6 +81,52 @@ describe('hasSideRow and isSideRowShared', () => {
   ])('with %s', (_, resolvedLayoutConfig, expectedSideRow, expectedShared) => {
     expect(hasSideRow(resolvedLayoutConfig)).toBe(expectedSideRow);
     expect(isSideRowShared(resolvedLayoutConfig)).toBe(expectedShared);
+  });
+});
+
+describe('canSplitInfoRow', () => {
+  it.each([
+    ['ratio info beside a camera', withWideInfo, true],
+    [
+      'ratio info beside aux content',
+      { ...withWideInfo, hasSideCamera: false, sideContentAuxNumericAspectRatio: 4 / 3 },
+      true,
+    ],
+    ['ratio info no wider than the widest camera', { ...withWideInfo, sideInfoNumericAspectRatio: 16 / 9 }, false],
+    ['ratio info alone', { ...withWideInfo, hasSideCamera: false }, false],
+    ['auto info beside a camera', createResolvedLayoutConfig({ hasSideInfo: true }), false],
+    ['no info', createResolvedLayoutConfig({}), false],
+  ])('with %s', (_, resolvedLayoutConfig, expected) => {
+    expect(canSplitInfoRow(resolvedLayoutConfig, 16 / 9)).toBe(expected);
+  });
+});
+
+describe('splitInfoRow', () => {
+  it('spans the column at the info ratio and leaves the rest of the cell to the side row without the info', () => {
+    expect(splitInfoRow(withWideInfo, context)).toEqual({
+      infoRowHeight: 200,
+      infoWidth: 1000,
+      infoHeight: 200,
+      rowResolvedLayoutConfig: { ...withWideInfo, hasSideInfo: false },
+      rowCellHeight: 780,
+    });
+  });
+
+  it('reaches info attached to the main region up across the gap, taking that much less of the row', () => {
+    expect(splitInfoRow({ ...withWideInfo, isInfoMainAttached: true }, context)).toMatchObject({
+      infoRowHeight: 185,
+      infoHeight: 200,
+      rowCellHeight: 795,
+    });
+  });
+
+  it('keeps info no taller than the cell leaves under the main region, narrowing it to its ratio', () => {
+    expect(splitInfoRow({ ...withWideInfo, sideInfoNumericAspectRatio: 1 }, context)).toMatchObject({
+      infoRowHeight: 417.5,
+      infoWidth: 417.5,
+      infoHeight: 417.5,
+      rowCellHeight: 562.5,
+    });
   });
 });
 
@@ -112,8 +167,8 @@ describe('fitSideRowHeight', () => {
         {
           ...withContentAux,
           hasSideInfo: true,
-          isCameraAboveAttached: true,
-          isInfoAboveAttached: true,
+          isCameraPreviousAttached: true,
+          isInfoPreviousAttached: true,
           sideInfoNumericAspectRatio: 2,
         },
         context,
@@ -217,6 +272,7 @@ describe('calculateSideRowSizes', () => {
   it('gives the camera the rest of a shared row beside aux content at the shared height', () => {
     expect(calculateSideRowSizes(withContentAux, { ...context, sharedHeight: 300 })).toEqual({
       mainHeight: 562.5,
+      infoRowHeight: 0,
       sideRowHeight: 300,
       contentAuxWidth: 400,
       contentAuxHeight: 300,
@@ -239,10 +295,10 @@ describe('calculateSideRowSizes', () => {
       {
         ...withContentAux,
         hasSideInfo: true,
-        isCameraAboveAttached: true,
+        isCameraPreviousAttached: true,
         isCameraMainAttached: true,
         isContentAuxMainAttached: true,
-        isInfoAboveAttached: true,
+        isInfoPreviousAttached: true,
         isInfoMainAttached: true,
         sideInfoNumericAspectRatio: 2,
       },
@@ -288,5 +344,118 @@ describe('calculateSideRowSizes', () => {
       cameraWidth: 0,
       cameraHeight: 0,
     });
+  });
+
+  it('gives auto info what a lone camera at its default ratio leaves of the row', () => {
+    const sideRowSizes = calculateSideRowSizes(createResolvedLayoutConfig({ hasSideInfo: true }), context);
+
+    expect(sideRowSizes).toMatchObject({ sideRowHeight: 417.5, infoHeight: 417.5, cameraHeight: 417.5 });
+    expect(sideRowSizes.cameraWidth).toBeCloseTo((4 / 3) * 417.5);
+    expect(sideRowSizes.infoWidth).toBeCloseTo(1000 - (4 / 3) * 417.5 - 20);
+  });
+
+  it('grows auto info attached to the main region, and attaches the camera to it by one shared border', () => {
+    const sideRowSizes = calculateSideRowSizes(
+      createResolvedLayoutConfig({ hasSideInfo: true, isCameraPreviousAttached: true, isInfoMainAttached: true }),
+      context,
+    );
+
+    expect(sideRowSizes.infoHeight).toBe(432.5);
+    expect(sideRowSizes.infoWidth).toBeCloseTo(1000 - (4 / 3) * 417.5 - 5);
+  });
+
+  it('omits auto info when the camera at its default ratio leaves it no width', () => {
+    expect(
+      calculateSideRowSizes(createResolvedLayoutConfig({ hasSideInfo: true }), { ...context, cellHeight: 1400 }),
+    ).toMatchObject({ infoWidth: 0, infoHeight: 0, cameraWidth: 1000, cameraHeight: 817.5 });
+  });
+
+  it('omits auto info when the row rounds to no height', () => {
+    expect(
+      calculateSideRowSizes(createResolvedLayoutConfig({ hasSideInfo: true }), { ...context, cellHeight: 582 }),
+    ).toMatchObject({ infoWidth: 0, infoHeight: 0, cameraWidth: 0 });
+  });
+
+  it('puts auto info between aux content and the camera at its default ratio in a shared row', () => {
+    const withAutoInfo = { ...withContentAux, hasSideInfo: true };
+
+    expect(calculateSideRowSizes(withAutoInfo, { ...context, sharedHeight: 300 })).toMatchObject({
+      contentAuxWidth: 400,
+      infoWidth: 160,
+      infoHeight: 300,
+      cameraWidth: 400,
+      cameraHeight: 300,
+    });
+    expect(
+      calculateSideRowSizes({ ...withAutoInfo, isInfoPreviousAttached: true }, { ...context, sharedHeight: 300 })
+        .infoWidth,
+    ).toBe(175);
+  });
+
+  it('gives split info a row of its own and fills the row beneath it with a lone camera', () => {
+    expect(calculateSideRowSizes(withWideInfo, splitContext)).toEqual({
+      mainHeight: 562.5,
+      infoRowHeight: 200,
+      sideRowHeight: 197.5,
+      contentAuxWidth: 0,
+      contentAuxHeight: 0,
+      infoWidth: 1000,
+      infoHeight: 200,
+      cameraWidth: 790,
+      cameraHeight: 197.5,
+      isCameraMainAttached: false,
+    });
+  });
+
+  it('shares the row beneath split info between aux content and the camera at the shared height', () => {
+    expect(
+      calculateSideRowSizes(
+        { ...withWideInfo, sideContentAuxNumericAspectRatio: 4 / 3 },
+        { ...splitContext, sharedHeight: 150 },
+      ),
+    ).toMatchObject({
+      infoRowHeight: 200,
+      sideRowHeight: 150,
+      contentAuxWidth: 200,
+      infoWidth: 1000,
+      cameraWidth: 600,
+      cameraHeight: 150,
+    });
+  });
+
+  it('keeps info no wider than the widest camera in the side row', () => {
+    expect(
+      calculateSideRowSizes(withWideInfo, { ...splitContext, cameraNumericAspectRatioMax: 5, sharedHeight: 100 }),
+    ).toMatchObject({ infoRowHeight: 0, sideRowHeight: 100, infoWidth: 500, cameraWidth: 480 });
+  });
+
+  it('keeps info that cannot split in the side row', () => {
+    expect(
+      calculateSideRowSizes({ ...withInfo, hasSideCamera: false }, { ...splitContext, sharedHeight: 100 }),
+    ).toMatchObject({ infoRowHeight: 0, sideRowHeight: 100, infoWidth: 200, infoHeight: 100 });
+  });
+
+  it('omits split info whose row rounds to no height or width', () => {
+    expect(calculateSideRowSizes(withWideInfo, { ...splitContext, cellHeight: 582 })).toMatchObject({
+      infoRowHeight: 0,
+      infoWidth: 0,
+      infoHeight: 0,
+    });
+    // With cameras narrower still, info narrow enough to split rounds to no width at the height the cell leaves it
+    expect(
+      calculateSideRowSizes(
+        { ...withWideInfo, sideInfoNumericAspectRatio: 1 / 1000 },
+        { ...splitContext, cameraNumericAspectRatioMax: 1 / 2000 },
+      ),
+    ).toMatchObject({ infoRowHeight: 0, infoWidth: 0, infoHeight: 0 });
+  });
+
+  it('gives auto info the rest of a shared row without a camera', () => {
+    expect(
+      calculateSideRowSizes(
+        { ...withContentAux, hasSideCamera: false, hasSideInfo: true },
+        { ...context, sharedHeight: 300 },
+      ),
+    ).toMatchObject({ infoWidth: 580, infoHeight: 300, cameraWidth: 0 });
   });
 });

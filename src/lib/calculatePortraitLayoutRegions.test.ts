@@ -20,11 +20,11 @@ const createResolvedLayoutConfig = (resolvedLayoutConfig: Partial<ResolvedLayout
   hasName: false,
   hasSideCamera: true,
   hasSideInfo: false,
-  isCameraAboveAttached: false,
+  isCameraPreviousAttached: false,
   isCameraGreenScreen: false,
   isCameraMainAttached: false,
   isContentAuxMainAttached: false,
-  isInfoAboveAttached: false,
+  isInfoPreviousAttached: false,
   isInfoMainAttached: false,
   mainNumericAspectRatio: 16 / 9,
   mainRegion: 'contentMain',
@@ -37,6 +37,7 @@ const createResolvedLayoutConfig = (resolvedLayoutConfig: Partial<ResolvedLayout
 
 const createSideRowSizes = (sideRowSizes: Partial<SideRowSizes>): SideRowSizes => ({
   mainHeight: 225,
+  infoRowHeight: 0,
   sideRowHeight: 0,
   contentAuxWidth: 0,
   contentAuxHeight: 0,
@@ -88,7 +89,7 @@ describe('calculatePortraitLayoutRegions', () => {
 
   it('places attached info one shared border right of the aux content', () => {
     expect(
-      calculatePortraitLayoutRegions(createResolvedLayoutConfig({ isInfoAboveAttached: true }), sharedRow, context)
+      calculatePortraitLayoutRegions(createResolvedLayoutConfig({ isInfoPreviousAttached: true }), sharedRow, context)
         .info,
     ).toEqual({ x: 225, y: 295, width: 80, height: 90, hasBorder: true });
   });
@@ -115,6 +116,41 @@ describe('calculatePortraitLayoutRegions', () => {
       contentAux: { y: 280, height: 105 },
       info: { y: 280, height: 105 },
     });
+  });
+
+  it('gives split info the left end of its own row and puts the side row a gap beneath it', () => {
+    expect(
+      calculatePortraitLayoutRegions(
+        createResolvedLayoutConfig({ isInfoPreviousAttached: true }),
+        { ...sharedRow, infoRowHeight: 60, infoWidth: 400, infoHeight: 60 },
+        context,
+      ),
+    ).toEqual({
+      camera: { x: 400, y: 375, width: 100, height: 90, hasBorder: true },
+      contentMain: main,
+      contentAux: { x: 100, y: 375, width: 120, height: 90, hasBorder: true },
+      info: { x: 100, y: 295, width: 400, height: 60, hasBorder: true },
+    });
+  });
+
+  it('reaches split info up to the main region and the side row up to the info row when attached', () => {
+    expect(
+      calculatePortraitLayoutRegions(
+        createResolvedLayoutConfig({ isContentAuxMainAttached: true, isInfoMainAttached: true }),
+        { ...sharedRow, infoRowHeight: 60, infoWidth: 400, infoHeight: 75, contentAuxHeight: 105 },
+        context,
+      ),
+    ).toMatchObject({ contentAux: { y: 360, height: 105 }, info: { y: 280, height: 75 } });
+  });
+
+  it('centers a lone camera narrower than the column beneath split info', () => {
+    expect(
+      calculatePortraitLayoutRegions(
+        createResolvedLayoutConfig({}),
+        createSideRowSizes({ infoRowHeight: 60, infoWidth: 400, infoHeight: 60, cameraWidth: 160, cameraHeight: 90 }),
+        context,
+      ).camera,
+    ).toEqual({ x: 220, y: 375, width: 160, height: 90, hasBorder: true });
   });
 
   it('puts the camera in the main column with aux content in the row beneath it', () => {

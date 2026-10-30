@@ -5,8 +5,10 @@ import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 
 import { calculateLayoutRegions, type CalculateLayoutRegionsContext } from '@/lib/calculateLayoutRegions';
 
+// A loose maximum ratio, so only the test about it narrows a camera
 const context: CalculateLayoutRegionsContext = {
   cameraHeight: 100,
+  cameraNumericAspectRatioMax: 100,
   cameraNumericAspectRatioMin: 9 / 16,
   layoutGap: 10,
   layoutSideWidth: 200,
@@ -21,11 +23,11 @@ const createResolvedLayoutConfig = (resolvedLayoutConfig: Partial<ResolvedLayout
   hasName: false,
   hasSideCamera: true,
   hasSideInfo: false,
-  isCameraAboveAttached: false,
+  isCameraPreviousAttached: false,
   isCameraGreenScreen: false,
   isCameraMainAttached: false,
   isContentAuxMainAttached: false,
-  isInfoAboveAttached: false,
+  isInfoPreviousAttached: false,
   isInfoMainAttached: false,
   mainNumericAspectRatio: 16 / 9,
   mainRegion: 'contentMain',
@@ -72,7 +74,7 @@ describe('calculateLayoutRegions', () => {
 
   it('places attached side info one shared border below the side aux content', () => {
     expect(
-      calculateLayoutRegions(createResolvedLayoutConfig({ isInfoAboveAttached: true }), sideRegionHeights, {
+      calculateLayoutRegions(createResolvedLayoutConfig({ isInfoPreviousAttached: true }), sideRegionHeights, {
         ...context,
         regionBorder: 4,
       }).info,
@@ -81,7 +83,7 @@ describe('calculateLayoutRegions', () => {
 
   it('reaches an attached side camera up to one shared border below the region above it', () => {
     expect(
-      calculateLayoutRegions(createResolvedLayoutConfig({ isCameraAboveAttached: true }), sideRegionHeights, {
+      calculateLayoutRegions(createResolvedLayoutConfig({ isCameraPreviousAttached: true }), sideRegionHeights, {
         ...context,
         regionBorder: 4,
       }).camera,
@@ -91,7 +93,7 @@ describe('calculateLayoutRegions', () => {
   it('keeps an attached side camera at the shared height when reaching up would make it narrower than 9:16', () => {
     expect(
       calculateLayoutRegions(
-        createResolvedLayoutConfig({ isCameraAboveAttached: true, sideCameraWidth: 50 }),
+        createResolvedLayoutConfig({ isCameraPreviousAttached: true, sideCameraWidth: 50 }),
         sideRegionHeights,
         { ...context, regionBorder: 4 },
       ).camera,
@@ -101,11 +103,20 @@ describe('calculateLayoutRegions', () => {
   it('keeps an attached side camera at the shared height with nothing above it', () => {
     expect(
       calculateLayoutRegions(
-        createResolvedLayoutConfig({ isCameraAboveAttached: true }),
+        createResolvedLayoutConfig({ isCameraPreviousAttached: true }),
         { ...noSideRegionHeights, showSideCamera: true },
         { ...context, regionBorder: 4 },
       ).camera,
     ).toEqual({ x: 460, y: 220, width: 200, height: 100, hasBorder: true });
+  });
+
+  it('narrows a side camera to the maximum ratio at the right edge of a wider side column', () => {
+    expect(
+      calculateLayoutRegions(createResolvedLayoutConfig({}), sideRegionHeights, {
+        ...context,
+        cameraNumericAspectRatioMax: 1,
+      }).camera,
+    ).toEqual({ x: 560, y: 220, width: 100, height: 100, hasBorder: true });
   });
 
   it('leaves a green screen side camera without a border', () => {

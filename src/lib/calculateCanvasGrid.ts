@@ -2,7 +2,7 @@ import type { AspectRatio } from '@/types/AspectRatio';
 import type { LayoutNamePosition } from '@/types/LayoutNamePosition';
 
 import { CONTENT_ASPECT_RATIOS } from '@/constants/contentAspectRatios';
-import { LAYOUT_OPTIONS_DEFAULT, type LayoutOptions } from '@/constants/layoutOptions';
+import { CAMERA_ASPECT_RATIO_DEFAULTS, LAYOUT_OPTIONS_DEFAULT, type LayoutOptions } from '@/constants/layoutOptions';
 import { transformAspectRatio } from '@/lib/transformAspectRatio';
 
 /**
@@ -11,6 +11,7 @@ import { transformAspectRatio } from '@/lib/transformAspectRatio';
  * settings are the resolved options both orientations share.
  */
 export interface CanvasGrid {
+  cameraNumericAspectRatioDefault: number;
   cameraNumericAspectRatioMax: number;
   cameraNumericAspectRatioMin: number;
   canvasContentHeight: number;
@@ -29,6 +30,7 @@ export interface CanvasGrid {
   layoutGap: number;
   layoutSideMin: number;
   layoutSideWidth: number;
+  nameHeightMax: number;
   nameHeightMin: number;
   namePosition: LayoutNamePosition;
   regionBorder: number;
@@ -50,7 +52,8 @@ export const widestNumericContentAspectRatio = Math.max(...numericContentAspectR
  * @param layoutConfigsTotal - Number of participants, which sets the grid size.
  * @returns The layout area inside the margins, and the content area, gaps, grid cell ratio, and side column width,
  *   all measured between region content rects. The side column is at least `layoutSideMin` wide; the rows narrow
- *   their main columns to fit it. Also the orientation, the side camera ratio limits, and the name settings.
+ *   their main columns to fit it. Also the orientation, the side camera ratio limits and default, which is held
+ *   within the limits, and the name settings.
  */
 export const calculateCanvasGrid = (
   {
@@ -68,7 +71,9 @@ export const calculateCanvasGrid = (
     regionBorder = LAYOUT_OPTIONS_DEFAULT.regionBorder,
     cameraAspectRatioMin = LAYOUT_OPTIONS_DEFAULT.cameraAspectRatioMin,
     cameraAspectRatioMax = LAYOUT_OPTIONS_DEFAULT.cameraAspectRatioMax,
+    cameraAspectRatioDefault = LAYOUT_OPTIONS_DEFAULT.cameraAspectRatioDefault,
     nameHeightMin = LAYOUT_OPTIONS_DEFAULT.nameHeightMin,
+    nameHeightMax = LAYOUT_OPTIONS_DEFAULT.nameHeightMax,
     namePosition = LAYOUT_OPTIONS_DEFAULT.namePosition,
   }: LayoutOptions,
   layoutConfigsTotal: number,
@@ -93,16 +98,35 @@ export const calculateCanvasGrid = (
     layoutSideMin,
     canvasGridUnitWidth - canvasGridUnitHeight * widestNumericContentAspectRatio - layoutContentGap,
   );
+  // Portrait is columns of main regions with side rows beneath them. Left to `'auto'`, or to an unknown value, a
+  // content area taller than wide is laid out in portrait
+  const isPortrait =
+    orientation === 'portrait' || (orientation !== 'landscape' && canvasContentHeight > canvasContentWidth);
+  const cameraNumericAspectRatioMax = cameraNumericAspectRatio(
+    cameraAspectRatioMax,
+    LAYOUT_OPTIONS_DEFAULT.cameraAspectRatioMax,
+  );
+  const cameraNumericAspectRatioMin = cameraNumericAspectRatio(
+    cameraAspectRatioMin,
+    LAYOUT_OPTIONS_DEFAULT.cameraAspectRatioMin,
+  );
+  // The default ratio falls back to the orientation's own, and is held within the limits
+  const cameraAspectRatioDefaultFallback = CAMERA_ASPECT_RATIO_DEFAULTS[isPortrait ? 'portrait' : 'landscape'];
+  const cameraNumericAspectRatioDefault = Math.min(
+    cameraNumericAspectRatioMax,
+    Math.max(
+      cameraNumericAspectRatioMin,
+      cameraNumericAspectRatio(
+        cameraAspectRatioDefault ?? cameraAspectRatioDefaultFallback,
+        cameraAspectRatioDefaultFallback,
+      ),
+    ),
+  );
 
   return {
-    cameraNumericAspectRatioMax: cameraNumericAspectRatio(
-      cameraAspectRatioMax,
-      LAYOUT_OPTIONS_DEFAULT.cameraAspectRatioMax,
-    ),
-    cameraNumericAspectRatioMin: cameraNumericAspectRatio(
-      cameraAspectRatioMin,
-      LAYOUT_OPTIONS_DEFAULT.cameraAspectRatioMin,
-    ),
+    cameraNumericAspectRatioDefault,
+    cameraNumericAspectRatioMax,
+    cameraNumericAspectRatioMin,
     canvasContentHeight,
     canvasContentWidth,
     canvasContentX: canvasMarginLeft + canvasPadding + regionBorder,
@@ -115,12 +139,11 @@ export const calculateCanvasGrid = (
     canvasLayoutY: canvasMarginTop,
     canvasPadding,
     hasSideRoom: Math.round(layoutSideWidth) > 0,
-    // Portrait is columns of main regions with side rows beneath them. Left to `'auto'`, or to an unknown value, a
-    // content area taller than wide is laid out in portrait
-    isPortrait: orientation === 'portrait' || (orientation !== 'landscape' && canvasContentHeight > canvasContentWidth),
+    isPortrait,
     layoutGap: layoutContentGap,
     layoutSideMin,
     layoutSideWidth,
+    nameHeightMax,
     nameHeightMin,
     namePosition,
     regionBorder,

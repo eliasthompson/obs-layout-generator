@@ -5,9 +5,11 @@ import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 import { calculateSideRowHeight, type CalculateSideRowHeightContext } from '@/lib/calculateSideRowHeight';
 
 const context: CalculateSideRowHeightContext = {
+  cameraNumericAspectRatioMax: 16 / 9,
   cameraNumericAspectRatioMin: 9 / 16,
   cellHeight: 1000,
   columnWidth: 1000,
+  isInfoRowSplit: false,
   layoutGap: 20,
   regionBorder: 5,
 };
@@ -16,11 +18,11 @@ const createResolvedLayoutConfig = (resolvedLayoutConfig: Partial<ResolvedLayout
   hasName: false,
   hasSideCamera: true,
   hasSideInfo: false,
-  isCameraAboveAttached: false,
+  isCameraPreviousAttached: false,
   isCameraGreenScreen: false,
   isCameraMainAttached: false,
   isContentAuxMainAttached: false,
-  isInfoAboveAttached: false,
+  isInfoPreviousAttached: false,
   isInfoMainAttached: false,
   mainNumericAspectRatio: 16 / 9,
   mainRegion: 'contentMain',
@@ -35,11 +37,8 @@ const cameraOnly = createResolvedLayoutConfig({});
 const withContentAux = createResolvedLayoutConfig({ sideContentAuxNumericAspectRatio: 4 / 3 });
 
 describe('calculateSideRowHeight', () => {
-  it('has no shared height without a shared row, with a third of half the cell as the name cap', () => {
-    const sideRowHeight = calculateSideRowHeight([cameraOnly], context);
-
-    expect(sideRowHeight.sharedHeight).toBe(Infinity);
-    expect(sideRowHeight.nameHeightMax).toBeCloseTo(490 / 3);
+  it('has no shared height without a shared row', () => {
+    expect(calculateSideRowHeight([cameraOnly], context)).toEqual({ sharedHeight: Infinity });
   });
 
   it('uses the leftover under the main region when that is the smallest', () => {
@@ -64,20 +63,28 @@ describe('calculateSideRowHeight', () => {
     ).toBe(250);
   });
 
+  it('measures the row beneath split info without the info, in what the info row leaves of the cell', () => {
+    const withWideInfo = { ...withContentAux, hasSideInfo: true, sideInfoNumericAspectRatio: 5 };
+    const splitContext = { ...context, isInfoRowSplit: true };
+
+    expect(calculateSideRowHeight([withWideInfo], { ...context, cellHeight: 3000 }).sharedHeight).toBeCloseTo(
+      960 / (4 / 3 + 5 + 9 / 16),
+    );
+    expect(calculateSideRowHeight([withWideInfo], { ...splitContext, cellHeight: 3000 }).sharedHeight).toBeCloseTo(
+      980 / (4 / 3 + 9 / 16),
+    );
+    // The 200 px info row and its gap leave 197.5 px beneath it
+    expect(calculateSideRowHeight([withWideInfo], splitContext).sharedHeight).toBe(197.5);
+    // Beneath split info, a lone camera's row is not shared
+    expect(
+      calculateSideRowHeight([{ ...cameraOnly, hasSideInfo: true, sideInfoNumericAspectRatio: 5 }], splitContext),
+    ).toEqual({ sharedHeight: Infinity });
+  });
+
   it('takes the smallest shared height across participants, ignoring lone cameras', () => {
     expect(
       calculateSideRowHeight([cameraOnly, withContentAux, { ...withContentAux, mainNumericAspectRatio: 1 }], context)
         .sharedHeight,
     ).toBe(-20);
-  });
-
-  it('caps the name by a 9:16 camera when the column is narrow', () => {
-    expect(calculateSideRowHeight([cameraOnly], { ...context, columnWidth: 100 }).nameHeightMax).toBeCloseTo(
-      100 / (9 / 16) / 3,
-    );
-  });
-
-  it('never caps the name below zero when the cell is shorter than the gap', () => {
-    expect(calculateSideRowHeight([cameraOnly], { ...context, cellHeight: 10 }).nameHeightMax).toBe(0);
   });
 });

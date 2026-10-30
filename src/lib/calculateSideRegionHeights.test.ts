@@ -16,11 +16,11 @@ const createResolvedLayoutConfig = (resolvedLayoutConfig: Partial<ResolvedLayout
   hasName: false,
   hasSideCamera: false,
   hasSideInfo: false,
-  isCameraAboveAttached: false,
+  isCameraPreviousAttached: false,
   isCameraGreenScreen: false,
   isCameraMainAttached: false,
   isContentAuxMainAttached: false,
-  isInfoAboveAttached: false,
+  isInfoPreviousAttached: false,
   isInfoMainAttached: false,
   mainNumericAspectRatio: 16 / 9,
   sideCameraWidth: 200,
@@ -70,18 +70,18 @@ describe('calculateSideRegionHeights', () => {
     ).toBe(180);
   });
 
-  it('caps side aux content at the space above the camera', () => {
+  it('omits side aux content taller than the space above the camera rather than squeezing it', () => {
     expect(
       calculateSideRegionHeights(
         createResolvedLayoutConfig({ hasSideCamera: true, sideContentAuxNumericAspectRatio: 1 / 2 }),
         context,
       ).contentAuxHeight,
-    ).toBe(290);
+    ).toBe(0);
   });
 
   it('lets side aux content fill the row when there is no side camera', () => {
     expect(
-      calculateSideRegionHeights(createResolvedLayoutConfig({ sideContentAuxNumericAspectRatio: 1 / 4 }), context)
+      calculateSideRegionHeights(createResolvedLayoutConfig({ sideContentAuxNumericAspectRatio: 1 / 2 }), context)
         .contentAuxHeight,
     ).toBe(400);
   });
@@ -114,7 +114,7 @@ describe('calculateSideRegionHeights', () => {
         createResolvedLayoutConfig({
           hasSideCamera: true,
           hasSideInfo: true,
-          isInfoAboveAttached: true,
+          isInfoPreviousAttached: true,
           sideContentAuxNumericAspectRatio: 4 / 3,
         }),
         { ...context, regionBorder: 4 },
@@ -128,7 +128,7 @@ describe('calculateSideRegionHeights', () => {
         createResolvedLayoutConfig({
           hasSideCamera: true,
           hasSideInfo: true,
-          isInfoAboveAttached: true,
+          isInfoPreviousAttached: true,
           sideContentAuxNumericAspectRatio: 4 / 3,
           sideInfoNumericAspectRatio: 16 / 9,
         }),
@@ -140,7 +140,7 @@ describe('calculateSideRegionHeights', () => {
   it('ignores info attachment without side aux content above it', () => {
     expect(
       calculateSideRegionHeights(
-        createResolvedLayoutConfig({ hasSideCamera: true, hasSideInfo: true, isInfoAboveAttached: true }),
+        createResolvedLayoutConfig({ hasSideCamera: true, hasSideInfo: true, isInfoPreviousAttached: true }),
         { ...context, regionBorder: 4 },
       ).infoHeight,
     ).toBe(290);
@@ -155,7 +155,7 @@ describe('calculateSideRegionHeights', () => {
     ).toBe(112.5);
   });
 
-  it('caps side info at the remaining space', () => {
+  it('omits side info taller than the remaining space before the aux content above it', () => {
     expect(
       calculateSideRegionHeights(
         createResolvedLayoutConfig({
@@ -165,11 +165,25 @@ describe('calculateSideRegionHeights', () => {
           sideInfoNumericAspectRatio: 1,
         }),
         context,
-      ).infoHeight,
-    ).toBe(130);
+      ),
+    ).toEqual({ contentAuxHeight: 150, infoHeight: 0, showSideCamera: true });
   });
 
-  it('omits side info when side aux content takes all the space', () => {
+  it('shows side info that fits when the side aux content above it does not', () => {
+    expect(
+      calculateSideRegionHeights(
+        createResolvedLayoutConfig({
+          hasSideCamera: true,
+          hasSideInfo: true,
+          sideContentAuxNumericAspectRatio: 1 / 2,
+          sideInfoNumericAspectRatio: 16 / 9,
+        }),
+        context,
+      ),
+    ).toEqual({ contentAuxHeight: 0, infoHeight: 112.5, showSideCamera: true });
+  });
+
+  it('omits auto side info when side aux content takes all the space', () => {
     expect(
       calculateSideRegionHeights(
         createResolvedLayoutConfig({
@@ -177,8 +191,8 @@ describe('calculateSideRegionHeights', () => {
           hasSideInfo: true,
           sideContentAuxNumericAspectRatio: 1 / 2,
         }),
-        context,
+        { ...context, rowHeight: 510 },
       ),
-    ).toEqual({ contentAuxHeight: 290, infoHeight: 0, showSideCamera: true });
+    ).toEqual({ contentAuxHeight: 400, infoHeight: 0, showSideCamera: true });
   });
 });

@@ -24,11 +24,11 @@ export interface ResolvedLayoutConfig {
   hasName: boolean;
   hasSideCamera: boolean;
   hasSideInfo: boolean;
-  isCameraAboveAttached: boolean;
+  isCameraPreviousAttached: boolean;
   isCameraGreenScreen: boolean;
   isCameraMainAttached: boolean;
   isContentAuxMainAttached: boolean;
-  isInfoAboveAttached: boolean;
+  isInfoPreviousAttached: boolean;
   isInfoMainAttached: boolean;
   mainNumericAspectRatio: number;
   /** The narrowest ratio a main region that may grow taller takes, a main camera at `'auto'`; otherwise unset. */
@@ -74,7 +74,7 @@ export const resolveLayoutConfig = (
   const {
     mainAspectRatio: cameraMainAspectRatio = CAMERA_LAYOUT_CONFIG_DEFAULT.mainAspectRatio,
     isMainAttached: isCameraMainAttached = CAMERA_LAYOUT_CONFIG_DEFAULT.isMainAttached,
-    isAboveAttached: isCameraAboveAttached = CAMERA_LAYOUT_CONFIG_DEFAULT.isAboveAttached,
+    isPreviousAttached: isCameraPreviousAttached = CAMERA_LAYOUT_CONFIG_DEFAULT.isPreviousAttached,
     isGreenScreen: isCameraGreenScreen = CAMERA_LAYOUT_CONFIG_DEFAULT.isGreenScreen,
   } = camera ?? {};
   const { aspectRatio: contentMainAspectRatio = CONTENT_MAIN_LAYOUT_CONFIG_DEFAULT.aspectRatio } = contentMain ?? {};
@@ -85,7 +85,7 @@ export const resolveLayoutConfig = (
   const {
     aspectRatio: infoAspectRatio = INFO_LAYOUT_CONFIG_DEFAULT.aspectRatio,
     isMainAttached: isInfoMainAttached = INFO_LAYOUT_CONFIG_DEFAULT.isMainAttached,
-    isAboveAttached: isInfoAboveAttached = INFO_LAYOUT_CONFIG_DEFAULT.isAboveAttached,
+    isPreviousAttached: isInfoPreviousAttached = INFO_LAYOUT_CONFIG_DEFAULT.isPreviousAttached,
   } = info ?? {};
   // Turn each requested region into a numeric ratio; disabled and invalid ratios both become 0
   const contentMainNumericAspectRatio = contentMain ? transformAspectRatio(contentMainAspectRatio) : 0;
@@ -138,11 +138,11 @@ export const resolveLayoutConfig = (
     hasName,
     hasSideCamera,
     hasSideInfo,
-    isCameraAboveAttached: isCameraAboveAttached && !isCameraGreenScreen,
+    isCameraPreviousAttached: isCameraPreviousAttached && !isCameraGreenScreen,
     isCameraGreenScreen,
     isCameraMainAttached: isSideCameraMainAttached,
     isContentAuxMainAttached: isSideContentAuxMainAttached,
-    isInfoAboveAttached,
+    isInfoPreviousAttached,
     isInfoMainAttached: isSideInfoMainAttached,
     mainNumericAspectRatio,
     mainNumericAspectRatioMin: mainRegion === 'camera' && isCameraMainAuto ? cameraNumericAspectRatioMin : undefined,

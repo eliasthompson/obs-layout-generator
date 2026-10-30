@@ -1,12 +1,13 @@
 import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 
-import { hasSideRow, isSideRowShared, measureSideRow } from '@/lib/calculateSideRowSizes';
+import { canSplitInfoRow, hasSideRow, isSideRowShared, measureSideRow } from '@/lib/calculateSideRowSizes';
 
 export interface CalculateColumnWidthContext {
   cameraNumericAspectRatioMax: number;
   canvasContentHeight: number;
   canvasContentWidth: number;
   canvasGap: number;
+  isInfoRowSplit: boolean;
   layoutGap: number;
   layoutSideMin: number;
   regionBorder: number;
@@ -21,11 +22,12 @@ export interface ColumnSizes {
  * Find the widest column width at which every participant's main region fits its cell with room for its side row.
  *
  * @param resolvedColumns - Resolved configs grouped into columns.
- * @param context - The widest camera ratio, content area size, the gap between participants, the gap between a main
- *   region and its side row, the smallest side row height, and the region border.
+ * @param context - The widest camera ratio, content area size, the gap between participants, whether ratio info takes
+ *   a row of its own, the gap between a main region and its side row, the smallest side row height, and the region
+ *   border.
  * @returns The cell height shared by every cell, set by the fullest column, and the column width shared by every
- *   column: the even split, narrowed until each main region leaves its side row at least the minimum height, and
- *   tall enough that its camera is no wider than the maximum ratio.
+ *   column: the even split, narrowed until each main region, and its info row when split, leaves its side row at
+ *   least the minimum height, and tall enough that its camera is no wider than the maximum ratio.
  */
 export const calculateColumnWidth = (
   resolvedColumns: ResolvedLayoutConfig[][],
@@ -34,6 +36,7 @@ export const calculateColumnWidth = (
     canvasContentHeight,
     canvasContentWidth,
     canvasGap,
+    isInfoRowSplit,
     layoutGap,
     layoutSideMin,
     regionBorder,
@@ -48,22 +51,34 @@ export const calculateColumnWidth = (
   const columnWidth = Math.min(
     (canvasContentWidth + canvasGap) / resolvedColumns.length - canvasGap,
     ...resolvedColumns.flat().map((resolvedLayoutConfig) => {
-      const { hasSideCamera, mainNumericAspectRatio } = resolvedLayoutConfig;
+      const {
+        hasSideCamera,
+        isInfoMainAttached,
+        mainNumericAspectRatio,
+        sideInfoNumericAspectRatio = 0,
+      } = resolvedLayoutConfig;
 
       if (mainNumericAspectRatio <= 0) return Infinity;
       if (!hasSideRow(resolvedLayoutConfig)) return mainNumericAspectRatio * cellHeight;
 
-      const sideRowWidths = [mainNumericAspectRatio * (rowRoom - layoutSideMin)];
+      // Split, the info row stacks beneath the main region, so per unit of width the two are 1 / mainRatio +
+      // 1 / infoRatio tall, and the info row's gap, less what info attached to the main region closes, leaves the
+      // side row less room
+      const isSplit = isInfoRowSplit && canSplitInfoRow(resolvedLayoutConfig, cameraNumericAspectRatioMax);
+      const rowResolvedLayoutConfig = isSplit ? { ...resolvedLayoutConfig, hasSideInfo: false } : resolvedLayoutConfig;
+      const aboveHeightPerWidth = 1 / mainNumericAspectRatio + (isSplit ? 1 / sideInfoNumericAspectRatio : 0);
+      const sideRowRoom = isSplit ? rowRoom - (isInfoMainAttached ? regionBorder : layoutGap) : rowRoom;
+      const sideRowWidths = [(sideRowRoom - layoutSideMin) / aboveHeightPerWidth];
 
       if (hasSideCamera) {
         // At content height h the row is ratioTotal * h + fixedWidth wide, with the camera at the widest ratio; a lone
-        // camera is the whole row. The row must reach that height under the main region, so the width W satisfies
-        // rowRoom >= W / mainRatio + (W - fixedWidth) / ratioTotal
-        const { ratioTotal, fixedWidth } = isSideRowShared(resolvedLayoutConfig)
-          ? measureSideRow(resolvedLayoutConfig, { layoutGap, regionBorder }, cameraNumericAspectRatioMax)
+        // camera is the whole row. The row must reach that height under the main region and any info row, so the
+        // width W satisfies sideRowRoom >= W * aboveHeightPerWidth + (W - fixedWidth) / ratioTotal
+        const { ratioTotal, fixedWidth } = isSideRowShared(rowResolvedLayoutConfig)
+          ? measureSideRow(rowResolvedLayoutConfig, { layoutGap, regionBorder }, cameraNumericAspectRatioMax)
           : { ratioTotal: cameraNumericAspectRatioMax, fixedWidth: 0 };
 
-        sideRowWidths.push((rowRoom + fixedWidth / ratioTotal) / (1 / mainNumericAspectRatio + 1 / ratioTotal));
+        sideRowWidths.push((sideRowRoom + fixedWidth / ratioTotal) / (aboveHeightPerWidth + 1 / ratioTotal));
       }
 
       return Math.min(...sideRowWidths);

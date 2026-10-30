@@ -4,7 +4,7 @@ import type { AspectRatio } from '@/types/AspectRatio';
 export interface CameraLayoutConfig {
   mainAspectRatio?: 'auto' | AspectRatio;
   isMainAttached?: boolean;
-  isAboveAttached?: boolean;
+  isPreviousAttached?: boolean;
   isGreenScreen?: boolean;
 }
 
@@ -15,12 +15,13 @@ export interface ContentMainLayoutConfig {
 export interface ContentAuxLayoutConfig {
   aspectRatio?: ContentAspectRatio;
   isMainAttached?: boolean;
+  isPreviousAttached?: boolean;
 }
 
 export interface InfoLayoutConfig {
   aspectRatio?: 'auto' | AspectRatio;
   isMainAttached?: boolean;
-  isAboveAttached?: boolean;
+  isPreviousAttached?: boolean;
 }
 
 export interface LayoutConfig {
@@ -34,7 +35,7 @@ export interface LayoutConfig {
 export const CAMERA_LAYOUT_CONFIG_DEFAULT = Object.freeze({
   mainAspectRatio: 'auto',
   isMainAttached: false,
-  isAboveAttached: false,
+  isPreviousAttached: false,
   isGreenScreen: false,
 } as const satisfies CameraLayoutConfig);
 
@@ -45,12 +46,13 @@ export const CONTENT_MAIN_LAYOUT_CONFIG_DEFAULT = Object.freeze({
 export const CONTENT_AUX_LAYOUT_CONFIG_DEFAULT = Object.freeze({
   aspectRatio: '4:3',
   isMainAttached: false,
+  isPreviousAttached: false,
 } as const satisfies ContentAuxLayoutConfig);
 
 export const INFO_LAYOUT_CONFIG_DEFAULT = Object.freeze({
   aspectRatio: 'auto',
   isMainAttached: false,
-  isAboveAttached: false,
+  isPreviousAttached: false,
 } as const satisfies InfoLayoutConfig);
 
 export const LAYOUT_CONFIG_DEFAULT = Object.freeze({

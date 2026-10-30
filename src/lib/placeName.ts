@@ -3,7 +3,6 @@ import type { LayoutMetric, LayoutRegion } from '@/types/LayoutMetric';
 import type { LayoutNamePosition } from '@/types/LayoutNamePosition';
 
 export interface PlaceNameContext {
-  hasCameraNameRoom: boolean;
   mainRegion?: LayoutMainRegion;
   nameHeightMax: number;
   nameHeightMin: number;
@@ -15,19 +14,20 @@ export interface PlaceNameContext {
  * tall, capped at `nameHeightMax`, raised to `nameHeightMin`, and never taller than the host.
  *
  * @param layoutMetric - Positioned regions of one participant, before rounding.
- * @param context - Whether a side camera is tall enough for the name, which region took the main column, the name
- *   height bounds, and the edge of the host the name runs along.
+ * @param context - Which region took the main column, the name height bounds, and the edge of the host the name runs
+ *   along.
  * @returns The name region, which has no border, or `undefined` when no host is shown or the name would round to no
  *   height.
  */
 export const placeName = (
   { camera, contentAux, contentMain }: LayoutMetric,
-  { hasCameraNameRoom, mainRegion, nameHeightMax, nameHeightMin, namePosition }: PlaceNameContext,
+  { mainRegion, nameHeightMax, nameHeightMin, namePosition }: PlaceNameContext,
 ): LayoutRegion | undefined => {
   let nameHost: LayoutRegion | undefined;
 
-  // Prefer the camera when it is the main region or a side camera with room, then the main content, then aux content
-  if (camera && (mainRegion === 'camera' || hasCameraNameRoom)) {
+  // Prefer the camera when it is the main region or a side camera a third of which holds the smallest name, then the
+  // main content, then aux content
+  if (camera && (mainRegion === 'camera' || camera.height / 3 >= nameHeightMin)) {
     nameHost = camera;
   } else if (contentMain) {
     nameHost = contentMain;

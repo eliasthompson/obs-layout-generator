@@ -4,6 +4,7 @@ import type { LayoutMetric, LayoutRegion } from '@/types/LayoutMetric';
 
 export interface CalculateLayoutRegionsContext {
   cameraHeight: number;
+  cameraNumericAspectRatioMax: number;
   cameraNumericAspectRatioMin: number;
   layoutGap: number;
   layoutSideWidth: number;
@@ -20,15 +21,15 @@ export interface CalculateLayoutRegionsContext {
  * @param resolvedLayoutConfig - Which region takes the main column, the side region widths, how the side regions
  *   attach, and whether the camera is a green screen.
  * @param sideRegionHeights - Heights of the side regions, where `0` omits the region.
- * @param context - The shared camera height, the narrowest camera ratio, the column gap and side width, the region
+ * @param context - The shared camera height, the camera ratio limits, the column gap and side width, the region
  *   border, and the size and position of the main column and the row.
  * @returns The positioned regions, before any green screen camera is expanded, the name is placed, and rounding.
  */
 export const calculateLayoutRegions = (
   {
-    isCameraAboveAttached,
+    isCameraPreviousAttached,
     isCameraGreenScreen,
-    isInfoAboveAttached,
+    isInfoPreviousAttached,
     mainRegion,
     sideCameraWidth,
     sideContentAuxWidth,
@@ -37,6 +38,7 @@ export const calculateLayoutRegions = (
   { contentAuxHeight, infoHeight, showSideCamera }: SideRegionHeights,
   {
     cameraHeight,
+    cameraNumericAspectRatioMax,
     cameraNumericAspectRatioMin,
     layoutGap,
     layoutSideWidth,
@@ -83,7 +85,7 @@ export const calculateLayoutRegions = (
     layoutMetric.info = main;
   } else if (infoHeight) {
     // Attached, info sits one shared border below the aux content instead of a gap
-    const infoY = above ? above.y + above.height + (isInfoAboveAttached ? regionBorder : layoutGap) : rowY;
+    const infoY = above ? above.y + above.height + (isInfoPreviousAttached ? regionBorder : layoutGap) : rowY;
 
     layoutMetric.info = {
       x: sideRight - sideInfoWidth,
@@ -96,20 +98,22 @@ export const calculateLayoutRegions = (
   }
 
   // Camera: the main column, else the bottom of the side column at the shared camera height, reaching up to share
-  // the border of the region above it when attached, unless that would make it narrower than the minimum ratio
+  // the border of the region above it when attached, unless that would make it narrower than the minimum ratio, and
+  // narrowed to the maximum ratio when the side column is wider than that
   if (mainRegion === 'camera' && main) {
     layoutMetric.camera = { ...main, hasBorder: !isCameraGreenScreen };
   } else if (showSideCamera) {
-    const attachedCameraY = above && isCameraAboveAttached ? above.y + above.height + regionBorder : undefined;
+    const attachedCameraY = above && isCameraPreviousAttached ? above.y + above.height + regionBorder : undefined;
     const cameraY =
       attachedCameraY !== undefined && rowBottom - attachedCameraY <= sideCameraWidth / cameraNumericAspectRatioMin
         ? attachedCameraY
         : rowBottom - cameraHeight;
+    const cameraWidth = Math.min(sideCameraWidth, cameraNumericAspectRatioMax * (rowBottom - cameraY));
 
     layoutMetric.camera = {
-      x: sideRight - sideCameraWidth,
+      x: sideRight - cameraWidth,
       y: cameraY,
-      width: sideCameraWidth,
+      width: cameraWidth,
       height: rowBottom - cameraY,
       hasBorder: !isCameraGreenScreen,
     };

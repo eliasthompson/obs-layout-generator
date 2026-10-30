@@ -24,6 +24,7 @@ import { roundLayoutMetric } from '@/lib/roundLayoutMetric';
 export const generateLandscapeLayout = (
   layoutConfigs: LayoutConfig[],
   {
+    cameraNumericAspectRatioDefault,
     cameraNumericAspectRatioMax,
     cameraNumericAspectRatioMin,
     canvasContentHeight,
@@ -40,6 +41,7 @@ export const generateLandscapeLayout = (
     hasSideRoom,
     layoutGap,
     layoutSideWidth,
+    nameHeightMax,
     nameHeightMin,
     namePosition,
     regionBorder,
@@ -48,7 +50,7 @@ export const generateLandscapeLayout = (
   // Split participants into rows
   const rows = distributeLayouts(layoutConfigs);
 
-  // Size rows, cameras, names, and side regions, without a side column for the layout configs in collapsedSideIndexes
+  // Size rows, cameras, and side regions, without a side column for the layout configs in collapsedSideIndexes
   const calculateLayoutSizes = (collapsedSideIndexes: ReadonlySet<number> = new Set()) => {
     // Resolve each config's main and side regions, counting across rows so the collapsed indexes line up
     let layoutConfigIndex = 0;
@@ -69,12 +71,15 @@ export const generateLandscapeLayout = (
         return resolvedLayoutConfig;
       }),
     );
-    // The row height, the shared camera and name heights, and each side stack all follow from the resolved rows
+    // The row height, the shared camera height, and each side stack all follow from the resolved rows
     const rowHeight = calculateRowHeight(resolvedRows, { canvasContentHeight, canvasContentWidth, canvasGap });
     const cameraHeights = calculateCameraHeights(resolvedRows.flat(), {
+      cameraNumericAspectRatioDefault,
+      cameraNumericAspectRatioMax,
       cameraNumericAspectRatioMin,
       hasSideRoom,
       layoutGap,
+      regionBorder,
       rowHeight,
     });
     const sideRegionHeightRows = resolvedRows.map((rowResolvedLayoutConfigs) =>
@@ -101,7 +106,7 @@ export const generateLandscapeLayout = (
 
   if (collapsedSideIndexes.length) layoutSizes = calculateLayoutSizes(new Set(collapsedSideIndexes));
 
-  const { cameraHeight, hasCameraNameRoom, nameHeightMax, resolvedRows, rowHeight, sideRegionHeightRows } = layoutSizes;
+  const { cameraHeight, resolvedRows, rowHeight, sideRegionHeightRows } = layoutSizes;
 
   // Center the rows vertically in the content area and each row's participants horizontally
   const layoutMetrics: LayoutMetric[] = [];
@@ -126,6 +131,7 @@ export const generateLandscapeLayout = (
         sideRegionHeightRows[rowIndex][rowLayoutConfigIndex],
         {
           cameraHeight,
+          cameraNumericAspectRatioMax,
           cameraNumericAspectRatioMin,
           layoutGap,
           layoutSideWidth,
@@ -138,10 +144,12 @@ export const generateLandscapeLayout = (
       );
 
       if (layoutMetric.camera && isCameraGreenScreen) {
-        // A side camera faces the main column and whatever stacks above it across the layout gap, and a main
-        // camera faces its side column; every other edge faces another participant or row, or the margin
+        // A side camera faces the main column and whatever stacks above it across the layout gap, unless it reaches
+        // within a layout gap of the row top, where it faces what the row does; a main camera faces its side column.
+        // Every other edge faces another participant or row, or the margin
         const isMainCamera = mainRegion === 'camera';
         const isLastInRow = rowLayoutConfigIndex === rowResolvedLayoutConfigs.length - 1;
+        const isCameraAtRowTop = isMainCamera || layoutMetric.camera.y - rowY < layoutGap;
 
         layoutMetric.camera = expandGreenScreenCamera(layoutMetric.camera, {
           canvasGap,
@@ -153,7 +161,7 @@ export const generateLandscapeLayout = (
           layoutGap,
           neighbors: {
             left: isMainCamera ? outerNeighbor(rowLayoutConfigIndex === 0) : 'layout',
-            top: isMainCamera ? outerNeighbor(rowIndex === 0) : 'layout',
+            top: isCameraAtRowTop ? outerNeighbor(rowIndex === 0) : 'layout',
             right: isMainCamera && sideWidthTotal > 0 ? 'layout' : outerNeighbor(isLastInRow),
             bottom: outerNeighbor(rowIndex === rowsTotal - 1),
           },
@@ -162,7 +170,7 @@ export const generateLandscapeLayout = (
       }
 
       const name = hasName
-        ? placeName(layoutMetric, { hasCameraNameRoom, mainRegion, nameHeightMax, nameHeightMin, namePosition })
+        ? placeName(layoutMetric, { mainRegion, nameHeightMax, nameHeightMin, namePosition })
         : undefined;
 
       if (name) layoutMetric.name = name;

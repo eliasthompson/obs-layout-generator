@@ -9,6 +9,7 @@ const context: CalculateColumnWidthContext = {
   canvasContentHeight: 1284,
   canvasContentWidth: 1020,
   canvasGap: 36,
+  isInfoRowSplit: false,
   layoutGap: 30,
   layoutSideMin: 0,
   regionBorder: 6,
@@ -18,11 +19,11 @@ const createResolvedLayoutConfig = (resolvedLayoutConfig: Partial<ResolvedLayout
   hasName: false,
   hasSideCamera: true,
   hasSideInfo: false,
-  isCameraAboveAttached: false,
+  isCameraPreviousAttached: false,
   isCameraGreenScreen: false,
   isCameraMainAttached: false,
   isContentAuxMainAttached: false,
-  isInfoAboveAttached: false,
+  isInfoPreviousAttached: false,
   isInfoMainAttached: false,
   mainNumericAspectRatio: 16 / 9,
   mainRegion: 'contentMain',
@@ -86,6 +87,35 @@ describe('calculateColumnWidth', () => {
     expect(
       calculateColumnWidth([[createResolvedLayoutConfig({ mainNumericAspectRatio: 4 / 6 })]], context).columnWidth,
     ).toBeCloseTo((1284 - 30) / (6 / 4 + 9 / 16));
+  });
+
+  it('narrows the column for a split info row stacked on the main region with a lone camera beneath', () => {
+    const withWideInfo = createResolvedLayoutConfig({ hasSideInfo: true, sideInfoNumericAspectRatio: 5 });
+    const splitContext = { ...context, isInfoRowSplit: true };
+
+    // Main region and info row are W * (9 / 16 + 1 / 5) tall, and the info row's gap comes out of the room
+    expect(calculateColumnWidth([[withWideInfo]], splitContext).columnWidth).toBeCloseTo(
+      (1254 - 30) / (9 / 16 + 1 / 5 + 9 / 16),
+    );
+    // Attached to the main region, the info closes all but one border of its gap above
+    expect(
+      calculateColumnWidth([[{ ...withWideInfo, isInfoMainAttached: true }]], splitContext).columnWidth,
+    ).toBeCloseTo((1254 - 6) / (9 / 16 + 1 / 5 + 9 / 16));
+    // Unsplit, the info shares the camera's row
+    expect(calculateColumnWidth([[withWideInfo]], context).columnWidth).toBe(1020);
+  });
+
+  it('measures the side row beneath a split info row without the info', () => {
+    const withWideInfo = createResolvedLayoutConfig({
+      hasSideInfo: true,
+      sideContentAuxNumericAspectRatio: 4 / 3,
+      sideInfoNumericAspectRatio: 5,
+    });
+    const ratioTotal = 4 / 3 + 16 / 9;
+
+    expect(
+      calculateColumnWidth([[withWideInfo, withWideInfo]], { ...context, isInfoRowSplit: true }).columnWidth,
+    ).toBeCloseTo((594 - 30 + 30 / ratioTotal) / (9 / 16 + 1 / 5 + 1 / ratioTotal));
   });
 
   it('ignores participants without a main region', () => {

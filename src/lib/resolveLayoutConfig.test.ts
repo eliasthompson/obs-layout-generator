@@ -18,11 +18,11 @@ describe('resolveLayoutConfig', () => {
       hasName: false,
       hasSideCamera: true,
       hasSideInfo: false,
-      isCameraAboveAttached: false,
+      isCameraPreviousAttached: false,
       isCameraGreenScreen: false,
       isCameraMainAttached: false,
       isContentAuxMainAttached: false,
-      isInfoAboveAttached: false,
+      isInfoPreviousAttached: false,
       isInfoMainAttached: false,
       mainNumericAspectRatio: 16 / 9,
       mainRegion: 'contentMain',
@@ -49,10 +49,10 @@ describe('resolveLayoutConfig', () => {
   it('passes hasName and the attachment flags through', () => {
     expect(
       resolveLayoutConfig(
-        { camera: { isAboveAttached: true }, hasName: true, info: { isAboveAttached: true } },
+        { camera: { isPreviousAttached: true }, hasName: true, info: { isPreviousAttached: true } },
         context,
       ),
-    ).toMatchObject({ hasName: true, isCameraAboveAttached: true, isInfoAboveAttached: true });
+    ).toMatchObject({ hasName: true, isCameraPreviousAttached: true, isInfoPreviousAttached: true });
   });
 
   it('widens side regions attached to the main region by the gap less the shared border', () => {
@@ -68,13 +68,13 @@ describe('resolveLayoutConfig', () => {
     expect(
       resolveLayoutConfig(
         {
-          camera: { isAboveAttached: true, isGreenScreen: true, isMainAttached: true },
+          camera: { isPreviousAttached: true, isGreenScreen: true, isMainAttached: true },
           info: { isMainAttached: true },
         },
         context,
       ),
     ).toMatchObject({
-      isCameraAboveAttached: false,
+      isCameraPreviousAttached: false,
       isCameraGreenScreen: true,
       sideCameraWidth: 400,
       sideInfoWidth: 410,

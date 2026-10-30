@@ -17,9 +17,17 @@ export interface LayoutOptions {
   regionBorder?: number;
   cameraAspectRatioMin?: AspectRatio;
   cameraAspectRatioMax?: AspectRatio;
+  cameraAspectRatioDefault?: AspectRatio;
   nameHeightMin?: number;
+  nameHeightMax?: number;
   namePosition?: LayoutNamePosition;
 }
+
+/** The side camera ratio each orientation takes when `cameraAspectRatioDefault` is left out: 4:3 turned across it */
+export const CAMERA_ASPECT_RATIO_DEFAULTS = Object.freeze({
+  landscape: '3:4',
+  portrait: '4:3',
+} as const satisfies Record<Exclude<LayoutOrientation, 'auto'>, AspectRatio>);
 
 export const LAYOUT_OPTIONS_DEFAULT = Object.freeze({
   canvasWidth: 1920,
@@ -36,6 +44,8 @@ export const LAYOUT_OPTIONS_DEFAULT = Object.freeze({
   regionBorder: 0,
   cameraAspectRatioMin: '9:16',
   cameraAspectRatioMax: '16:9',
+  cameraAspectRatioDefault: undefined as AspectRatio | undefined,
   nameHeightMin: 0,
+  nameHeightMax: Infinity,
   namePosition: 'bottom',
 } as const satisfies LayoutOptions);

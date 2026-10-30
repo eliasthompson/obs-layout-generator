@@ -1,45 +1,48 @@
 import type { SideRowContext } from '@/lib/calculateSideRowSizes';
 import type { ResolvedLayoutConfig } from '@/lib/resolveLayoutConfig';
 
-import { fitSideRowHeight, isSideRowShared } from '@/lib/calculateSideRowSizes';
+import { canSplitInfoRow, fitSideRowHeight, isSideRowShared, splitInfoRow } from '@/lib/calculateSideRowSizes';
 
 export interface CalculateSideRowHeightContext extends SideRowContext {
+  cameraNumericAspectRatioMax: number;
   cellHeight: number;
+  isInfoRowSplit: boolean;
 }
 
 export interface SideRowHeight {
   sharedHeight: number;
-  nameHeightMax: number;
 }
 
 /**
- * Size the side row content height shared by every row that holds aux content or ratio info, and the largest name
- * tag: a third of a full side camera, which is half the cell at most and never narrower than the minimum ratio.
+ * Size the side row content height shared by every row that holds aux content or ratio info.
  *
  * @param resolvedLayoutConfigs - Resolved configs for every participant.
- * @param context - The narrowest camera ratio, the cell height, column width, gap between regions, and region border.
- * @returns The shared row content height, `Infinity` when no row is shared, and the name height cap.
+ * @param context - The camera ratio limits, the cell height, column width, gap between regions, region border, and
+ *   whether ratio info takes a row of its own.
+ * @returns The shared row content height, `Infinity` when no row is shared.
  */
 export const calculateSideRowHeight = (
   resolvedLayoutConfigs: ResolvedLayoutConfig[],
   context: CalculateSideRowHeightContext,
 ): SideRowHeight => {
-  const { cameraNumericAspectRatioMin, cellHeight, columnWidth, layoutGap } = context;
+  const { cameraNumericAspectRatioMax, cellHeight, columnWidth, isInfoRowSplit, layoutGap } = context;
   // Every shared row uses one height: the smallest of each row's leftover under its main region, that main region's
-  // height, and the height at which the row exactly fills the column
+  // height, and the height at which the row exactly fills the column. Split, the row is the one beneath the info row,
+  // without the info, in what the info row leaves of the cell
   const sharedHeights = resolvedLayoutConfigs.flatMap((resolvedLayoutConfig) => {
-    if (!isSideRowShared(resolvedLayoutConfig)) return [];
+    const { rowResolvedLayoutConfig, rowCellHeight } =
+      isInfoRowSplit && canSplitInfoRow(resolvedLayoutConfig, cameraNumericAspectRatioMax)
+        ? splitInfoRow(resolvedLayoutConfig, context)
+        : { rowResolvedLayoutConfig: resolvedLayoutConfig, rowCellHeight: cellHeight };
 
-    const mainHeight = columnWidth / resolvedLayoutConfig.mainNumericAspectRatio;
+    if (!isSideRowShared(rowResolvedLayoutConfig)) return [];
 
-    return [Math.min(cellHeight - mainHeight - layoutGap, mainHeight, fitSideRowHeight(resolvedLayoutConfig, context))];
+    const mainHeight = columnWidth / rowResolvedLayoutConfig.mainNumericAspectRatio;
+
+    return [
+      Math.min(rowCellHeight - mainHeight - layoutGap, mainHeight, fitSideRowHeight(rowResolvedLayoutConfig, context)),
+    ];
   });
-  const sharedHeight = sharedHeights.length ? Math.min(...sharedHeights) : Infinity;
-  // A full side camera is at most half the cell less the gap, and never narrower than the minimum ratio
-  const cameraHeightMax = Math.max(
-    0,
-    Math.min((cellHeight - layoutGap) / 2, columnWidth / cameraNumericAspectRatioMin),
-  );
 
-  return { sharedHeight, nameHeightMax: cameraHeightMax / 3 };
+  return { sharedHeight: sharedHeights.length ? Math.min(...sharedHeights) : Infinity };
 };
