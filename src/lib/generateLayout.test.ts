@@ -371,7 +371,10 @@ describe('generateLayout', () => {
   });
 
   it('expands a green screen main camera halfway toward the previous participant and through the padding', () => {
-    const layoutMetrics = generateLayout([{}, { camera: { isGreenScreen: true }, contentMain: null }], barOptions);
+    const layoutMetrics = generateLayout(
+      [{}, { camera: { isGreenScreen: true, mainAspectRatio: '16:9' }, contentMain: null }],
+      barOptions,
+    );
 
     // The row is shorter than the content area, so above and below it the camera stops after the padding
     expect(layoutMetrics[1].camera).toEqual({ x: 1031, y: 213, width: 889, height: 534, hasBorder: false });
@@ -492,6 +495,44 @@ describe('generateLayout', () => {
     ]);
     expect(generateLayout([{ camera: { mainAspectRatio: '16:9' }, contentMain: null }], portraitOptions)).toEqual([
       { camera: { x: 30, y: 529, width: 1020, height: 574, hasBorder: true } },
+    ]);
+  });
+
+  it('grows a main camera at its auto ratio into what the side row leaves of a portrait cell', () => {
+    const timer = { contentMain: null, info: { aspectRatio: '4:1', isMainAttached: true } } as const;
+
+    // The camera reaches down to the info attached beneath it, which ends at the bottom of the content area
+    expect(generateLayout([timer], portraitOptions)).toEqual([
+      {
+        camera: { x: 30, y: 174, width: 1020, height: 1023, hasBorder: true },
+        info: { x: 30, y: 1203, width: 1020, height: 255, hasBorder: true },
+      },
+    ]);
+    expect(generateLayout([{ ...timer, camera: { mainAspectRatio: '16:9' } }], portraitOptions)).toEqual([
+      {
+        camera: { x: 30, y: 399, width: 1020, height: 573, hasBorder: true },
+        info: { x: 30, y: 978, width: 1020, height: 255, hasBorder: true },
+      },
+    ]);
+  });
+
+  it('grows main cameras at their auto ratio into the content height a row too narrow for them leaves', () => {
+    // At 16:9 the two cameras would be 515 px tall
+    expect(generateLayout([{ contentMain: null }, { contentMain: null }], barOptions)).toEqual([
+      { camera: { x: 30, y: 30, width: 915, height: 900, hasBorder: true } },
+      { camera: { x: 975, y: 30, width: 915, height: 900, hasBorder: true } },
+    ]);
+    // Beside a participant that cannot grow, the camera and its side column are taller than the row, which centers
+    // that participant
+    expect(generateLayout([{}, { contentMain: null, info: { aspectRatio: '4:1' } }], barOptions)).toEqual([
+      {
+        camera: { x: 818, y: 529, width: 127, height: 169, hasBorder: true },
+        contentMain: { x: 30, y: 263, width: 773, height: 435, hasBorder: true },
+      },
+      {
+        camera: { x: 975, y: 30, width: 773, height: 900, hasBorder: true },
+        info: { x: 1763, y: 30, width: 127, height: 32, hasBorder: true },
+      },
     ]);
   });
 
@@ -622,8 +663,8 @@ describe('generateLayout', () => {
       generateLayout([{ camera: { isGreenScreen: true }, contentAux: {}, contentMain: null }], portraitOptions),
     ).toEqual([
       {
-        camera: { x: 0, y: 197, width: 1080, height: 628, hasBorder: false },
-        contentAux: { x: 30, y: 831, width: 765, height: 574, hasBorder: true },
+        camera: { x: 0, y: 144, width: 1080, height: 734, hasBorder: false },
+        contentAux: { x: 30, y: 884, width: 765, height: 574, hasBorder: true },
       },
     ]);
   });

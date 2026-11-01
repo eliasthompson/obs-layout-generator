@@ -252,22 +252,58 @@ const fillAutoInfo = (
 };
 
 /**
- * Size one participant's main region and side row: aux content at the left, info next, and the camera at the right.
- * A lone camera fills the row; a row with aux content or ratio info uses the layout's shared content height, with
- * the camera taking the rest of the width. A camera is never narrower than the minimum ratio or wider than the
- * maximum; the column width leaves every row tall enough for that, and a camera the shared height leaves too wide is
- * narrowed. `'auto'` info takes what the row leaves with the camera at its default ratio, and is omitted when that
- * leaves nothing. When the info row is split, ratio info wider than the widest camera, beside aux content or a camera,
- * takes a row of its own above the side row instead.
+ * The height a participant takes of its cell: the main region, then the info row and the side row, each with the gap
+ * above it. A shown side region claims the side row's gap even when the row has no height below its top, as an
+ * attached camera that fits inside the gap does.
+ *
+ * @param sideRowSizes - The participant's main region height and side row sizes.
+ * @param layoutGap - The gap between the main region and the rows beneath it.
+ * @returns The height from the top of the main region to the bottom of the lowest row.
+ */
+export const measureCellHeight = (
+  { mainHeight, infoRowHeight, sideRowHeight, contentAuxWidth, infoWidth, cameraWidth }: SideRowSizes,
+  layoutGap: number,
+) =>
+  mainHeight +
+  (infoRowHeight ? layoutGap + infoRowHeight : 0) +
+  (cameraWidth > 0 || contentAuxWidth > 0 || (infoWidth > 0 && !infoRowHeight) ? layoutGap + sideRowHeight : 0);
+
+/**
+ * Grow a main region that may be taller, an `'auto'` main camera, into the height its cell leaves under the rows
+ * beneath it, down to its narrowest ratio.
  *
  * @param resolvedLayoutConfig - The participant's resolved config.
- * @param context - The camera ratio default and limits, the cell height, column width, gap, border, whether ratio info
- *   takes a row of its own, and the shared row content height, `Infinity` when no row in the layout is shared.
- * @returns The main region height, the height the info row takes below its top, `0` when the info has no row of its
- *   own, the height the side row takes below its top, `0` when no side region is shown in it, each side region's size,
- *   `0` when the region is omitted, and whether the camera reaches the region above it.
+ * @param sizes - The participant's sizes with the main region at its ratio.
+ * @param context - The cell height, the column width, and the gap between the main region and the rows beneath it.
+ * @returns The sizes, with the grown main region height.
  */
-export const calculateSideRowSizes = (
+const growMainRegion = (
+  { mainNumericAspectRatioMin }: ResolvedLayoutConfig,
+  sizes: SideRowSizes,
+  {
+    cellHeight,
+    columnWidth,
+    layoutGap,
+  }: Pick<CalculateSideRowSizesContext, 'cellHeight' | 'columnWidth' | 'layoutGap'>,
+): SideRowSizes => {
+  if (mainNumericAspectRatioMin === undefined) return sizes;
+
+  const mainHeight = Math.min(
+    sizes.mainHeight + cellHeight - measureCellHeight(sizes, layoutGap),
+    columnWidth / mainNumericAspectRatioMin,
+  );
+
+  return mainHeight > sizes.mainHeight ? { ...sizes, mainHeight } : sizes;
+};
+
+/**
+ * Size one participant's side row beneath its main region at its ratio, as `calculateSideRowSizes` describes.
+ *
+ * @param resolvedLayoutConfig - The participant's resolved config.
+ * @param context - As for `calculateSideRowSizes`.
+ * @returns The sizes, before the main region grows.
+ */
+const sizeSideRow = (
   resolvedLayoutConfig: ResolvedLayoutConfig,
   context: CalculateSideRowSizesContext,
 ): SideRowSizes => {
@@ -277,7 +313,7 @@ export const calculateSideRowSizes = (
       resolvedLayoutConfig,
       context,
     );
-    const rowSizes = calculateSideRowSizes(rowResolvedLayoutConfig, {
+    const rowSizes = sizeSideRow(rowResolvedLayoutConfig, {
       ...context,
       cellHeight: rowCellHeight,
       isInfoRowSplit: false,
@@ -307,7 +343,6 @@ export const calculateSideRowSizes = (
     isInfoPreviousAttached,
     isInfoMainAttached,
     mainNumericAspectRatio,
-    mainNumericAspectRatioMin = mainNumericAspectRatio,
     sideContentAuxNumericAspectRatio,
     sideInfoNumericAspectRatio,
   } = resolvedLayoutConfig;
@@ -325,15 +360,7 @@ export const calculateSideRowSizes = (
     isCameraMainAttached: false,
   };
 
-  if (!hasSideRow(resolvedLayoutConfig)) {
-    // Alone in its cell, a main region that may grow taller, an 'auto' main camera, fills the cell down to its
-    // narrowest ratio
-    if (mainNumericAspectRatio > 0) {
-      sizes.mainHeight = Math.max(sizes.mainHeight, Math.min(cellHeight, columnWidth / mainNumericAspectRatioMin));
-    }
-
-    return sizes;
-  }
+  if (!hasSideRow(resolvedLayoutConfig)) return sizes;
 
   // The row gets what the main region and the gap leave of the cell; a camera is never narrower than the minimum ratio
   const rowHeight = cellHeight - sizes.mainHeight - layoutGap;
@@ -404,3 +431,25 @@ export const calculateSideRowSizes = (
     regionBorder,
   });
 };
+
+/**
+ * Size one participant's main region and side row: aux content at the left, info next, and the camera at the right.
+ * A lone camera fills the row; a row with aux content or ratio info uses the layout's shared content height, with
+ * the camera taking the rest of the width. A camera is never narrower than the minimum ratio or wider than the
+ * maximum; the column width leaves every row tall enough for that, and a camera the shared height leaves too wide is
+ * narrowed. `'auto'` info takes what the row leaves with the camera at its default ratio, and is omitted when that
+ * leaves nothing. When the info row is split, ratio info wider than the widest camera, beside aux content or a camera,
+ * takes a row of its own above the side row instead. A main region that may grow taller, an `'auto'` main camera,
+ * then grows into what the rows leave of the cell, down to its narrowest ratio.
+ *
+ * @param resolvedLayoutConfig - The participant's resolved config.
+ * @param context - The camera ratio default and limits, the cell height, column width, gap, border, whether ratio info
+ *   takes a row of its own, and the shared row content height, `Infinity` when no row in the layout is shared.
+ * @returns The main region height, the height the info row takes below its top, `0` when the info has no row of its
+ *   own, the height the side row takes below its top, `0` when no side region is shown in it, each side region's size,
+ *   `0` when the region is omitted, and whether the camera reaches the region above it.
+ */
+export const calculateSideRowSizes = (
+  resolvedLayoutConfig: ResolvedLayoutConfig,
+  context: CalculateSideRowSizesContext,
+): SideRowSizes => growMainRegion(resolvedLayoutConfig, sizeSideRow(resolvedLayoutConfig, context), context);

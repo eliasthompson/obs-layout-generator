@@ -9,6 +9,7 @@ import {
   fitSideRowHeight,
   hasSideRow,
   isSideRowShared,
+  measureCellHeight,
   splitInfoRow,
 } from '@/lib/calculateSideRowSizes';
 
@@ -130,6 +131,29 @@ describe('splitInfoRow', () => {
   });
 });
 
+describe('measureCellHeight', () => {
+  const sideRowSizes = { mainHeight: 500, ...noSideRow, isCameraMainAttached: false };
+
+  it('takes the main region alone without shown side regions', () => {
+    expect(measureCellHeight(sideRowSizes, 20)).toBe(500);
+  });
+
+  it('adds the info row and the side row, each with its gap', () => {
+    expect(
+      measureCellHeight(
+        { ...sideRowSizes, infoRowHeight: 100, sideRowHeight: 200, infoWidth: 1000, cameraWidth: 300 },
+        20,
+      ),
+    ).toBe(840);
+  });
+
+  it('adds the side row gap for a shown region even when the row has no height below its top', () => {
+    expect(measureCellHeight({ ...sideRowSizes, cameraWidth: 10, cameraHeight: 15 }, 20)).toBe(520);
+    expect(measureCellHeight({ ...sideRowSizes, contentAuxWidth: 10 }, 20)).toBe(520);
+    expect(measureCellHeight({ ...sideRowSizes, infoWidth: 10 }, 20)).toBe(520);
+  });
+});
+
 describe('fitSideRowHeight', () => {
   it('fits aux content at its ratio and the camera at the minimum ratio with a gap between', () => {
     expect(fitSideRowHeight(withContentAux, context)).toBeCloseTo(980 / (4 / 3 + 9 / 16));
@@ -211,6 +235,43 @@ describe('calculateSideRowSizes', () => {
     expect(calculateSideRowSizes({ ...mainCamera, mainNumericAspectRatioMin: undefined }, context).mainHeight).toBe(
       562.5,
     );
+  });
+
+  it('grows a main region that may be taller into what its side row leaves of the cell', () => {
+    const mainCameraWithInfo = createResolvedLayoutConfig({
+      hasSideCamera: false,
+      hasSideInfo: true,
+      mainNumericAspectRatioMin: 9 / 16,
+      mainRegion: 'camera',
+      sideInfoNumericAspectRatio: 2,
+    });
+
+    // 1000 less the 20 px gap and the 100 px row
+    expect(calculateSideRowSizes(mainCameraWithInfo, { ...context, sharedHeight: 100 })).toMatchObject({
+      mainHeight: 880,
+      sideRowHeight: 100,
+      infoWidth: 200,
+      infoHeight: 100,
+    });
+    // A row that fills the rest of the cell leaves it nothing to grow into
+    expect(calculateSideRowSizes(mainCameraWithInfo, { ...context, sharedHeight: 417.5 }).mainHeight).toBe(562.5);
+  });
+
+  it('grows a main region that may be taller into what an info row and the side row beneath it leave', () => {
+    const mainCameraWithWideInfo = {
+      ...withWideInfo,
+      hasSideCamera: false,
+      mainNumericAspectRatioMin: 9 / 16,
+      mainRegion: 'camera' as const,
+      sideContentAuxNumericAspectRatio: 4 / 3,
+    };
+
+    // 1000 less the 200 px info row and the 150 px side row, each with its 20 px gap
+    expect(calculateSideRowSizes(mainCameraWithWideInfo, { ...splitContext, sharedHeight: 150 })).toMatchObject({
+      mainHeight: 610,
+      infoRowHeight: 200,
+      sideRowHeight: 150,
+    });
   });
 
   it('fills the row with a lone camera', () => {

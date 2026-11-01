@@ -6,7 +6,7 @@ import type { LayoutMetric } from '@/types/LayoutMetric';
 import { calculateColumnWidth } from '@/lib/calculateColumnWidth';
 import { calculatePortraitLayoutRegions } from '@/lib/calculatePortraitLayoutRegions';
 import { calculateSideRowHeight } from '@/lib/calculateSideRowHeight';
-import { calculateSideRowSizes, canSplitInfoRow } from '@/lib/calculateSideRowSizes';
+import { calculateSideRowSizes, canSplitInfoRow, measureCellHeight } from '@/lib/calculateSideRowSizes';
 import { distributeLayouts } from '@/lib/distributeLayouts';
 import { expandGreenScreenCamera, outerNeighbor } from '@/lib/expandGreenScreenCamera';
 import { placeName } from '@/lib/placeName';
@@ -171,17 +171,10 @@ export const generatePortraitLayout = (
 
   resolvedColumns.forEach((columnResolvedLayoutConfigs, columnIndex) => {
     // Stack the column's participants a canvas gap apart and center the stack vertically, so a participant shorter
-    // than its cell leaves the room at the ends of the column rather than between participants. An info row claims
-    // its gap, and a shown side region claims the gap even when the row below the gap has no height, as an attached
-    // camera that fits inside the gap does
+    // than its cell leaves the room at the ends of the column rather than between participants
     const cellsTotal = columnResolvedLayoutConfigs.length;
     const columnSideRowSizes = columnsSideRowSizes[columnIndex];
-    const usedHeights = columnSideRowSizes.map(
-      ({ mainHeight, infoRowHeight, sideRowHeight, cameraWidth, contentAuxWidth, infoWidth }) =>
-        mainHeight +
-        (infoRowHeight ? layoutGap + infoRowHeight : 0) +
-        (cameraWidth > 0 || contentAuxWidth > 0 || (infoWidth > 0 && !infoRowHeight) ? layoutGap + sideRowHeight : 0),
-    );
+    const usedHeights = columnSideRowSizes.map((sideRowSizes) => measureCellHeight(sideRowSizes, layoutGap));
     const columnHeight =
       usedHeights.reduce((total, usedHeight) => total + usedHeight, 0) + canvasGap * (cellsTotal - 1);
     let cellY = canvasContentY + (canvasContentHeight - columnHeight) / 2;

@@ -73,6 +73,23 @@ export const generateLandscapeLayout = (
     );
     // The row height, the shared camera height, and each side stack all follow from the resolved rows
     const rowHeight = calculateRowHeight(resolvedRows, { canvasContentHeight, canvasContentWidth, canvasGap });
+    // Main widths follow from the row height. A main region that may grow taller, an 'auto' main camera, keeps its
+    // width and grows into the height the row's even share of the content area leaves, down to its narrowest ratio,
+    // and its side column takes that height too
+    const rowHeightEven = (canvasContentHeight + canvasGap) / rows.length - canvasGap;
+    const mainWidthRows = resolvedRows.map((rowResolvedLayoutConfigs) =>
+      rowResolvedLayoutConfigs.map(({ mainNumericAspectRatio }) => mainNumericAspectRatio * rowHeight),
+    );
+    const heightRows = resolvedRows.map((rowResolvedLayoutConfigs, rowIndex) =>
+      rowResolvedLayoutConfigs.map(({ mainNumericAspectRatioMin }, rowLayoutConfigIndex) =>
+        mainNumericAspectRatioMin === undefined
+          ? rowHeight
+          : Math.max(
+              rowHeight,
+              Math.min(rowHeightEven, mainWidthRows[rowIndex][rowLayoutConfigIndex] / mainNumericAspectRatioMin),
+            ),
+      ),
+    );
     const cameraHeights = calculateCameraHeights(resolvedRows.flat(), {
       cameraNumericAspectRatioDefault,
       cameraNumericAspectRatioMax,
@@ -82,19 +99,19 @@ export const generateLandscapeLayout = (
       regionBorder,
       rowHeight,
     });
-    const sideRegionHeightRows = resolvedRows.map((rowResolvedLayoutConfigs) =>
-      rowResolvedLayoutConfigs.map((resolvedLayoutConfig) =>
+    const sideRegionHeightRows = resolvedRows.map((rowResolvedLayoutConfigs, rowIndex) =>
+      rowResolvedLayoutConfigs.map((resolvedLayoutConfig, rowLayoutConfigIndex) =>
         calculateSideRegionHeights(resolvedLayoutConfig, {
           cameraHeight: cameraHeights.cameraHeight,
           hasCameraRoom: cameraHeights.hasCameraRoom,
           layoutGap,
           regionBorder,
-          rowHeight,
+          rowHeight: heightRows[rowIndex][rowLayoutConfigIndex],
         }),
       ),
     );
 
-    return { ...cameraHeights, resolvedRows, rowHeight, sideRegionHeightRows };
+    return { ...cameraHeights, heightRows, mainWidthRows, resolvedRows, sideRegionHeightRows };
   };
 
   // Size once, then drop the side column of layout configs whose side regions all collapsed and size again
@@ -106,16 +123,19 @@ export const generateLandscapeLayout = (
 
   if (collapsedSideIndexes.length) layoutSizes = calculateLayoutSizes(new Set(collapsedSideIndexes));
 
-  const { cameraHeight, resolvedRows, rowHeight, sideRegionHeightRows } = layoutSizes;
+  const { cameraHeight, heightRows, mainWidthRows, resolvedRows, sideRegionHeightRows } = layoutSizes;
 
-  // Center the rows vertically in the content area and each row's participants horizontally
+  // Center the rows vertically in the content area, each as tall as its tallest participant, and each row's
+  // participants horizontally, and vertically within the row
   const layoutMetrics: LayoutMetric[] = [];
   const rowsTotal = resolvedRows.length;
-  let rowY = canvasContentY + (canvasContentHeight - (rowHeight * rowsTotal + canvasGap * (rowsTotal - 1))) / 2;
+  const rowHeights = heightRows.map((heights) => Math.max(...heights));
+  const rowsHeight = rowHeights.reduce((total, height) => total + height, 0) + canvasGap * (rowsTotal - 1);
+  let rowY = canvasContentY + (canvasContentHeight - rowsHeight) / 2;
 
   resolvedRows.forEach((rowResolvedLayoutConfigs, rowIndex) => {
-    // Main widths follow from the row height; the row width adds the side columns and the gaps between participants
-    const mainWidths = rowResolvedLayoutConfigs.map(({ mainNumericAspectRatio }) => mainNumericAspectRatio * rowHeight);
+    // The row width adds the side columns and the gaps between participants to the main widths
+    const mainWidths = mainWidthRows[rowIndex];
     const rowWidth = rowResolvedLayoutConfigs.reduce((acc, { sideWidthTotal }, rowLayoutConfigIndex) => {
       const gap = rowLayoutConfigIndex ? canvasGap : 0;
       return acc + gap + mainWidths[rowLayoutConfigIndex] + sideWidthTotal;
@@ -126,6 +146,8 @@ export const generateLandscapeLayout = (
       // Position the regions, expand a green screen camera, place the name on its host, round, and step on
       const { hasName, isCameraGreenScreen, mainRegion, sideWidthTotal } = resolvedLayoutConfig;
       const mainWidth = mainWidths[rowLayoutConfigIndex];
+      const height = heightRows[rowIndex][rowLayoutConfigIndex];
+      const y = rowY + (rowHeights[rowIndex] - height) / 2;
       const layoutMetric = calculateLayoutRegions(
         resolvedLayoutConfig,
         sideRegionHeightRows[rowIndex][rowLayoutConfigIndex],
@@ -138,8 +160,8 @@ export const generateLandscapeLayout = (
           mainWidth,
           mainX,
           regionBorder,
-          rowHeight,
-          rowY,
+          rowHeight: height,
+          rowY: y,
         },
       );
 
@@ -149,7 +171,7 @@ export const generateLandscapeLayout = (
         // Every other edge faces another participant or row, or the margin
         const isMainCamera = mainRegion === 'camera';
         const isLastInRow = rowLayoutConfigIndex === rowResolvedLayoutConfigs.length - 1;
-        const isCameraAtRowTop = isMainCamera || layoutMetric.camera.y - rowY < layoutGap;
+        const isCameraAtRowTop = isMainCamera || layoutMetric.camera.y - y < layoutGap;
 
         layoutMetric.camera = expandGreenScreenCamera(layoutMetric.camera, {
           canvasGap,
@@ -180,7 +202,7 @@ export const generateLandscapeLayout = (
     });
 
     // Step to the next row
-    rowY += rowHeight + canvasGap;
+    rowY += rowHeights[rowIndex] + canvasGap;
   });
 
   return layoutMetrics;
